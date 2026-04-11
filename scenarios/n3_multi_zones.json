@@ -1,0 +1,27 @@
+{
+  "id": "n3_multi_zones",
+  "titre": "Incendie multi-zones — ERP type R",
+  "niveau": 3,
+  "erp_type": "R",
+  "duree_max": 420,
+  "description": "Départ de feu en laboratoire chimie, propagation rapide sur 3 zones. Défaillances DAS multiples. Personne bloquée signalée. Gestion de crise complète.",
+  "evenements": [
+    { "t": 0, "type": "alarme", "zone": "ZC1", "detail": "Déclencheur manuel — Labo chimie Bât A" },
+    { "t": 10, "type": "alarme", "zone": "ZC1", "detail": "Détecteur thermique — Labo chimie Bât A (double knock)" },
+    { "t": 30, "type": "info_formateur", "msg": "Équipier : feu chimique confirmé, flammes visibles" },
+    { "t": 90, "type": "propagation", "zone": "ZC2", "from": "ZC1", "detail": "Fumée dense — Couloir Bât A RDC" },
+    { "t": 120, "type": "defaillance", "das": "EXU-BAT-A", "msg": "Exutoire désenfumage Bât A — défaillance moteur" },
+    { "t": 150, "type": "propagation", "zone": "ZC4", "from": "ZC2", "detail": "Fumée — Hall principal" },
+    { "t": 180, "type": "derangement", "zone": "ZC3", "msg": "Court-circuit ligne détection — Bât A R+1" },
+    { "t": 210, "type": "info_formateur", "msg": "PERSONNE BLOQUÉE signalée au R+1 Bât A — salle 108" },
+    { "t": 270, "type": "defaillance", "das": "PCF-R1-02", "msg": "PCF escalier Bât A R+1 — ventouse HS" },
+    { "t": 300, "type": "info_formateur", "msg": "Pompiers sur site — demandent point de situation" }
+  ],
+  "actions_attendues": [
+    { "action": "acquittement", "delai_max": 15, "competence": "C2", "points": 15 },
+    { "action": "evacuation_generale", "delai_max": 30, "competence": "C4", "points": 25 },
+    { "action": "appel_18", "delai_max": 45, "competence": "C3", "points": 20 },
+    { "action": "commande_das", "delai_max": 60, "competence": "C6", "points": 15 },
+    { "action": "accueil_pompiers", "delai_max": 300, "competence": "C8", "points": 25 }
+  ]
+}

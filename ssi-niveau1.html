@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SSI Niveau 1 — ECS Simple — inerWeb Édu</title>
+<style>
+/* ===== RESET & BASE ===== */
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Calibri,sans-serif;font-size:14pt;line-height:1.5;background:#f2f5fb;color:#1b3a63;text-align:left;min-height:100vh}
+
+/* ===== HEADER ===== */
+.header{background:#1b3a63;color:#fff;padding:14px 24px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;position:sticky;top:0;z-index:100}
+.header .logo{font-family:'Trebuchet MS',sans-serif;font-size:1.4em;font-weight:bold;display:flex;align-items:center;gap:6px;white-space:nowrap}
+.header .logo .snowflake{font-size:1.2em}
+.header .badge{background:#ff6b35;color:#fff;padding:1px 8px;border-radius:4px;font-size:0.55em;margin-left:3px;vertical-align:middle}
+.header .author{font-size:0.5em;opacity:0.8;margin-left:6px}
+.header .title-center{margin-left:auto;font-family:'Trebuchet MS',sans-serif;font-size:1.05em;letter-spacing:1px;text-align:right}
+.header .back-link{color:#fff;text-decoration:none;font-size:0.85em;opacity:0.8;margin-right:8px}
+.header .back-link:hover{opacity:1}
+
+/* ===== LAYOUT 2 COLONNES ===== */
+.main-layout{display:grid;grid-template-columns:1fr 1fr;gap:0;min-height:calc(100vh - 56px)}
+@media(max-width:1100px){.main-layout{grid-template-columns:1fr;}}
+
+/* ===== LEFT COLUMN — ECS PANEL ===== */
+.ecs-panel{background:#1e2228;padding:18px;display:flex;flex-direction:column;gap:14px;color:#ddd;min-height:100%}
+
+/* Bannière titre */
+.ecs-banner{background:linear-gradient(180deg,#2a2f38 0%,#1e2228 100%);border:2px solid #444;border-radius:4px;padding:10px 16px;text-align:center;font-family:'Courier New',monospace;font-size:0.72em;letter-spacing:2px;color:#ccc;text-transform:uppercase;position:relative}
+.ecs-banner::before,.ecs-banner::after{content:'';position:absolute;top:4px;width:6px;height:6px;background:#555;border-radius:50%}
+.ecs-banner::before{left:8px}
+.ecs-banner::after{right:8px}
+.ecs-brand{font-family:'Trebuchet MS',sans-serif;font-size:0.9em;color:#ff6b35;margin-top:4px;letter-spacing:3px;font-weight:bold}
+
+/* Voyants généraux */
+.general-indicators{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;background:#252930;border-radius:4px;padding:10px 8px;border:1px solid #333}
+.indicator{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center}
+.indicator-label{font-family:'Courier New',monospace;font-size:0.52em;text-transform:uppercase;letter-spacing:0.5px;color:#999;line-height:1.2}
+.led{width:14px;height:14px;border-radius:50%;border:1px solid #555;position:relative}
+.led-green{background:#0a3a0a;border-color:#1a5a1a}
+.led-green.on{background:#00ff44;box-shadow:0 0 8px #00ff44,0 0 16px rgba(0,255,68,0.3)}
+.led-red{background:#3a0a0a;border-color:#5a1a1a}
+.led-red.on{background:#ff2222;box-shadow:0 0 8px #ff2222,0 0 16px rgba(255,34,34,0.3)}
+.led-red.blink{animation:blinkRed 0.5s infinite}
+.led-yellow{background:#3a3a0a;border-color:#5a5a1a}
+.led-yellow.on{background:#ffcc00;box-shadow:0 0 8px #ffcc00,0 0 16px rgba(255,204,0,0.3)}
+.led-yellow.blink{animation:blinkYellow 1s infinite}
+
+@keyframes blinkRed{0%,49%{background:#ff2222;box-shadow:0 0 8px #ff2222,0 0 16px rgba(255,34,34,0.3)}50%,100%{background:#3a0a0a;box-shadow:none}}
+@keyframes blinkYellow{0%,49%{background:#ffcc00;box-shadow:0 0 8px #ffcc00,0 0 16px rgba(255,204,0,0.3)}50%,100%{background:#3a3a0a;box-shadow:none}}
+
+/* Écran LCD */
+.lcd-container{background:#0a1a0a;border:2px solid #1a3a1a;border-radius:4px;padding:10px 12px;font-family:'Courier New',monospace;position:relative}
+.lcd-title{font-size:0.5em;color:#005522;text-transform:uppercase;letter-spacing:2px;margin-bottom:4px;text-align:center}
+.lcd-screen{font-size:0.82em;color:#00ff44;line-height:1.6;min-height:6.4em;text-shadow:0 0 6px rgba(0,255,68,0.4);white-space:pre;overflow:hidden}
+.lcd-line{display:block;height:1.6em;overflow:hidden}
+.lcd-line.blink-text{animation:blinkText 0.8s infinite}
+@keyframes blinkText{0%,49%{opacity:1}50%,100%{opacity:0.15}}
+
+/* Boutons physiques */
+.buttons-section{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn-ecs{font-family:'Courier New',monospace;font-size:0.65em;padding:10px 6px;border:none;border-radius:3px;cursor:pointer;text-transform:uppercase;letter-spacing:0.5px;font-weight:bold;position:relative;transition:transform 0.05s;user-select:none;line-height:1.3;text-align:center}
+.btn-ecs:active{transform:translateY(2px);box-shadow:inset 0 2px 4px rgba(0,0,0,0.4) !important}
+.btn-acq{background:linear-gradient(180deg,#3366aa,#224488);color:#fff;box-shadow:0 3px 0 #1a3366,0 4px 8px rgba(0,0,0,0.3)}
+.btn-rearm{background:linear-gradient(180deg,#33aa55,#228844);color:#fff;box-shadow:0 3px 0 #1a6633,0 4px 8px rgba(0,0,0,0.3)}
+.btn-test{background:linear-gradient(180deg,#888,#666);color:#fff;box-shadow:0 3px 0 #444,0 4px 8px rgba(0,0,0,0.3)}
+.btn-arret{background:linear-gradient(180deg,#cc3333,#aa2222);color:#fff;box-shadow:0 3px 0 #881111,0 4px 8px rgba(0,0,0,0.3)}
+.btn-evac{background:linear-gradient(180deg,#cc2222,#991111);color:#fff;border:2px solid #ffcc00;box-shadow:0 3px 0 #660808,0 4px 8px rgba(0,0,0,0.3);grid-column:1/3;padding:14px 6px;font-size:0.75em}
+
+/* Cartes zones */
+.zones-section{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.zone-card{background:#252930;border:1px solid #3a3f48;border-radius:4px;padding:10px;position:relative}
+.zone-card-label{font-family:'Courier New',monospace;font-size:0.62em;color:#ccc;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;border-bottom:1px solid #3a3f48;padding-bottom:4px}
+.zone-leds{display:flex;gap:10px;margin-bottom:8px;align-items:center;justify-content:center}
+.zone-led-group{display:flex;flex-direction:column;align-items:center;gap:2px}
+.zone-led-group .led{width:10px;height:10px}
+.zone-led-label{font-family:'Courier New',monospace;font-size:0.42em;color:#888;text-transform:uppercase}
+.btn-acquit-zone{font-family:'Courier New',monospace;font-size:0.5em;padding:4px 8px;background:linear-gradient(180deg,#555,#444);color:#ccc;border:1px solid #666;border-radius:2px;cursor:pointer;width:100%;text-transform:uppercase;letter-spacing:0.5px}
+.btn-acquit-zone:active{transform:translateY(1px);background:#333}
+
+/* ===== RIGHT COLUMN — PÉDAGOGIQUE ===== */
+.pedagogy-panel{background:#f2f5fb;padding:18px 20px;display:flex;flex-direction:column;gap:14px;overflow-y:auto;max-height:calc(100vh - 56px)}
+
+/* Scénario badge + chrono */
+.scenario-header{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.scenario-badge{background:#1b3a63;color:#fff;padding:4px 14px;border-radius:16px;font-size:0.8em;font-weight:bold}
+.scenario-badge.active{background:#ff6b35}
+.chrono{font-family:'Courier New',monospace;font-size:1.3em;color:#1b3a63;font-weight:bold;margin-left:auto}
+.scenario-controls{display:flex;gap:8px;flex-wrap:wrap}
+.scenario-controls select{font-family:Calibri,sans-serif;font-size:0.85em;padding:6px 10px;border:1px solid #ccc;border-radius:6px;background:#fff;color:#1b3a63;cursor:pointer}
+.btn-pedagogy{font-family:Calibri,sans-serif;font-size:0.8em;padding:6px 16px;border:none;border-radius:6px;cursor:pointer;font-weight:bold;transition:background 0.15s}
+.btn-start{background:#4caf50;color:#fff}
+.btn-start:hover{background:#43a047}
+.btn-pause{background:#ff9800;color:#fff}
+.btn-pause:hover{background:#f57c00}
+.btn-stop{background:#e53935;color:#fff}
+.btn-stop:hover{background:#c62828}
+.btn-aide{background:#1b3a63;color:#fff}
+.btn-aide:hover{background:#142d4e}
+
+/* Journal */
+.journal-section{background:#fff;border-radius:8px;border:1px solid #dde2ea;flex:1;min-height:180px;display:flex;flex-direction:column;overflow:hidden}
+.journal-title{font-family:'Trebuchet MS',sans-serif;font-size:0.85em;color:#1b3a63;padding:10px 14px 6px;border-bottom:1px solid #eee;font-weight:bold}
+.journal-list{flex:1;overflow-y:auto;padding:6px 14px;font-family:'Courier New',monospace;font-size:0.7em;line-height:1.7;max-height:220px}
+.journal-entry{padding:2px 0;border-bottom:1px solid #f5f5f5}
+.journal-entry .time{color:#888}
+.journal-entry.alarme{color:#e53935;font-weight:bold}
+.journal-entry.acquittement{color:#1b3a63}
+.journal-entry.info{color:#ff9800}
+.journal-entry.transition{color:#7b1fa2}
+.journal-entry.derangement{color:#ff9800}
+.journal-entry.evacuation{color:#e53935;font-weight:bold}
+.journal-entry.rearmement{color:#4caf50}
+
+/* Conduite à tenir */
+.conduite-section{background:#fff;border-radius:8px;border:1px solid #dde2ea;padding:14px 16px}
+.conduite-title{font-family:'Trebuchet MS',sans-serif;font-size:0.85em;color:#1b3a63;font-weight:bold;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.conduite-title .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.conduite-title .dot-green{background:#4caf50}
+.conduite-title .dot-red{background:#e53935}
+.conduite-title .dot-orange{background:#ff9800}
+.conduite-content{font-size:0.85em;color:#333;line-height:1.7}
+.conduite-content ol{margin-left:18px}
+.conduite-content ol li{margin-bottom:3px}
+.conduite-content .step-done{color:#4caf50;text-decoration:line-through}
+
+/* Scoring */
+.scoring-section{background:#fff;border-radius:8px;border:1px solid #dde2ea;padding:14px 16px}
+.scoring-title{font-family:'Trebuchet MS',sans-serif;font-size:0.85em;color:#1b3a63;font-weight:bold;margin-bottom:8px}
+.scoring-bar{height:22px;background:#e8ecf2;border-radius:11px;overflow:hidden;position:relative;margin-bottom:8px}
+.scoring-fill{height:100%;border-radius:11px;transition:width 0.4s;display:flex;align-items:center;justify-content:center;font-size:0.65em;font-weight:bold;color:#fff;min-width:40px}
+.scoring-fill.good{background:linear-gradient(90deg,#4caf50,#66bb6a)}
+.scoring-fill.medium{background:linear-gradient(90deg,#ff9800,#ffb74d)}
+.scoring-fill.bad{background:linear-gradient(90deg,#e53935,#ef5350)}
+.scoring-details{display:flex;gap:16px;font-size:0.75em;flex-wrap:wrap}
+.scoring-item{display:flex;align-items:center;gap:4px}
+.scoring-dot{width:8px;height:8px;border-radius:50%}
+.scoring-dot-ok{background:#4caf50}
+.scoring-dot-retard{background:#ff9800}
+.scoring-dot-manque{background:#e53935}
+
+/* Modal aide */
+.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.55);z-index:200;align-items:center;justify-content:center}
+.modal-overlay.active{display:flex}
+.modal-aide{background:#fff;border-radius:12px;padding:24px 28px;max-width:520px;width:92%;max-height:85vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,0.25)}
+.modal-aide h3{font-family:'Trebuchet MS',sans-serif;color:#1b3a63;margin-bottom:12px;font-size:1.1em}
+.modal-aide .close-btn{float:right;background:none;border:none;font-size:1.5em;cursor:pointer;color:#888;line-height:1}
+.modal-aide table{width:100%;border-collapse:collapse;font-size:0.85em;margin-top:8px}
+.modal-aide th{background:#1b3a63;color:#fff;padding:6px 10px;text-align:left;font-size:0.85em}
+.modal-aide td{padding:6px 10px;border-bottom:1px solid #eee}
+.modal-aide .fiche-title{color:#ff6b35;font-weight:bold;margin:12px 0 6px;font-size:0.95em}
+.modal-aide ol{margin-left:18px;font-size:0.88em;line-height:1.7}
+
+/* Bilan final */
+.bilan-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.55);z-index:200;align-items:center;justify-content:center}
+.bilan-overlay.active{display:flex}
+.bilan-modal{background:#fff;border-radius:12px;padding:24px 28px;max-width:560px;width:92%;max-height:85vh;overflow-y:auto;box-shadow:0 8px 32px rgba(0,0,0,0.25)}
+.bilan-modal h3{font-family:'Trebuchet MS',sans-serif;color:#1b3a63;margin-bottom:12px}
+.bilan-modal table{width:100%;border-collapse:collapse;font-size:0.8em;margin:10px 0}
+.bilan-modal th{background:#1b3a63;color:#fff;padding:6px 8px;text-align:left}
+.bilan-modal td{padding:6px 8px;border-bottom:1px solid #eee}
+.bilan-modal .score-big{font-size:2em;font-weight:bold;text-align:center;margin:12px 0}
+.bilan-modal .score-big.good{color:#4caf50}
+.bilan-modal .score-big.medium{color:#ff9800}
+.bilan-modal .score-big.bad{color:#e53935}
+.bilan-modal .btn-close-bilan{background:#1b3a63;color:#fff;padding:10px 28px;border:none;border-radius:6px;cursor:pointer;font-size:0.95em;font-weight:bold;display:block;margin:16px auto 0}
+
+/* Footer */
+.footer{text-align:center;padding:12px;color:#888;font-size:0.75em;border-top:1px solid #e0e4ea;background:#fff}
+.footer a{color:#ff6b35;text-decoration:none}
+</style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<div class="header">
+  <a href="index.html" class="back-link" title="Retour accueil">&larr; Accueil</a>
+  <div class="logo">
+    <span class="snowflake">&#10052;</span>
+    inerWeb<span class="badge">&Eacute;du</span>
+    <span class="author">par F. Henninot</span>
+  </div>
+  <div class="title-center">SSI TRAINER &mdash; NIVEAU 1 : ECS SIMPLE</div>
+</div>
+
+<!-- ===== LAYOUT PRINCIPAL ===== -->
+<div class="main-layout">
+
+  <!-- ===== COLONNE GAUCHE : PANNEAU ECS ===== -->
+  <div class="ecs-panel">
+
+    <!-- Bannière titre -->
+    <div class="ecs-banner">
+      &Eacute;quipement de Contr&ocirc;le et de Signalisation &mdash; NF S 61-961
+      <div class="ecs-brand">INERFIRE CAT.A</div>
+    </div>
+
+    <!-- Voyants généraux -->
+    <div class="general-indicators">
+      <div class="indicator">
+        <div class="led led-green on" id="led-sousTension"></div>
+        <span class="indicator-label">Sous<br>Tension</span>
+      </div>
+      <div class="indicator">
+        <div class="led led-red" id="led-alarmeFeu"></div>
+        <span class="indicator-label">Alarme<br>Feu</span>
+      </div>
+      <div class="indicator">
+        <div class="led led-yellow" id="led-derangement"></div>
+        <span class="indicator-label">D&eacute;rang<br>ement</span>
+      </div>
+      <div class="indicator">
+        <div class="led led-yellow" id="led-horsService"></div>
+        <span class="indicator-label">Hors<br>Service</span>
+      </div>
+      <div class="indicator">
+        <div class="led led-yellow" id="led-essais"></div>
+        <span class="indicator-label">Essais</span>
+      </div>
+    </div>
+
+    <!-- Écran LCD -->
+    <div class="lcd-container">
+      <div class="lcd-title">Afficheur LCD</div>
+      <div class="lcd-screen" id="lcdScreen">
+        <span class="lcd-line" id="lcd-line1">VEILLE NORMALE      </span>
+        <span class="lcd-line" id="lcd-line2">--------------------</span>
+        <span class="lcd-line" id="lcd-line3">SYSTEME OPERATIONNEL</span>
+        <span class="lcd-line" id="lcd-line4"><span id="lcd-clock">--:--:--</span>            </span>
+      </div>
+    </div>
+
+    <!-- Boutons de commande -->
+    <div class="buttons-section">
+      <button class="btn-ecs btn-acq" id="btnAcquittement" onclick="actionAcquittement()">&#9654; Acquittement</button>
+      <button class="btn-ecs btn-rearm" id="btnRearmement" onclick="actionRearmement()">&#8634; R&eacute;armement</button>
+      <button class="btn-ecs btn-test" id="btnTest" onclick="actionTest()">&#9881; Test Signal.</button>
+      <button class="btn-ecs btn-arret" id="btnArretSon" onclick="actionArretSon()">&#128263; Arr&ecirc;t Signal</button>
+      <button class="btn-ecs btn-evac" id="btnEvacuation" onclick="actionEvacuation()">&#9888; &Eacute;VACUATION G&Eacute;N&Eacute;RALE</button>
+    </div>
+
+    <!-- Cartes zones -->
+    <div class="zones-section">
+      <div class="zone-card" id="zoneCard-ZD01">
+        <div class="zone-card-label">ZD01 &mdash; Cuisine</div>
+        <div class="zone-leds">
+          <div class="zone-led-group">
+            <div class="led led-red" id="zled-ZD01-alarme"></div>
+            <span class="zone-led-label">Alarme</span>
+          </div>
+          <div class="zone-led-group">
+            <div class="led led-yellow" id="zled-ZD01-derang"></div>
+            <span class="zone-led-label">D&eacute;rang.</span>
+          </div>
+          <div class="zone-led-group">
+            <div class="led led-yellow" id="zled-ZD01-hs"></div>
+            <span class="zone-led-label">H.S.</span>
+          </div>
+        </div>
+        <button class="btn-acquit-zone" onclick="actionAcquitZone('ZD01')">Acquit Zone</button>
+      </div>
+      <div class="zone-card" id="zoneCard-ZD02">
+        <div class="zone-card-label">ZD02 &mdash; Hall</div>
+        <div class="zone-leds">
+          <div class="zone-led-group">
+            <div class="led led-red" id="zled-ZD02-alarme"></div>
+            <span class="zone-led-label">Alarme</span>
+          </div>
+          <div class="zone-led-group">
+            <div class="led led-yellow" id="zled-ZD02-derang"></div>
+            <span class="zone-led-label">D&eacute;rang.</span>
+          </div>
+          <div class="zone-led-group">
+            <div class="led led-yellow" id="zled-ZD02-hs"></div>
+            <span class="zone-led-label">H.S.</span>
+          </div>
+        </div>
+        <button class="btn-acquit-zone" onclick="actionAcquitZone('ZD02')">Acquit Zone</button>
+      </div>
+      <div class="zone-card" id="zoneCard-ZD03">
+        <div class="zone-card-label">ZD03 &mdash; Bureaux</div>
+        <div class="zone-leds">
+          <div class="zone-led-group">
+            <div class="led led-red" id="zled-ZD03-alarme"></div>
+            <span class="zone-led-label">Alarme</span>
+          </div>
+          <div class="zone-led-group">
+            <div class="led led-yellow" id="zled-ZD03-derang"></div>
+            <span class="zone-led-label">D&eacute;rang.</span>
+          </div>
+          <div class="zone-led-group">
+            <div class="led led-yellow" id="zled-ZD03-hs"></div>
+            <span class="zone-led-label">H.S.</span>
+          </div>
+        </div>
+        <button class="btn-acquit-zone" onclick="actionAcquitZone('ZD03')">Acquit Zone</button>
+      </div>
+      <div class="zone-card" id="zoneCard-ZD04">
+        <div class="zone-card-label">ZD04 &mdash; Stockage</div>
+        <div class="zone-leds">
+          <div class="zone-led-group">
+            <div class="led led-red" id="zled-ZD04-alarme"></div>
+            <span class="zone-led-label">Alarme</span>
+          </div>
+          <div class="zone-led-group">
+            <div class="led led-yellow" id="zled-ZD04-derang"></div>
+            <span class="zone-led-label">D&eacute;rang.</span>
+          </div>
+          <div class="zone-led-group">
+            <div class="led led-yellow" id="zled-ZD04-hs"></div>
+            <span class="zone-led-label">H.S.</span>
+          </div>
+        </div>
+        <button class="btn-acquit-zone" onclick="actionAcquitZone('ZD04')">Acquit Zone</button>
+      </div>
+    </div>
+
+  </div><!-- fin ecs-panel -->
+
+  <!-- ===== COLONNE DROITE : PÉDAGOGIE ===== -->
+  <div class="pedagogy-panel">
+
+    <!-- Scénario + chrono -->
+    <div class="scenario-header">
+      <span class="scenario-badge" id="scenarioBadge">Aucun sc&eacute;nario</span>
+      <span class="chrono" id="chronoDisplay">00:00</span>
+    </div>
+    <div class="scenario-controls">
+      <select id="scenarioSelect">
+        <option value="">-- Choisir un sc&eacute;nario --</option>
+        <option value="n1_fausse_alarme">N1 — Fausse alarme cuisine</option>
+        <option value="n2_incendie_confirme">N2 — Incendie confirm&eacute;</option>
+        <option value="n3_multi_zones">N3 — Multi-zones</option>
+        <option value="n4_crise_complexe">N4 — Crise complexe</option>
+      </select>
+      <button class="btn-pedagogy btn-start" id="btnDemarrer" onclick="demarrerScenario()">&#9654; D&eacute;marrer</button>
+      <button class="btn-pedagogy btn-pause" id="btnPause" onclick="pauseScenario()" style="display:none">&#10074;&#10074; Pause</button>
+      <button class="btn-pedagogy btn-stop" id="btnStop" onclick="stopScenario()" style="display:none">&#9632; Arr&ecirc;ter</button>
+      <button class="btn-pedagogy btn-aide" id="btnAide" onclick="showAide()">? Aide</button>
+    </div>
+
+    <!-- Journal horodaté -->
+    <div class="journal-section">
+      <div class="journal-title">Journal des &eacute;v&eacute;nements</div>
+      <div class="journal-list" id="journalList">
+        <div class="journal-entry info"><span class="time">--:--:--</span> &mdash; Syst&egrave;me en attente. S&eacute;lectionnez un sc&eacute;nario.</div>
+      </div>
+    </div>
+
+    <!-- Conduite à tenir -->
+    <div class="conduite-section">
+      <div class="conduite-title">
+        <span class="dot dot-green" id="conduiteDot"></span>
+        Conduite &agrave; tenir
+      </div>
+      <div class="conduite-content" id="conduiteContent">
+        Surveillance normale. Le syst&egrave;me est en veille.
+      </div>
+    </div>
+
+    <!-- Scoring temps réel -->
+    <div class="scoring-section">
+      <div class="scoring-title">Score en temps r&eacute;el</div>
+      <div class="scoring-bar">
+        <div class="scoring-fill good" id="scoringFill" style="width:0%">0%</div>
+      </div>
+      <div class="scoring-details" id="scoringDetails">
+        <div class="scoring-item"><span class="scoring-dot scoring-dot-ok"></span> Correct : <strong id="scoreOk">0</strong></div>
+        <div class="scoring-item"><span class="scoring-dot scoring-dot-retard"></span> Retard : <strong id="scoreRetard">0</strong></div>
+        <div class="scoring-item"><span class="scoring-dot scoring-dot-manque"></span> Manqu&eacute; : <strong id="scoreManque">0</strong></div>
+      </div>
+    </div>
+
+  </div><!-- fin pedagogy-panel -->
+
+</div><!-- fin main-layout -->
+
+<!-- Footer -->
+<div class="footer">
+  SSI Trainer v1.0 &mdash; <a href="https://frigorx.github.io/ssi-trainer/">inerWeb &Eacute;du</a> &mdash; par F. Henninot
+  &mdash; LP Priv&eacute; Jacques Raynaud &mdash; Campus &Eacute;QUATIO, Marseille
+</div>
+
+<!-- ===== MODAL AIDE / FICHE DE POSTE ===== -->
+<div class="modal-overlay" id="aideModal">
+  <div class="modal-aide">
+    <button class="close-btn" onclick="closeAide()">&times;</button>
+    <h3>Fiche de poste &mdash; Agent SSIAP 1</h3>
+    <p class="fiche-title">Proc&eacute;dure alarme feu (ECS Cat. A)</p>
+    <ol>
+      <li><strong>Acquitter</strong> l'alarme sur l'ECS (bouton bleu)</li>
+      <li><strong>Localiser</strong> la zone concern&eacute;e sur le tableau</li>
+      <li><strong>Envoyer</strong> un &eacute;quipier de ronde pour lev&eacute;e de doute</li>
+      <li><strong>Attendre</strong> le compte-rendu (&le; 3 min)</li>
+      <li><strong>Si fausse alarme</strong> : r&eacute;armer apr&egrave;s v&eacute;rification</li>
+      <li><strong>Si feu confirm&eacute;</strong> : appeler le 18/112, d&eacute;clencher &eacute;vacuation</li>
+      <li><strong>Accueillir</strong> les secours avec plans et cl&eacute;s</li>
+    </ol>
+    <p class="fiche-title">Signalisations de l'ECS</p>
+    <table>
+      <thead>
+        <tr><th>Voyant</th><th>Couleur</th><th>Signification</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Sous tension</td><td style="color:#00ff44">&#9679; Vert fixe</td><td>Alimentation OK</td></tr>
+        <tr><td>Alarme feu</td><td style="color:#e53935">&#9679; Rouge clignotant</td><td>D&eacute;tection en cours</td></tr>
+        <tr><td>D&eacute;rangement</td><td style="color:#ffcc00">&#9679; Jaune clignotant</td><td>D&eacute;faut technique</td></tr>
+        <tr><td>Hors service</td><td style="color:#ffcc00">&#9679; Jaune fixe</td><td>Zone neutralis&eacute;e</td></tr>
+        <tr><td>Essais</td><td style="color:#ffcc00">&#9679; Jaune fixe</td><td>Mode test actif</td></tr>
+      </tbody>
+    </table>
+    <p class="fiche-title">R&eacute;f&eacute;rences normatives</p>
+    <table>
+      <thead><tr><th>Norme</th><th>Objet</th></tr></thead>
+      <tbody>
+        <tr><td>NF S 61-931</td><td>SSI &mdash; Dispositions g&eacute;n&eacute;rales</td></tr>
+        <tr><td>NF S 61-961</td><td>ECS &mdash; &Eacute;quipement de contr&ocirc;le et de signalisation</td></tr>
+        <tr><td>NF S 61-932</td><td>R&egrave;gles d'installation du SDI</td></tr>
+        <tr><td>NF S 61-933</td><td>R&egrave;gles d'exploitation et de maintenance</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ===== MODAL BILAN ===== -->
+<div class="bilan-overlay" id="bilanOverlay">
+  <div class="bilan-modal" id="bilanModal">
+    <h3>Bilan du sc&eacute;nario</h3>
+    <div id="bilanContent"></div>
+    <button class="btn-close-bilan" onclick="closeBilan()">Fermer</button>
+  </div>
+</div>
+
+<!-- ===== SCRIPTS ===== -->
+<script src="js/ssi-engine.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/scenario-player.js"></script>
+
+<script>
+/* ================================================================
+   SSI Niveau 1 — Contrôleur d'interface
+   inerWeb Édu — F. Henninot
+   ================================================================ */
+
+// --- Zones de configuration ---
+const ZONES_CONFIG = [
+  { id: 'ZD01', nom: 'CUISINE RDC' },
+  { id: 'ZD02', nom: 'HALL ACCUEIL' },
+  { id: 'ZD03', nom: 'BUREAUX 1ER' },
+  { id: 'ZD04', nom: 'STOCKAGE SS' }
+];
+
+const ZONE_LABELS = {
+  ZD01: 'CUISINE',
+  ZD02: 'HALL',
+  ZD03: 'BUREAUX',
+  ZD04: 'STOCKAGE'
+};
+
+const ZONE_FULL = {
+  ZD01: 'CUISINE RDC',
+  ZD02: 'HALL ACCUEIL',
+  ZD03: 'BUREAUX 1ER',
+  ZD04: 'STOCKAGE SS'
+};
+
+// --- Initialisation moteurs ---
+const engine = new SSIEngine({ delaiVeilleRestreinte: 300000, doubleKnock: true });
+engine.initZones(ZONES_CONFIG);
+
+const audio = new SSIAudio();
+const player = new ScenarioPlayer(engine, audio);
+
+let scenarioLoaded = false;
+let scenarioRunning = false;
+let testMode = false;
+let testTimeout = null;
+
+// --- Horloge LCD ---
+function updateLCDClock() {
+  const now = new Date();
+  return now.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+}
+
+setInterval(function() {
+  if (engine.getState() === 'VEILLE_NORMALE' && !testMode) {
+    document.getElementById('lcd-line4').textContent = padLCD(updateLCDClock());
+  }
+}, 1000);
+
+// --- Utilitaire LCD 20 caractères ---
+function padLCD(text) {
+  if (!text) return '                    ';
+  const s = text.substring(0, 20);
+  return s + ' '.repeat(Math.max(0, 20 - s.length));
+}
+
+// --- Scrolling text pour lignes longues ---
+const scrollStates = {};
+function startScrollIfNeeded(lineId, text) {
+  if (scrollStates[lineId]) {
+    clearInterval(scrollStates[lineId].interval);
+    delete scrollStates[lineId];
+  }
+  if (text.length <= 20) {
+    document.getElementById(lineId).textContent = padLCD(text);
+    return;
+  }
+  const padded = text + '     ';
+  let pos = 0;
+  scrollStates[lineId] = {
+    interval: setInterval(function() {
+      const display = (padded + padded).substring(pos, pos + 20);
+      document.getElementById(lineId).textContent = display;
+      pos = (pos + 1) % padded.length;
+    }, 300)
+  };
+}
+
+function stopAllScrolls() {
+  Object.keys(scrollStates).forEach(function(k) {
+    clearInterval(scrollStates[k].interval);
+    delete scrollStates[k];
+  });
+}
+
+// --- Mise à jour LCD ---
+function updateLCD() {
+  const state = engine.getState();
+  const line1 = document.getElementById('lcd-line1');
+  const line2 = document.getElementById('lcd-line2');
+  const line3 = document.getElementById('lcd-line3');
+  const line4 = document.getElementById('lcd-line4');
+
+  stopAllScrolls();
+  line1.classList.remove('blink-text');
+
+  if (testMode) {
+    line1.textContent = padLCD('TEST SIGNALISATION');
+    line2.textContent = padLCD('TOUTES ZONES OK');
+    line3.textContent = padLCD('VOYANTS EN TEST');
+    line4.textContent = padLCD(updateLCDClock());
+    return;
+  }
+
+  switch (state) {
+    case 'VEILLE_NORMALE':
+      line1.textContent = padLCD('VEILLE NORMALE');
+      line2.textContent = padLCD('--------------------');
+      line3.textContent = padLCD('SYSTEME OPERATIONNEL');
+      line4.textContent = padLCD(updateLCDClock());
+      break;
+
+    case 'ALARME_RESTREINTE':
+    case 'ALARME_GENERALE':
+    case 'SINISTRE': {
+      line1.textContent = padLCD(state === 'ALARME_RESTREINTE' ? 'ALARME FEU' : 'ALARME GENERALE');
+      line1.classList.add('blink-text');
+      const alarmedZones = engine.getZones().filter(function(z) { return z.alarme; });
+      if (alarmedZones.length > 0) {
+        const z = alarmedZones[0];
+        startScrollIfNeeded('lcd-line2', z.id + ' - ' + ZONE_FULL[z.id]);
+        // Trouver le dernier détail d'alarme dans le journal
+        const lastAlarm = engine.getJournal().find(function(j) { return j.type === 'ALARME' && j.zone === z.id; });
+        const detailText = lastAlarm && lastAlarm.detail ? lastAlarm.detail : 'DETECTEUR';
+        startScrollIfNeeded('lcd-line3', detailText.toUpperCase());
+      } else {
+        line2.textContent = padLCD('ZONE INCONNUE');
+        line3.textContent = padLCD('DETECTEUR');
+      }
+      const suffix = engine.acquitte ? 'ACQUITTE' : 'ACQUITTER?';
+      line4.textContent = padLCD(updateLCDClock() + ' ' + suffix);
+      break;
+    }
+
+    case 'EVACUATION':
+      line1.textContent = padLCD('!! EVACUATION !!');
+      line1.classList.add('blink-text');
+      line2.textContent = padLCD('TOUTES ZONES');
+      line3.textContent = padLCD('QUITTER BATIMENT');
+      line4.textContent = padLCD(updateLCDClock() + ' URGENCE');
+      break;
+  }
+}
+
+// --- Mise à jour voyants généraux ---
+function updateGeneralLEDs() {
+  const state = engine.getState();
+  const zones = engine.getZones();
+  const hasDerangement = zones.some(function(z) { return z.derangement; });
+  const hasHS = zones.some(function(z) { return z.horsService; });
+
+  const ledAlarm = document.getElementById('led-alarmeFeu');
+  const ledDerang = document.getElementById('led-derangement');
+  const ledHS = document.getElementById('led-horsService');
+  const ledEssais = document.getElementById('led-essais');
+
+  // Reset
+  ledAlarm.className = 'led led-red';
+  ledDerang.className = 'led led-yellow';
+  ledHS.className = 'led led-yellow';
+  ledEssais.className = 'led led-yellow';
+
+  if (testMode) {
+    ledAlarm.className = 'led led-red on';
+    ledDerang.className = 'led led-yellow on';
+    ledHS.className = 'led led-yellow on';
+    ledEssais.className = 'led led-yellow on';
+    return;
+  }
+
+  if (state !== 'VEILLE_NORMALE') {
+    ledAlarm.className = 'led led-red blink';
+  }
+  if (hasDerangement) {
+    ledDerang.className = 'led led-yellow blink';
+  }
+  if (hasHS) {
+    ledHS.className = 'led led-yellow on';
+  }
+}
+
+// --- Mise à jour voyants zones ---
+function updateZoneLEDs() {
+  ZONES_CONFIG.forEach(function(zc) {
+    const z = engine.getZone(zc.id);
+    const ledA = document.getElementById('zled-' + zc.id + '-alarme');
+    const ledD = document.getElementById('zled-' + zc.id + '-derang');
+    const ledH = document.getElementById('zled-' + zc.id + '-hs');
+
+    ledA.className = 'led led-red';
+    ledD.className = 'led led-yellow';
+    ledH.className = 'led led-yellow';
+
+    if (testMode) {
+      ledA.className = 'led led-red on';
+      ledD.className = 'led led-yellow on';
+      ledH.className = 'led led-yellow on';
+      return;
+    }
+
+    if (z.alarme) {
+      ledA.className = z.acquittee ? 'led led-red on' : 'led led-red blink';
+    }
+    if (z.derangement) {
+      ledD.className = 'led led-yellow blink';
+    }
+    if (z.horsService) {
+      ledH.className = 'led led-yellow on';
+    }
+  });
+}
+
+// --- Conduite à tenir ---
+function updateConduite() {
+  const state = engine.getState();
+  const dot = document.getElementById('conduiteDot');
+  const content = document.getElementById('conduiteContent');
+
+  switch (state) {
+    case 'VEILLE_NORMALE':
+      dot.className = 'dot dot-green';
+      content.innerHTML = 'Surveillance normale. Le syst\u00e8me est en veille. Aucune action requise.';
+      break;
+
+    case 'ALARME_RESTREINTE':
+      dot.className = 'dot dot-orange';
+      content.innerHTML =
+        '<ol>' +
+        '<li' + (engine.acquitte ? ' class="step-done"' : '') + '><strong>Acquitter</strong> l\u2019alarme sur l\u2019ECS</li>' +
+        '<li><strong>Localiser</strong> la zone sur le tableau</li>' +
+        '<li><strong>Envoyer</strong> un \u00e9quipier de ronde pour lev\u00e9e de doute</li>' +
+        '<li><strong>Attendre</strong> le compte-rendu (\u2264 3 min)</li>' +
+        '<li>Si fausse alarme \u2192 <strong>R\u00e9armer</strong></li>' +
+        '<li>Si feu confirm\u00e9 \u2192 <strong>Appeler 18/112</strong> et <strong>\u00c9vacuer</strong></li>' +
+        '</ol>';
+      break;
+
+    case 'ALARME_GENERALE':
+    case 'SINISTRE':
+      dot.className = 'dot dot-red';
+      content.innerHTML =
+        '<ol>' +
+        '<li><strong>Confirmer</strong> l\u2019alarme g\u00e9n\u00e9rale</li>' +
+        '<li><strong>Appeler le 18/112</strong> imm\u00e9diatement</li>' +
+        '<li><strong>D\u00e9clencher</strong> l\u2019\u00e9vacuation g\u00e9n\u00e9rale</li>' +
+        '<li><strong>Guider</strong> le public vers les issues de secours</li>' +
+        '<li><strong>V\u00e9rifier</strong> la vacuit\u00e9 des locaux</li>' +
+        '<li><strong>Accueillir</strong> les secours avec plans et cl\u00e9s</li>' +
+        '</ol>';
+      break;
+
+    case 'EVACUATION':
+      dot.className = 'dot dot-red';
+      content.innerHTML =
+        '<ol>' +
+        '<li class="step-done"><strong>\u00c9vacuation</strong> d\u00e9clench\u00e9e</li>' +
+        '<li><strong>V\u00e9rifier</strong> que le signal sonore est audible</li>' +
+        '<li><strong>Guider</strong> le public vers le point de rassemblement</li>' +
+        '<li><strong>V\u00e9rifier</strong> la vacuit\u00e9 de chaque local (porte-\u00e0-porte)</li>' +
+        '<li><strong>Effectuer</strong> le pointage au point de rassemblement</li>' +
+        '<li><strong>Attendre</strong> les secours \u2014 NE PAS r\u00e9int\u00e9grer</li>' +
+        '</ol>';
+      break;
+  }
+}
+
+// --- Scoring temps réel ---
+function updateScoring() {
+  const scoring = player.getScoring();
+  let ok = 0, retard = 0, manque = 0;
+  scoring.forEach(function(s) {
+    if (s.resultat === 'OK') ok++;
+    else if (s.resultat === 'RETARD') retard++;
+    else if (s.resultat === 'MANQUE') manque++;
+  });
+  document.getElementById('scoreOk').textContent = ok;
+  document.getElementById('scoreRetard').textContent = retard;
+  document.getElementById('scoreManque').textContent = manque;
+
+  const total = player.getScoreTotal();
+  const fill = document.getElementById('scoringFill');
+  const pct = total.pct;
+  fill.style.width = Math.max(pct, 5) + '%';
+  fill.textContent = pct + '%';
+  fill.className = 'scoring-fill ' + (pct >= 70 ? 'good' : pct >= 40 ? 'medium' : 'bad');
+}
+
+// --- Journal UI ---
+function addJournalEntry(entry) {
+  const list = document.getElementById('journalList');
+  const div = document.createElement('div');
+  let cls = 'journal-entry';
+  const typeLower = (entry.type || '').toLowerCase();
+  if (typeLower.includes('alarme')) cls += ' alarme';
+  else if (typeLower.includes('acquit')) cls += ' acquittement';
+  else if (typeLower.includes('info')) cls += ' info';
+  else if (typeLower.includes('transition')) cls += ' transition';
+  else if (typeLower.includes('derang')) cls += ' derangement';
+  else if (typeLower.includes('evacuation')) cls += ' evacuation';
+  else if (typeLower.includes('rearm')) cls += ' rearmement';
+  div.className = cls;
+
+  const zoneText = entry.zone ? (' ' + entry.zone + ' \u2014 ' + (ZONE_FULL[entry.zone] || '')) : '';
+  div.innerHTML = '<span class="time">' + entry.time + '</span> \u2014 ' + entry.message + zoneText;
+
+  // Insérer en haut
+  if (list.firstChild) {
+    list.insertBefore(div, list.firstChild);
+  } else {
+    list.appendChild(div);
+  }
+
+  // Limiter à 100 entrées
+  while (list.children.length > 100) {
+    list.removeChild(list.lastChild);
+  }
+}
+
+// --- Rafraîchir tout ---
+function refreshUI() {
+  updateLCD();
+  updateGeneralLEDs();
+  updateZoneLEDs();
+  updateConduite();
+  updateScoring();
+}
+
+// --- Écoute événements moteur ---
+engine.onEvent(function(event, data) {
+  if (event === 'journal') {
+    addJournalEntry(data);
+  }
+  if (event === 'son') {
+    audio.resume();
+    switch (data.type) {
+      case 'alarme':
+        audio.alarmeRestreinte();
+        break;
+      case 'evacuation':
+        audio.stop('alarme');
+        audio.evacuation();
+        break;
+      case 'derangement':
+        audio.derangement();
+        break;
+      case 'stop':
+        audio.stopAll();
+        break;
+    }
+  }
+  refreshUI();
+});
+
+// --- Actions opérateur ---
+function actionAcquittement() {
+  audio.resume();
+  audio.click();
+  engine.acquitter();
+}
+
+function actionRearmement() {
+  audio.resume();
+  audio.click();
+  engine.rearmement();
+}
+
+function actionTest() {
+  audio.resume();
+  audio.click();
+  if (engine.getState() !== 'VEILLE_NORMALE') return;
+  testMode = true;
+  engine.testSignalisation();
+  refreshUI();
+  if (testTimeout) clearTimeout(testTimeout);
+  testTimeout = setTimeout(function() {
+    testMode = false;
+    refreshUI();
+  }, 5000);
+}
+
+function actionArretSon() {
+  audio.resume();
+  audio.click();
+  engine.arreterSignalSonore();
+}
+
+function actionEvacuation() {
+  audio.resume();
+  audio.click();
+  engine.evacuationGenerale();
+}
+
+function actionAcquitZone(zoneId) {
+  audio.resume();
+  audio.click();
+  engine.acquitterZone(zoneId);
+  refreshUI();
+}
+
+// --- Scénarios ---
+function demarrerScenario() {
+  const sel = document.getElementById('scenarioSelect').value;
+  if (!sel) {
+    alert('Veuillez s\u00e9lectionner un sc\u00e9nario.');
+    return;
+  }
+  audio.resume();
+
+  // Charger le JSON
+  fetch('scenarios/' + sel + '.json')
+    .then(function(r) { return r.json(); })
+    .then(function(scenario) {
+      player.charger(scenario);
+
+      // Vider le journal
+      document.getElementById('journalList').innerHTML = '';
+
+      // Badge
+      document.getElementById('scenarioBadge').textContent = scenario.titre;
+      document.getElementById('scenarioBadge').classList.add('active');
+
+      // Afficher boutons
+      document.getElementById('btnDemarrer').style.display = 'none';
+      document.getElementById('btnPause').style.display = 'inline-block';
+      document.getElementById('btnStop').style.display = 'inline-block';
+
+      scenarioRunning = true;
+      scenarioLoaded = true;
+
+      // Callbacks
+      player.onTick = function(elapsed) {
+        const m = String(Math.floor(elapsed / 60)).padStart(2, '0');
+        const s = String(elapsed % 60).padStart(2, '0');
+        document.getElementById('chronoDisplay').textContent = m + ':' + s;
+      };
+
+      player.onScore = function(score) {
+        updateScoring();
+        if (score.fin) {
+          finScenario();
+        }
+      };
+
+      player.onEvent = function(evt) {
+        // Les événements sont joués automatiquement par le player
+      };
+
+      player.demarrer();
+      refreshUI();
+    })
+    .catch(function(err) {
+      alert('Erreur de chargement du sc\u00e9nario : ' + err.message);
+    });
+}
+
+function pauseScenario() {
+  if (!scenarioRunning) return;
+  if (player.paused) {
+    player.reprendre();
+    document.getElementById('btnPause').innerHTML = '&#10074;&#10074; Pause';
+  } else {
+    player.pause();
+    document.getElementById('btnPause').innerHTML = '&#9654; Reprendre';
+  }
+}
+
+function stopScenario() {
+  player.stop();
+  audio.stopAll();
+  scenarioRunning = false;
+  document.getElementById('btnDemarrer').style.display = 'inline-block';
+  document.getElementById('btnPause').style.display = 'none';
+  document.getElementById('btnStop').style.display = 'none';
+  document.getElementById('scenarioBadge').textContent = 'Termin\u00e9';
+  document.getElementById('scenarioBadge').classList.remove('active');
+  finScenario();
+}
+
+function finScenario() {
+  scenarioRunning = false;
+  document.getElementById('btnDemarrer').style.display = 'inline-block';
+  document.getElementById('btnPause').style.display = 'none';
+  document.getElementById('btnStop').style.display = 'none';
+
+  const bilan = player.getBilan();
+  showBilan(bilan);
+}
+
+// --- Bilan modal ---
+function showBilan(bilan) {
+  const pct = bilan.score.pct;
+  const cls = pct >= 70 ? 'good' : pct >= 40 ? 'medium' : 'bad';
+
+  let html = '<div class="score-big ' + cls + '">' + pct + '% (' + bilan.score.points + '/' + bilan.score.max + ')</div>';
+  html += '<p style="text-align:center;color:#666;font-size:0.9em">Dur\u00e9e : ' + bilan.duree + ' s &mdash; Sc\u00e9nario : ' + bilan.scenario + '</p>';
+
+  if (bilan.details.length > 0) {
+    html += '<table><thead><tr><th>Action</th><th>R\u00e9sultat</th><th>Temps</th><th>Points</th></tr></thead><tbody>';
+    bilan.details.forEach(function(d) {
+      const color = d.resultat === 'OK' ? '#4caf50' : d.resultat === 'RETARD' ? '#ff9800' : '#e53935';
+      html += '<tr>';
+      html += '<td>' + d.action + '</td>';
+      html += '<td style="color:' + color + ';font-weight:bold">' + d.resultat + '</td>';
+      html += '<td>' + d.realise + '</td>';
+      html += '<td>' + d.points + '/' + d.max + '</td>';
+      html += '</tr>';
+    });
+    html += '</tbody></table>';
+  }
+
+  document.getElementById('bilanContent').innerHTML = html;
+  document.getElementById('bilanOverlay').classList.add('active');
+}
+
+function closeBilan() {
+  document.getElementById('bilanOverlay').classList.remove('active');
+}
+
+// --- Aide modal ---
+function showAide() {
+  document.getElementById('aideModal').classList.add('active');
+}
+function closeAide() {
+  document.getElementById('aideModal').classList.remove('active');
+}
+
+// Fermer modals au clic sur overlay
+document.getElementById('aideModal').addEventListener('click', function(e) {
+  if (e.target === this) closeAide();
+});
+document.getElementById('bilanOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeBilan();
+});
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeAide();
+    closeBilan();
+  }
+});
+
+// --- BroadcastChannel réception formateur ---
+(function() {
+  try {
+    var channel = new BroadcastChannel('ssi-trainer');
+    channel.onmessage = function(e) {
+      var msg = e.data;
+      if (msg && msg.source === 'formateur') {
+        // Les commandes sont déjà gérées par l'engine via son propre channel
+        // Ici on gère des commandes UI supplémentaires
+        if (msg.command === 'load_scenario' && msg.scenarioId) {
+          document.getElementById('scenarioSelect').value = msg.scenarioId;
+          demarrerScenario();
+        }
+        if (msg.command === 'pause') {
+          if (scenarioRunning && !player.paused) pauseScenario();
+        }
+        if (msg.command === 'resume') {
+          if (scenarioRunning && player.paused) pauseScenario();
+        }
+        if (msg.command === 'stop') {
+          if (scenarioRunning) stopScenario();
+        }
+      }
+    };
+  } catch (err) {
+    // BroadcastChannel non supporté — pas de communication formateur
+  }
+})();
+
+// --- Init ---
+refreshUI();
+</script>
+</body>
+</html>

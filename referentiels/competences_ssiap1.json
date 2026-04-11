@@ -1,0 +1,114 @@
+{
+  "referentiel": "SSIAP 1",
+  "reference_reglementaire": "Arrêté du 2 mai 2005 modifié — relatif aux missions, à l'emploi et à la qualification du personnel permanent des services de sécurité incendie des ERP et IGH",
+  "competences": [
+    {
+      "id": "C1",
+      "libelle": "Prévention des incendies",
+      "description": "Connaître les principes de la prévention incendie, les causes et effets des incendies, le comportement au feu des matériaux et éléments de construction.",
+      "criteres": [
+        "Identifier les risques d'incendie propres à l'établissement",
+        "Connaître les principes de classement des matériaux (M0-M4, Euroclasses)",
+        "Vérifier la vacuité des dégagements et circulations",
+        "Contrôler l'état des moyens de secours"
+      ],
+      "bareme": { "max": 20, "seuil": 12 },
+      "ref_arrete": "Annexe I — 1re partie — Chapitre 1"
+    },
+    {
+      "id": "C2",
+      "libelle": "Exploitation du SSI — Détection et alerte",
+      "description": "Savoir exploiter un système de sécurité incendie : reconnaître les signaux, acquitter les alarmes, interpréter les informations de l'ECS/CMSI.",
+      "criteres": [
+        "Identifier les différents types de détecteurs (optique, thermique, ionique, linéaire)",
+        "Reconnaître les signalisations visuelles et sonores de l'ECS",
+        "Acquitter une alarme feu dans le délai réglementaire",
+        "Interpréter les messages du tableau de signalisation",
+        "Distinguer alarme restreinte et alarme générale"
+      ],
+      "bareme": { "max": 30, "seuil": 18 },
+      "ref_arrete": "Annexe I — 1re partie — Chapitre 2"
+    },
+    {
+      "id": "C3",
+      "libelle": "Alerte des secours — Transmission de l'alerte",
+      "description": "Savoir transmettre l'alerte aux services de secours (18/112) avec les informations essentielles.",
+      "criteres": [
+        "Appeler le 18 ou 112 avec message structuré",
+        "Communiquer : nature du sinistre, localisation précise, nombre de victimes éventuelles",
+        "Confirmer l'adresse et les accès de l'établissement",
+        "Rester en ligne jusqu'à instruction du CODIS"
+      ],
+      "bareme": { "max": 25, "seuil": 15 },
+      "ref_arrete": "Annexe I — 1re partie — Chapitre 3"
+    },
+    {
+      "id": "C4",
+      "libelle": "Évacuation du public",
+      "description": "Organiser et conduire l'évacuation du public en toute sécurité selon les procédures de l'établissement.",
+      "criteres": [
+        "Déclencher l'évacuation générale au moment approprié",
+        "Guider le public vers les issues de secours",
+        "Vérifier la vacuité des locaux (technique du porte-à-porte)",
+        "Gérer les personnes à mobilité réduite (PMR)",
+        "Effectuer le pointage à la zone de rassemblement"
+      ],
+      "bareme": { "max": 30, "seuil": 18 },
+      "ref_arrete": "Annexe I — 1re partie — Chapitre 4"
+    },
+    {
+      "id": "C5",
+      "libelle": "Premiers secours — Assistance à personnes",
+      "description": "Porter les premiers secours aux victimes en attendant l'arrivée des secours spécialisés.",
+      "criteres": [
+        "Effectuer un dégagement d'urgence si nécessaire",
+        "Réaliser un bilan vital (conscience, respiration, circulation)",
+        "Mettre en PLS une victime inconsciente qui respire",
+        "Alerter ou faire alerter les secours médicaux",
+        "Surveiller la victime jusqu'à l'arrivée des secours"
+      ],
+      "bareme": { "max": 20, "seuil": 12 },
+      "ref_arrete": "Annexe I — 1re partie — Chapitre 5"
+    },
+    {
+      "id": "C6",
+      "libelle": "Compartimentage",
+      "description": "Assurer le compartimentage de la zone sinistrée : fermeture des portes coupe-feu, vérification des clapets.",
+      "criteres": [
+        "Vérifier la fermeture effective des portes coupe-feu (PCF)",
+        "Commander manuellement les DAS de compartimentage si nécessaire",
+        "Identifier et signaler les PCF défaillantes",
+        "Comprendre le rôle des clapets coupe-feu dans les gaines"
+      ],
+      "bareme": { "max": 20, "seuil": 12 },
+      "ref_arrete": "Annexe I — 1re partie — Chapitre 6"
+    },
+    {
+      "id": "C7",
+      "libelle": "Désenfumage",
+      "description": "Mettre en œuvre les dispositifs de désenfumage : exutoires, ouvrants, ventilateurs.",
+      "criteres": [
+        "Identifier les zones à désenfumer",
+        "Commander les exutoires ou ouvrants de désenfumage",
+        "Vérifier le fonctionnement des dispositifs commandés",
+        "Signaler tout dysfonctionnement du désenfumage"
+      ],
+      "bareme": { "max": 20, "seuil": 12 },
+      "ref_arrete": "Annexe I — 1re partie — Chapitre 7"
+    },
+    {
+      "id": "C8",
+      "libelle": "Accueil et guidage des secours extérieurs",
+      "description": "Accueillir les services de secours, leur fournir les informations et documents nécessaires, les guider vers le sinistre.",
+      "criteres": [
+        "Se positionner au point d'accueil convenu",
+        "Fournir les plans de l'établissement et les clés",
+        "Faire un point de situation clair et complet",
+        "Guider les secours jusqu'à la zone sinistrée",
+        "Mettre à disposition l'historique des événements SSI"
+      ],
+      "bareme": { "max": 25, "seuil": 15 },
+      "ref_arrete": "Annexe I — 1re partie — Chapitre 8"
+    }
+  ]
+}

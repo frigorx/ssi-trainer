@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SSI Trainer — Tableau de bord formateur — inerWeb Édu</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Calibri,sans-serif;font-size:14pt;line-height:1.5;background:#f2f5fb;color:#1b3a63;text-align:left}
+
+/* ── HEADER ── */
+.header{background:#1b3a63;color:#fff;padding:18px 30px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.header .logo{font-family:'Trebuchet MS',sans-serif;font-size:1.6em;font-weight:bold;display:flex;align-items:center;gap:8px}
+.header .logo .snowflake{font-size:1.3em}
+.header .badge{background:#ff6b35;color:#fff;padding:2px 10px;border-radius:4px;font-size:0.6em;margin-left:4px;vertical-align:middle}
+.header .author{font-size:0.55em;opacity:0.8;margin-left:10px}
+.header .title-ssi{margin-left:auto;font-family:'Trebuchet MS',sans-serif;font-size:1.1em;letter-spacing:1px;text-align:right}
+
+/* ── LAYOUT ── */
+.container{max-width:1400px;margin:0 auto;padding:20px}
+.grid-main{display:grid;grid-template-columns:420px 1fr;gap:24px;align-items:start}
+@media(max-width:1000px){.grid-main{grid-template-columns:1fr}}
+
+/* ── INJECTION PANEL ── */
+.panel{background:#1b3a63;color:#fff;border-radius:12px;padding:24px;box-shadow:0 4px 16px rgba(27,58,99,0.25)}
+.panel h2{font-family:'Trebuchet MS',sans-serif;font-size:1.15em;margin-bottom:16px;border-bottom:2px solid rgba(255,255,255,0.2);padding-bottom:8px}
+.panel h3{font-family:'Trebuchet MS',sans-serif;font-size:0.95em;margin:14px 0 8px;color:#ff6b35}
+.panel label{display:block;font-size:0.85em;margin-bottom:4px;opacity:0.85}
+.panel select,.panel input[type="text"]{width:100%;padding:7px 10px;border:none;border-radius:5px;font-family:Calibri,sans-serif;font-size:0.9em;margin-bottom:8px;color:#1b3a63}
+.panel select{cursor:pointer}
+.row-flex{display:flex;gap:8px;align-items:end;flex-wrap:wrap}
+.row-flex>*{flex:1;min-width:0}
+.row-flex .btn{flex:0 0 auto}
+.btn{display:inline-block;padding:8px 16px;border:none;border-radius:6px;font-family:Calibri,sans-serif;font-size:0.85em;font-weight:bold;cursor:pointer;transition:background 0.2s,transform 0.1s;text-align:center;white-space:nowrap}
+.btn:active{transform:scale(0.96)}
+.btn-orange{background:#ff6b35;color:#fff}
+.btn-orange:hover{background:#e55a28}
+.btn-red{background:#e53935;color:#fff}
+.btn-red:hover{background:#c62828}
+.btn-yellow{background:#ffc107;color:#1b3a63}
+.btn-yellow:hover{background:#ffb300}
+.btn-green{background:#43a047;color:#fff}
+.btn-green:hover{background:#388e3c}
+.btn-blue{background:#2196f3;color:#fff}
+.btn-blue:hover{background:#1976d2}
+.btn-white{background:#fff;color:#1b3a63}
+.btn-white:hover{background:#e8ecf2}
+.btn-block{display:block;width:100%;margin-bottom:6px}
+.btn-sm{padding:6px 12px;font-size:0.8em}
+.btn-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+.btn-row .btn{flex:1;min-width:100px}
+.separator{border:none;border-top:1px solid rgba(255,255,255,0.15);margin:14px 0}
+
+/* ── CHRONO ── */
+.chrono-wrap{text-align:center;margin:12px 0 16px}
+.chrono{font-family:'Trebuchet MS',sans-serif;font-size:2.8em;font-weight:bold;letter-spacing:2px;color:#fff}
+.chrono-label{font-size:0.75em;opacity:0.7;margin-top:2px}
+
+/* ── CONTROLS BAR ── */
+.controls-bar{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:14px}
+
+/* ── SCORING TABLE ── */
+.scoring-section{background:#fff;border-radius:12px;padding:24px;box-shadow:0 2px 12px rgba(27,58,99,0.1)}
+.scoring-section h2{font-family:'Trebuchet MS',sans-serif;color:#1b3a63;font-size:1.15em;margin-bottom:14px}
+.table-wrap{overflow-x:auto;margin-bottom:20px}
+table{width:100%;border-collapse:collapse;font-size:0.9em}
+thead th{background:#1b3a63;color:#fff;padding:10px 12px;text-align:left;font-family:'Trebuchet MS',sans-serif;font-weight:bold;font-size:0.85em;white-space:nowrap}
+tbody td{padding:9px 12px;border-bottom:1px solid #e8ecf2;vertical-align:top}
+tbody tr.correct{background:#e8f5e9}
+tbody tr.wrong{background:#ffebee}
+tbody tr.late{background:#fff3e0}
+tbody tr:hover{filter:brightness(0.97)}
+.empty-msg{text-align:center;color:#999;padding:30px;font-size:0.95em}
+
+/* ── BILAN ── */
+.bilan-section{background:#fff;border-radius:12px;padding:24px;box-shadow:0 2px 12px rgba(27,58,99,0.1);margin-top:24px}
+.bilan-section h2{font-family:'Trebuchet MS',sans-serif;color:#1b3a63;font-size:1.15em;margin-bottom:14px}
+.score-big{text-align:center;font-family:'Trebuchet MS',sans-serif;font-size:2.4em;font-weight:bold;color:#1b3a63;margin:10px 0}
+.score-big .pct{font-size:0.5em;color:#ff6b35;margin-left:8px}
+.competence-bars{margin:20px 0}
+.comp-bar-row{display:flex;align-items:center;margin-bottom:10px;gap:12px}
+.comp-bar-label{width:200px;font-size:0.85em;flex-shrink:0;text-align:right}
+.comp-bar-track{flex:1;height:22px;background:#e8ecf2;border-radius:11px;overflow:hidden;position:relative}
+.comp-bar-fill{height:100%;border-radius:11px;transition:width 0.5s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-size:0.75em;font-weight:bold;color:#fff;min-width:30px}
+.comp-bar-fill.high{background:#43a047}
+.comp-bar-fill.mid{background:#ff9800}
+.comp-bar-fill.low{background:#e53935}
+.timeline-section{margin-top:20px}
+.timeline-section h3{font-family:'Trebuchet MS',sans-serif;font-size:0.95em;color:#1b3a63;margin-bottom:10px}
+.timeline{position:relative;padding-left:24px;border-left:3px solid #e8ecf2}
+.timeline-item{position:relative;margin-bottom:12px;padding:6px 0 6px 16px}
+.timeline-item::before{content:'';position:absolute;left:-30px;top:10px;width:14px;height:14px;border-radius:50%;border:3px solid #1b3a63;background:#fff}
+.timeline-item.ok::before{background:#43a047;border-color:#43a047}
+.timeline-item.ko::before{background:#e53935;border-color:#e53935}
+.timeline-item.retard::before{background:#ff9800;border-color:#ff9800}
+.timeline-item .tl-time{font-weight:bold;font-size:0.85em;color:#1b3a63}
+.timeline-item .tl-desc{font-size:0.85em;color:#444}
+.timeline-item .tl-expected{font-size:0.8em;color:#888;font-style:italic}
+
+/* ── EXPORT BAR ── */
+.export-bar{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;justify-content:center}
+
+/* ── MODAL ── */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center}
+.modal-overlay.active{display:flex}
+.modal{background:#fff;border-radius:12px;padding:30px;max-width:480px;width:90%;box-shadow:0 8px 40px rgba(0,0,0,0.25)}
+.modal h2{font-family:'Trebuchet MS',sans-serif;color:#1b3a63;margin-bottom:16px;font-size:1.1em}
+.modal label{display:block;font-size:0.9em;margin-bottom:4px;color:#1b3a63}
+.modal input[type="text"]{width:100%;padding:9px 12px;border:2px solid #e8ecf2;border-radius:6px;font-size:0.95em;margin-bottom:14px;font-family:Calibri,sans-serif}
+.modal .btn-row{display:flex;gap:10px;justify-content:flex-end;margin-top:8px}
+
+/* ── PRINT ── */
+@media print{
+  body{background:#fff;font-size:11pt;line-height:1.3}
+  .header{background:#1b3a63 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .panel,.controls-bar,.export-bar,.modal-overlay{display:none !important}
+  .grid-main{grid-template-columns:1fr}
+  .scoring-section,.bilan-section{box-shadow:none;border:1px solid #ccc;page-break-inside:avoid}
+  thead th{background:#1b3a63 !important;color:#fff !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  tbody tr.correct{background:#e8f5e9 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  tbody tr.wrong{background:#ffebee !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  tbody tr.late{background:#fff3e0 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .comp-bar-fill{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .timeline-item::before{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+.footer{text-align:center;padding:20px;color:#888;font-size:0.85em;border-top:1px solid #e0e4ea;margin-top:30px}
+.footer a{color:#ff6b35;text-decoration:none}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ HEADER ═══════════════════ -->
+<div class="header">
+  <div class="logo">
+    <span class="snowflake">&#10052;</span>
+    inerWeb<span class="badge">Édu</span>
+    <span class="author">par F. Henninot</span>
+  </div>
+  <div class="title-ssi">SSI TRAINER &mdash; Tableau de bord formateur</div>
+</div>
+
+<!-- ═══════════════════ MAIN GRID ═══════════════════ -->
+<div class="container">
+<div class="grid-main">
+
+<!-- ─── LEFT: INJECTION PANEL ─── -->
+<div class="panel" id="injectionPanel">
+  <h2>&#9881; Panneau d'injection</h2>
+
+  <!-- Scenario & Level -->
+  <label for="selScenario">Scénario</label>
+  <div class="row-flex">
+    <select id="selScenario">
+      <option value="">— Choisir un scénario —</option>
+    </select>
+    <button class="btn btn-orange" onclick="chargerScenario()">CHARGER</button>
+  </div>
+
+  <label for="selNiveau">Niveau</label>
+  <select id="selNiveau">
+    <option value="1">Niveau 1 — Initiation</option>
+    <option value="2">Niveau 2 — Intermédiaire</option>
+    <option value="3">Niveau 3 — Expert</option>
+  </select>
+
+  <!-- Chronometer -->
+  <div class="chrono-wrap">
+    <div class="chrono" id="chrono">00:00</div>
+    <div class="chrono-label">Chronomètre de session</div>
+  </div>
+
+  <hr class="separator">
+
+  <!-- DÉTECTION -->
+  <h3>&#128293; DÉTECTION</h3>
+  <label for="selZoneDetection">Zone</label>
+  <div class="row-flex">
+    <select id="selZoneDetection"></select>
+    <button class="btn btn-red" onclick="injectAlarme()">INJECT ALARME</button>
+  </div>
+  <button class="btn btn-yellow btn-block" onclick="injectDmManuel()">&#128680; DM MANUEL</button>
+
+  <hr class="separator">
+
+  <!-- DÉFAILLANCES -->
+  <h3>&#9888; DÉFAILLANCES</h3>
+  <label for="selDas">DAS / Équipement</label>
+  <select id="selDas"></select>
+  <div class="btn-row">
+    <button class="btn btn-red btn-sm" onclick="injectDefaillance('derangement_detecteur')">Dérangement détecteur</button>
+    <button class="btn btn-red btn-sm" onclick="injectDefaillance('court_circuit_ligne')">Court-circuit ligne</button>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-red btn-sm" onclick="injectDefaillance('defaillance_pcf')">Défaillance PCF</button>
+    <button class="btn btn-red btn-sm" onclick="injectDefaillance('defaillance_desenfumage')">Défaillance désenfumage</button>
+  </div>
+
+  <hr class="separator">
+
+  <!-- PROPAGATION -->
+  <h3>&#128293; PROPAGATION</h3>
+  <div class="row-flex">
+    <div>
+      <label for="selZoneFrom">De la zone</label>
+      <select id="selZoneFrom"></select>
+    </div>
+    <div>
+      <label for="selZoneTo">Vers la zone</label>
+      <select id="selZoneTo"></select>
+    </div>
+    <button class="btn btn-orange" onclick="injectPropagation()">PROPAGER</button>
+  </div>
+  <button class="btn btn-yellow btn-block" onclick="injectZoneFumee()" style="margin-top:6px">&#127787; Zone fumée</button>
+
+  <hr class="separator">
+
+  <!-- PERSONNES -->
+  <h3>&#129485; PERSONNES</h3>
+  <label for="selZonePersonne">Zone concernée</label>
+  <select id="selZonePersonne"></select>
+  <div class="btn-row">
+    <button class="btn btn-red btn-sm" onclick="injectPersonne('personne_bloquee')">Personne bloquée</button>
+    <button class="btn btn-red btn-sm" onclick="injectPersonne('blesse_signale')">Blessé signalé</button>
+    <button class="btn btn-yellow btn-sm" onclick="injectPersonne('panique_secteur')">Panique secteur</button>
+  </div>
+
+  <hr class="separator">
+
+  <!-- SYSTÈME -->
+  <h3>&#128268; SYSTÈME</h3>
+  <div class="btn-row">
+    <button class="btn btn-red btn-sm" onclick="injectSysteme('coupure_reseau')">Coupure réseau</button>
+    <button class="btn btn-green btn-sm" onclick="injectSysteme('retour_reseau')">Retour réseau</button>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-yellow btn-sm" onclick="injectSysteme('batterie_faible')">Batterie faible</button>
+    <button class="btn btn-red btn-sm" onclick="injectSysteme('defaut_bus_rs485')">Défaut bus RS485</button>
+  </div>
+
+  <hr class="separator">
+
+  <!-- CONTROLS -->
+  <div class="controls-bar">
+    <button class="btn btn-yellow" id="btnPause" onclick="togglePause()">&#9199; PAUSE</button>
+    <button class="btn btn-green" id="btnResume" onclick="togglePause()" style="display:none">&#9654; REPRENDRE</button>
+    <button class="btn btn-white" onclick="resetSession()">&#8634; RESET</button>
+    <button class="btn btn-blue" id="btnCorrection" onclick="toggleCorrection()">&#128065; CORRECTION</button>
+  </div>
+</div>
+
+<!-- ─── RIGHT: SCORING + BILAN ─── -->
+<div>
+
+  <!-- SCORING TABLE -->
+  <div class="scoring-section">
+    <h2>&#128202; Suivi des actions</h2>
+    <div class="table-wrap">
+      <table id="scoringTable">
+        <thead>
+          <tr>
+            <th>Temps</th>
+            <th>Action élève</th>
+            <th>Compétence</th>
+            <th>Attendu</th>
+            <th>Résultat</th>
+            <th>Points</th>
+          </tr>
+        </thead>
+        <tbody id="scoringBody">
+          <tr><td colspan="6" class="empty-msg">En attente du démarrage de la session...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- BILAN -->
+  <div class="bilan-section" id="bilanSection">
+    <h2>&#127942; Bilan de session</h2>
+
+    <div class="score-big">
+      <span id="scoreTotal">0</span> / <span id="scoreMax">0</span>
+      <span class="pct" id="scorePct">(0%)</span>
+    </div>
+
+    <h3 style="font-family:'Trebuchet MS',sans-serif;font-size:0.95em;color:#1b3a63;margin:16px 0 10px">Compétences évaluées</h3>
+    <div class="competence-bars" id="competenceBars">
+      <p class="empty-msg">Aucune donnée pour le moment.</p>
+    </div>
+
+    <div class="timeline-section">
+      <h3>Chronologie actions / attendus</h3>
+      <div class="timeline" id="timeline">
+        <p class="empty-msg">Aucune action enregistrée.</p>
+      </div>
+    </div>
+
+    <!-- EXPORT -->
+    <div class="export-bar">
+      <button class="btn btn-green" onclick="exportGoogleSheets()">&#128196; Exporter Google Sheets</button>
+      <button class="btn btn-blue" onclick="telechargerPDF()">&#128196; Télécharger bilan PDF</button>
+      <button class="btn btn-orange" onclick="copierCSV()">&#128196; Copier CSV</button>
+      <button class="btn btn-white btn-sm" onclick="openSettings()" style="border:1px solid #ccc">&#9881; Paramètres</button>
+    </div>
+  </div>
+
+</div>
+</div><!-- /grid-main -->
+</div><!-- /container -->
+
+<div class="footer">
+  SSI Trainer &mdash; inerWeb Édu &mdash; par F. Henninot &mdash;
+  <a href="index.html">Retour accueil</a>
+</div>
+
+<!-- ═══════════════════ SETTINGS MODAL ═══════════════════ -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal">
+    <h2>&#9881; Paramètres d'export</h2>
+    <label for="inputWebhook">URL Webhook Google Sheets</label>
+    <input type="text" id="inputWebhook" placeholder="https://script.google.com/macros/s/...">
+    <div class="btn-row">
+      <button class="btn btn-white" onclick="closeSettings()">Annuler</button>
+      <button class="btn btn-orange" onclick="saveSettings()">Enregistrer</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ SCRIPTS ═══════════════════ -->
+<script src="js/ssi-engine.js"></script>
+<script src="js/audio.js"></script>
+<script src="js/scenario-player.js"></script>
+<script src="js/sheets-export.js"></script>
+
+<script>
+/* ═══════════════════════════════════════════════
+   SSI TRAINER — Formateur Dashboard
+   ═══════════════════════════════════════════════ */
+
+// ── Zones par niveau ──
+const ZONES = {
+  1: ['ZD01-CUISINE','ZD02-HALL','ZD03-BUREAUX','ZD04-STOCKAGE'],
+  2: ['ZA','ZC1','ZC2','ZC3','ZC4','ZF1','ZF2','ZF3','ZF4','VED1','VED2','AVED'],
+  3: [
+    'BAT-A-Z1','BAT-A-Z2','BAT-A-Z3','BAT-A-Z4',
+    'BAT-B-Z1','BAT-B-Z2','BAT-B-Z3','BAT-B-Z4',
+    'BAT-C-Z1','BAT-C-Z2','BAT-C-Z3','BAT-C-Z4',
+    'BAT-D-Z1','BAT-D-Z2','BAT-D-Z3','BAT-D-Z4',
+    'BAT-E-Z1','BAT-E-Z2','BAT-E-Z3','BAT-E-Z4'
+  ]
+};
+const ALL_ZONES = [...ZONES[1], ...ZONES[2], ...ZONES[3]];
+
+const DAS_LIST = [
+  'PCF-RDC-01','PCF-RDC-02','PCF-RDC-03',
+  'PCF-R1-01','PCF-R1-02',
+  'EXU-BAT-A','EXU-BAT-B',
+  'VEL-BAT-A','VEL-BAT-B',
+  'CLF-GAINE-01','CLF-GAINE-02',
+  'DESF-BAT-A','DESF-BAT-B'
+];
+
+const SCENARIOS = [
+  'n1_fausse_alarme.json',
+  'n2_incendie_confirme.json',
+  'n3_multi_zones.json',
+  'n4_crise_complexe.json'
+];
+
+// ── State ──
+let chronoInterval = null;
+let chronoSeconds = 0;
+let isPaused = false;
+let isRunning = false;
+let showCorrection = false;
+let currentScenario = null;
+let scoringRows = [];
+let competenceStats = {};
+let bc = null;
+
+// ── Init ──
+document.addEventListener('DOMContentLoaded', () => {
+  populateZoneDropdowns();
+  populateDasDropdown();
+  loadScenarioList();
+  initBroadcastChannel();
+  loadWebhookSetting();
+});
+
+// ── BroadcastChannel ──
+function initBroadcastChannel() {
+  try {
+    bc = new BroadcastChannel('ssi-trainer');
+    bc.onmessage = (e) => {
+      const msg = e.data;
+      if (msg && msg.source === 'eleve') {
+        handleStudentAction(msg);
+      }
+    };
+  } catch (err) {
+    console.warn('BroadcastChannel non supporté, fallback localStorage');
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'ssi-trainer-eleve') {
+        try {
+          const msg = JSON.parse(e.newValue);
+          if (msg && msg.source === 'eleve') handleStudentAction(msg);
+        } catch (_) {}
+      }
+    });
+  }
+}
+
+function sendCommand(data) {
+  const msg = { source: 'formateur', timestamp: Date.now(), chrono: chronoSeconds, ...data };
+  try {
+    if (bc) bc.postMessage(msg);
+  } catch (_) {}
+  localStorage.setItem('ssi-trainer-formateur', JSON.stringify(msg));
+}
+
+// ── Populate dropdowns ──
+function populateZoneDropdowns() {
+  const selects = ['selZoneDetection','selZoneFrom','selZoneTo','selZonePersonne'];
+  selects.forEach(id => {
+    const sel = document.getElementById(id);
+    sel.innerHTML = '';
+    [1,2,3].forEach(niv => {
+      const grp = document.createElement('optgroup');
+      grp.label = 'Niveau ' + niv;
+      ZONES[niv].forEach(z => {
+        const opt = document.createElement('option');
+        opt.value = z;
+        opt.textContent = z;
+        grp.appendChild(opt);
+      });
+      sel.appendChild(grp);
+    });
+  });
+}
+
+function populateDasDropdown() {
+  const sel = document.getElementById('selDas');
+  sel.innerHTML = '';
+  DAS_LIST.forEach(d => {
+    const opt = document.createElement('option');
+    opt.value = d;
+    opt.textContent = d;
+    sel.appendChild(opt);
+  });
+}
+
+// ── Scenario loading ──
+function loadScenarioList() {
+  const sel = document.getElementById('selScenario');
+  SCENARIOS.forEach(file => {
+    const opt = document.createElement('option');
+    opt.value = file;
+    opt.textContent = file.replace('.json','').replace(/_/g,' ');
+    sel.appendChild(opt);
+  });
+  // Also try fetching from disk
+  SCENARIOS.forEach(file => {
+    fetch('scenarios/' + file).then(r => {
+      if (!r.ok) {
+        // Scenario file unavailable, keep listed anyway
+      }
+    }).catch(() => {});
+  });
+}
+
+function chargerScenario() {
+  const file = document.getElementById('selScenario').value;
+  if (!file) { alert('Veuillez sélectionner un scénario.'); return; }
+  fetch('scenarios/' + file)
+    .then(r => { if (!r.ok) throw new Error('Fichier introuvable'); return r.json(); })
+    .then(data => {
+      currentScenario = data;
+      sendCommand({ command: 'load_scenario', scenario: file, data: data });
+      alert('Scénario chargé : ' + (data.titre || file));
+    })
+    .catch(err => alert('Erreur chargement scénario : ' + err.message));
+}
+
+// ── Chrono ──
+function startChrono() {
+  if (chronoInterval) return;
+  isRunning = true;
+  chronoInterval = setInterval(() => {
+    if (!isPaused) {
+      chronoSeconds++;
+      updateChronoDisplay();
+    }
+  }, 1000);
+}
+
+function stopChrono() {
+  clearInterval(chronoInterval);
+  chronoInterval = null;
+  isRunning = false;
+}
+
+function updateChronoDisplay() {
+  const m = String(Math.floor(chronoSeconds / 60)).padStart(2, '0');
+  const s = String(chronoSeconds % 60).padStart(2, '0');
+  document.getElementById('chrono').textContent = m + ':' + s;
+}
+
+function formatChrono(secs) {
+  if (secs === undefined || secs === null) secs = chronoSeconds;
+  const m = String(Math.floor(secs / 60)).padStart(2, '0');
+  const s = String(secs % 60).padStart(2, '0');
+  return m + ':' + s;
+}
+
+// ── Controls ──
+function togglePause() {
+  isPaused = !isPaused;
+  document.getElementById('btnPause').style.display = isPaused ? 'none' : '';
+  document.getElementById('btnResume').style.display = isPaused ? '' : 'none';
+  sendCommand({ command: isPaused ? 'pause' : 'resume' });
+}
+
+function resetSession() {
+  if (isRunning && !confirm('Réinitialiser la session en cours ?')) return;
+  stopChrono();
+  chronoSeconds = 0;
+  isPaused = false;
+  updateChronoDisplay();
+  document.getElementById('btnPause').style.display = '';
+  document.getElementById('btnResume').style.display = 'none';
+  scoringRows = [];
+  competenceStats = {};
+  renderScoringTable();
+  renderBilan();
+  sendCommand({ command: 'reset' });
+}
+
+function toggleCorrection() {
+  showCorrection = !showCorrection;
+  const btn = document.getElementById('btnCorrection');
+  btn.style.background = showCorrection ? '#ff6b35' : '';
+  sendCommand({ command: 'toggle_correction', visible: showCorrection });
+}
+
+// ── Injection commands ──
+function ensureRunning() {
+  if (!isRunning) startChrono();
+}
+
+function injectAlarme() {
+  ensureRunning();
+  const zone = document.getElementById('selZoneDetection').value;
+  const niveau = document.getElementById('selNiveau').value;
+  sendCommand({ command: 'alarme', zone: zone, niveau: parseInt(niveau) });
+  logInjection('ALARME', zone);
+}
+
+function injectDmManuel() {
+  ensureRunning();
+  const zone = document.getElementById('selZoneDetection').value;
+  const niveau = document.getElementById('selNiveau').value;
+  sendCommand({ command: 'dm_manuel', zone: zone, niveau: parseInt(niveau) });
+  logInjection('DM MANUEL', zone);
+}
+
+function injectDefaillance(type) {
+  ensureRunning();
+  const das = document.getElementById('selDas').value;
+  const niveau = document.getElementById('selNiveau').value;
+  sendCommand({ command: 'defaillance', type: type, das: das, niveau: parseInt(niveau) });
+  logInjection('DÉFAILLANCE: ' + type.replace(/_/g,' '), das);
+}
+
+function injectPropagation() {
+  ensureRunning();
+  const from = document.getElementById('selZoneFrom').value;
+  const to = document.getElementById('selZoneTo').value;
+  const niveau = document.getElementById('selNiveau').value;
+  sendCommand({ command: 'propagation', from: from, to: to, niveau: parseInt(niveau) });
+  logInjection('PROPAGATION', from + ' → ' + to);
+}
+
+function injectZoneFumee() {
+  ensureRunning();
+  const from = document.getElementById('selZoneFrom').value;
+  const niveau = document.getElementById('selNiveau').value;
+  sendCommand({ command: 'zone_fumee', zone: from, niveau: parseInt(niveau) });
+  logInjection('ZONE FUMÉE', from);
+}
+
+function injectPersonne(type) {
+  ensureRunning();
+  const zone = document.getElementById('selZonePersonne').value;
+  const niveau = document.getElementById('selNiveau').value;
+  sendCommand({ command: 'personne', type: type, zone: zone, niveau: parseInt(niveau) });
+  logInjection('PERSONNE: ' + type.replace(/_/g,' '), zone);
+}
+
+function injectSysteme(type) {
+  ensureRunning();
+  const niveau = document.getElementById('selNiveau').value;
+  sendCommand({ command: 'systeme', type: type, niveau: parseInt(niveau) });
+  logInjection('SYSTÈME: ' + type.replace(/_/g,' '), '');
+}
+
+function logInjection(label, detail) {
+  console.log('[INJECT ' + formatChrono() + '] ' + label + (detail ? ' — ' + detail : ''));
+}
+
+// ── Student action handling ──
+function handleStudentAction(msg) {
+  const row = {
+    time: formatChrono(msg.chrono || chronoSeconds),
+    action: msg.action || '—',
+    competence: msg.competence || '—',
+    attendu: msg.attendu || '—',
+    resultat: msg.resultat || 'inconnu',
+    points: msg.points || 0,
+    maxPoints: msg.maxPoints || 0,
+    status: msg.status || 'correct' // correct | wrong | late
+  };
+  scoringRows.push(row);
+
+  // Accumulate competence stats
+  if (row.competence !== '—') {
+    if (!competenceStats[row.competence]) {
+      competenceStats[row.competence] = { earned: 0, max: 0 };
+    }
+    competenceStats[row.competence].earned += row.points;
+    competenceStats[row.competence].max += row.maxPoints;
+  }
+
+  renderScoringTable();
+  renderBilan();
+}
+
+// ── Render scoring table ──
+function renderScoringTable() {
+  const tbody = document.getElementById('scoringBody');
+  if (scoringRows.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" class="empty-msg">En attente du démarrage de la session...</td></tr>';
+    return;
+  }
+  let html = '';
+  scoringRows.forEach(r => {
+    const cls = r.status === 'correct' ? 'correct' : r.status === 'late' ? 'late' : 'wrong';
+    const icon = r.status === 'correct' ? '&#9989;' : r.status === 'late' ? '&#9888;' : '&#10060;';
+    html += '<tr class="' + cls + '">';
+    html += '<td>' + r.time + '</td>';
+    html += '<td>' + r.action + '</td>';
+    html += '<td>' + r.competence + '</td>';
+    html += '<td>' + r.attendu + '</td>';
+    html += '<td>' + icon + ' ' + r.resultat + '</td>';
+    html += '<td>' + r.points + '</td>';
+    html += '</tr>';
+  });
+  tbody.innerHTML = html;
+  // Auto-scroll to bottom
+  const wrap = tbody.closest('.table-wrap');
+  if (wrap) wrap.scrollTop = wrap.scrollHeight;
+}
+
+// ── Render bilan ──
+function renderBilan() {
+  // Score total
+  let total = 0, max = 0;
+  scoringRows.forEach(r => { total += r.points; max += r.maxPoints; });
+  document.getElementById('scoreTotal').textContent = total;
+  document.getElementById('scoreMax').textContent = max;
+  const pct = max > 0 ? Math.round((total / max) * 100) : 0;
+  document.getElementById('scorePct').textContent = '(' + pct + '%)';
+
+  // Competence bars
+  const barsDiv = document.getElementById('competenceBars');
+  const compKeys = Object.keys(competenceStats);
+  if (compKeys.length === 0) {
+    barsDiv.innerHTML = '<p class="empty-msg">Aucune donnée pour le moment.</p>';
+  } else {
+    let html = '';
+    compKeys.forEach(comp => {
+      const s = competenceStats[comp];
+      const p = s.max > 0 ? Math.round((s.earned / s.max) * 100) : 0;
+      const cls = p >= 70 ? 'high' : p >= 40 ? 'mid' : 'low';
+      html += '<div class="comp-bar-row">';
+      html += '  <div class="comp-bar-label">' + comp + '</div>';
+      html += '  <div class="comp-bar-track">';
+      html += '    <div class="comp-bar-fill ' + cls + '" style="width:' + Math.max(p, 5) + '%">' + p + '%</div>';
+      html += '  </div>';
+      html += '</div>';
+    });
+    barsDiv.innerHTML = html;
+  }
+
+  // Timeline
+  const tl = document.getElementById('timeline');
+  if (scoringRows.length === 0) {
+    tl.innerHTML = '<p class="empty-msg">Aucune action enregistrée.</p>';
+  } else {
+    let html = '';
+    scoringRows.forEach(r => {
+      const cls = r.status === 'correct' ? 'ok' : r.status === 'late' ? 'retard' : 'ko';
+      html += '<div class="timeline-item ' + cls + '">';
+      html += '  <div class="tl-time">' + r.time + '</div>';
+      html += '  <div class="tl-desc">' + r.action + ' — ' + r.resultat + '</div>';
+      html += '  <div class="tl-expected">Attendu : ' + r.attendu + '</div>';
+      html += '</div>';
+    });
+    tl.innerHTML = html;
+  }
+}
+
+// ── Export functions ──
+function exportGoogleSheets() {
+  const webhook = localStorage.getItem('ssi-webhook-url');
+  if (!webhook) {
+    alert('URL Webhook non configurée. Ouvrez les Paramètres pour la définir.');
+    openSettings();
+    return;
+  }
+  const payload = {
+    date: new Date().toISOString(),
+    scenario: currentScenario ? (currentScenario.titre || 'Inconnu') : 'Inconnu',
+    niveau: document.getElementById('selNiveau').value,
+    duree: formatChrono(),
+    rows: scoringRows,
+    competences: competenceStats
+  };
+  fetch(webhook, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload),
+    mode: 'no-cors'
+  })
+  .then(() => alert('Données envoyées vers Google Sheets.'))
+  .catch(err => alert('Erreur d\'envoi : ' + err.message));
+}
+
+function telechargerPDF() {
+  window.print();
+}
+
+function copierCSV() {
+  if (scoringRows.length === 0) { alert('Aucune donnée à copier.'); return; }
+  let csv = 'Temps;Action;Compétence;Attendu;Résultat;Points\n';
+  scoringRows.forEach(r => {
+    csv += [r.time, r.action, r.competence, r.attendu, r.resultat, r.points].join(';') + '\n';
+  });
+  navigator.clipboard.writeText(csv)
+    .then(() => alert('CSV copié dans le presse-papier.'))
+    .catch(() => {
+      // Fallback
+      const ta = document.createElement('textarea');
+      ta.value = csv;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      alert('CSV copié dans le presse-papier.');
+    });
+}
+
+// ── Settings modal ──
+function openSettings() {
+  document.getElementById('inputWebhook').value = localStorage.getItem('ssi-webhook-url') || '';
+  document.getElementById('settingsModal').classList.add('active');
+}
+
+function closeSettings() {
+  document.getElementById('settingsModal').classList.remove('active');
+}
+
+function saveSettings() {
+  const url = document.getElementById('inputWebhook').value.trim();
+  if (url) {
+    localStorage.setItem('ssi-webhook-url', url);
+  } else {
+    localStorage.removeItem('ssi-webhook-url');
+  }
+  closeSettings();
+  alert('Paramètres enregistrés.');
+}
+
+function loadWebhookSetting() {
+  // Just pre-load, nothing to display on init
+}
+</script>
+</body>
+</html>

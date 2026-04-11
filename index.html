@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SSI Trainer — inerWeb Édu</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Calibri,sans-serif;font-size:14pt;line-height:1.5;background:#f2f5fb;color:#1b3a63;text-align:left}
+.header{background:#1b3a63;color:#fff;padding:20px 30px;display:flex;align-items:center;gap:18px}
+.header .logo{font-family:'Trebuchet MS',sans-serif;font-size:1.6em;font-weight:bold;display:flex;align-items:center;gap:8px}
+.header .logo .snowflake{font-size:1.3em}
+.header .badge{background:#ff6b35;color:#fff;padding:2px 10px;border-radius:4px;font-size:0.6em;margin-left:4px;vertical-align:middle}
+.header .author{font-size:0.55em;opacity:0.8;margin-left:10px}
+.header .title-ssi{margin-left:auto;font-family:'Trebuchet MS',sans-serif;font-size:1.1em;letter-spacing:1px}
+.container{max-width:1100px;margin:40px auto;padding:0 20px}
+h1{font-family:'Trebuchet MS',sans-serif;color:#1b3a63;font-size:1.6em;margin-bottom:10px;text-align:center}
+.subtitle{text-align:center;color:#555;margin-bottom:40px;font-size:1em}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;margin-bottom:40px}
+.card{background:#fff;border-radius:12px;box-shadow:0 2px 12px rgba(27,58,99,0.1);overflow:hidden;transition:transform 0.2s,box-shadow 0.2s;cursor:pointer;text-decoration:none;color:#1b3a63;display:flex;flex-direction:column}
+.card:hover{transform:translateY(-4px);box-shadow:0 6px 24px rgba(27,58,99,0.18)}
+.card-header{padding:20px 24px 12px;display:flex;align-items:center;gap:12px}
+.card-header .icon{width:48px;height:48px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.5em;color:#fff;flex-shrink:0}
+.card-header .n1{background:#4caf50}
+.card-header .n2{background:#ff9800}
+.card-header .n3{background:#e53935}
+.card-header .nf{background:#1b3a63}
+.card-header h2{font-family:'Trebuchet MS',sans-serif;font-size:1.1em;margin:0}
+.card-header .niveau{font-size:0.7em;color:#888;display:block;margin-top:2px}
+.card-body{padding:8px 24px 20px;flex:1}
+.card-body p{font-size:0.95em;color:#444;line-height:1.5}
+.card-body ul{font-size:0.9em;color:#555;margin:8px 0 0 18px}
+.card-body ul li{margin-bottom:4px}
+.card-footer{padding:12px 24px;background:#f8fafd;border-top:1px solid #e8ecf2;text-align:center}
+.card-footer .btn{display:inline-block;background:#ff6b35;color:#fff;padding:8px 28px;border-radius:6px;font-size:1em;font-weight:bold;text-decoration:none;border:none;cursor:pointer;transition:background 0.2s}
+.card-footer .btn:hover{background:#e55a28}
+.card-footer .btn-blue{background:#1b3a63}
+.card-footer .btn-blue:hover{background:#142d4e}
+.ref-section{background:#fff;border-radius:12px;padding:24px 30px;box-shadow:0 2px 8px rgba(27,58,99,0.06);margin-bottom:30px}
+.ref-section h3{font-family:'Trebuchet MS',sans-serif;color:#1b3a63;margin-bottom:10px;font-size:1.1em}
+.ref-section ul{margin-left:18px;color:#444;font-size:0.95em}
+.ref-section ul li{margin-bottom:4px}
+.ref-section a{color:#ff6b35;text-decoration:none}
+.ref-section a:hover{text-decoration:underline}
+.formateur-access{text-align:center;margin:30px 0 40px}
+.formateur-access button{background:#1b3a63;color:#fff;padding:12px 36px;border:none;border-radius:8px;font-size:1.05em;font-weight:bold;cursor:pointer;transition:background 0.2s}
+.formateur-access button:hover{background:#142d4e}
+.footer{text-align:center;padding:20px;color:#888;font-size:0.85em;border-top:1px solid #e0e4ea}
+.footer a{color:#ff6b35;text-decoration:none}
+
+/* Modal PIN */
+.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center}
+.modal-overlay.active{display:flex}
+.modal{background:#fff;border-radius:12px;padding:30px 40px;box-shadow:0 8px 32px rgba(0,0,0,0.2);text-align:center;max-width:360px;width:90%}
+.modal h3{font-family:'Trebuchet MS',sans-serif;color:#1b3a63;margin-bottom:16px}
+.modal input{width:100%;padding:12px;font-size:1.2em;text-align:center;border:2px solid #ddd;border-radius:8px;letter-spacing:8px;margin-bottom:12px}
+.modal input:focus{outline:none;border-color:#1b3a63}
+.modal .err{color:#e53935;font-size:0.9em;margin-bottom:8px;min-height:1.5em}
+.modal button{background:#ff6b35;color:#fff;padding:10px 30px;border:none;border-radius:6px;font-size:1em;font-weight:bold;cursor:pointer}
+.modal .close{position:absolute;top:10px;right:16px;font-size:1.5em;cursor:pointer;color:#888;background:none;border:none}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">
+    <span class="snowflake">&#10052;</span>
+    inerWeb<span class="badge">Édu</span>
+    <span class="author">par F. Henninot</span>
+  </div>
+  <div class="title-ssi">SSI TRAINER</div>
+</div>
+
+<div class="container">
+  <h1>Simulateur SSI Grandeur Nature</h1>
+  <p class="subtitle">Formation SSIAP — Exploitation des Systèmes de Sécurité Incendie</p>
+
+  <div class="cards">
+    <!-- Niveau 1 -->
+    <a href="ssi-niveau1.html" class="card">
+      <div class="card-header">
+        <div class="icon n1">1</div>
+        <div>
+          <h2>ECS Simple</h2>
+          <span class="niveau">Niveau Initiation</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <p>Panneau ECS basique avec 4 zones de détection. Apprentissage des signalisations et des gestes fondamentaux.</p>
+        <ul>
+          <li>Voyants et signalisations</li>
+          <li>Acquittement et réarmement</li>
+          <li>Procédure alarme simple</li>
+        </ul>
+      </div>
+      <div class="card-footer">
+        <span class="btn">Commencer</span>
+      </div>
+    </a>
+
+    <!-- Niveau 2 -->
+    <a href="ssi-niveau2.html" class="card">
+      <div class="card-header">
+        <div class="icon n2">2</div>
+        <div>
+          <h2>CMSI Complet</h2>
+          <span class="niveau">Niveau Intermédiaire</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <p>Centralisateur type Chubb/Esser avec cartes zones, DAS et plan de masse. Gestion incendie complète.</p>
+        <ul>
+          <li>12 zones de détection</li>
+          <li>Tableau DAS interactif</li>
+          <li>Plan de masse SVG</li>
+        </ul>
+      </div>
+      <div class="card-footer">
+        <span class="btn">Commencer</span>
+      </div>
+    </a>
+
+    <!-- Niveau 3 -->
+    <a href="ssi-niveau3.html" class="card">
+      <div class="card-header">
+        <div class="icon n3">3</div>
+        <div>
+          <h2>Baie Multi-Bâtiments</h2>
+          <span class="niveau">Niveau Expert</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <p>Baie rack 19" avec 5 CMSI empilés, bus RS485 et 20+ zones. Gestion de crise multi-sites.</p>
+        <ul>
+          <li>5 bâtiments interconnectés</li>
+          <li>Défaillances simultanées</li>
+          <li>Synoptique général</li>
+        </ul>
+      </div>
+      <div class="card-footer">
+        <span class="btn">Commencer</span>
+      </div>
+    </a>
+  </div>
+
+  <!-- Accès formateur -->
+  <div class="formateur-access">
+    <button onclick="showPinModal()">&#128274; Accès Formateur</button>
+  </div>
+
+  <!-- Référentiel -->
+  <div class="ref-section">
+    <h3>Cadre réglementaire</h3>
+    <ul>
+      <li><strong>NF S 61-931</strong> — SSI : Dispositions générales</li>
+      <li><strong>NF S 61-932</strong> — Règles d'installation du SDI</li>
+      <li><strong>NF S 61-933</strong> — Règles d'exploitation et de maintenance</li>
+      <li><strong>NF S 61-934</strong> — CMSI — Centralisateur de Mise en Sécurité Incendie</li>
+      <li><strong>NF S 61-961</strong> — ECS — Équipement de Contrôle et de Signalisation</li>
+      <li><strong>Arrêté du 2 mai 2005</strong> — Qualification SSIAP</li>
+    </ul>
+  </div>
+
+  <div class="ref-section">
+    <h3>Ressources</h3>
+    <ul>
+      <li><a href="https://www.sfp73.fr" target="_blank">sfp73.fr — Référentiels et supports SSIAP</a></li>
+      <li><a href="referentiels/competences_ssiap1.json" target="_blank">Référentiel compétences SSIAP 1 (JSON)</a></li>
+    </ul>
+  </div>
+</div>
+
+<div class="footer">
+  <p>SSI Trainer v1.0 — <a href="https://frigorx.github.io/ssi-trainer/">inerWeb Édu</a> — par F. Henninot</p>
+  <p>LP Privé Jacques Raynaud — Campus ÉQUATIO, Marseille</p>
+</div>
+
+<!-- Modal PIN -->
+<div class="modal-overlay" id="pinModal">
+  <div class="modal">
+    <h3>&#128274; Accès Formateur</h3>
+    <p style="color:#666;font-size:0.9em;margin-bottom:16px">Saisissez le code d'accès</p>
+    <input type="password" id="pinInput" maxlength="4" placeholder="____" autofocus>
+    <div class="err" id="pinErr"></div>
+    <button onclick="checkPin()">Valider</button>
+    <br><br>
+    <a href="#" onclick="closePinModal();return false" style="color:#888;font-size:0.9em">Annuler</a>
+  </div>
+</div>
+
+<script>
+function showPinModal(){
+  document.getElementById('pinModal').classList.add('active');
+  document.getElementById('pinInput').value='';
+  document.getElementById('pinErr').textContent='';
+  setTimeout(()=>document.getElementById('pinInput').focus(),100);
+}
+function closePinModal(){
+  document.getElementById('pinModal').classList.remove('active');
+}
+function checkPin(){
+  const pin=document.getElementById('pinInput').value;
+  if(pin==='1234'){
+    window.location.href='formateur.html';
+  } else {
+    document.getElementById('pinErr').textContent='Code incorrect';
+    document.getElementById('pinInput').value='';
+    document.getElementById('pinInput').focus();
+  }
+}
+document.getElementById('pinInput').addEventListener('keydown',function(e){
+  if(e.key==='Enter') checkPin();
+  if(e.key==='Escape') closePinModal();
+});
+document.getElementById('pinModal').addEventListener('click',function(e){
+  if(e.target===this) closePinModal();
+});
+</script>
+</body>
+</html>
