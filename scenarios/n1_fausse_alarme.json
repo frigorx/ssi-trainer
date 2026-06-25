@@ -19,10 +19,14 @@
     { "id": "ZD03", "nom": "Bureaux 1er" },
     { "id": "ZD04", "nom": "Stockage SS" }
   ],
+  "levee_doute": {
+    "feu": false,
+    "delai": 6,
+    "rapport_ras": "RAS — vapeur de cuisson en cuisine, activité normale. Aucun foyer, pas de fumée suspecte.",
+    "rapport_feu": "FEU — départ de feu en cuisine, flammes sur le piano de cuisson, fumée."
+  },
   "evenements": [
-    { "t": 0, "type": "alarme", "zone": "ZD01", "detail": "Détecteur optique fumée — Cuisine RDC" },
-    { "t": 60, "type": "info_formateur", "msg": "Équipier de ronde : RAS, vapeur de cuisson détectée" },
-    { "t": 90, "type": "info_formateur", "msg": "Confirmer : fausse alarme, cuisine en activité normale" }
+    { "t": 0, "type": "alarme", "zone": "ZD01", "detail": "Détecteur optique fumée — Cuisine RDC" }
   ],
   "actions_attendues": [
     { "action": "acquittement", "delai_max": 15, "competence": "C2", "points": 25 },
@@ -36,7 +40,7 @@
     { "cle": "arret_signal", "texte": "Arrêter le signal sonore une fois pris en compte" },
     { "texte": "Localiser la zone en alarme sur le tableau (voyant + afficheur)" },
     { "cle": "levee_doute", "texte": "Envoyer un équipier de ronde en levée de doute" },
-    { "texte": "Attendre le compte-rendu de l'équipier (≤ 3 min)" },
+    { "texte": "Attendre et analyser le compte-rendu de l'équipier" },
     { "cle": "rearmement", "texte": "Fausse alarme confirmée → réarmer le système" },
     { "cle": "test_signalisation", "texte": "Vérifier le bon fonctionnement (test signalisation)" }
   ],

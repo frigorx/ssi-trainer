@@ -307,6 +307,7 @@ body{font-family:Calibri,sans-serif;font-size:14pt;line-height:1.5;background:#f
       <div class="pe-palier" id="palierSelect">
         <button class="actif" data-mode="guide" onclick="setPalier('guide')">Guid&eacute;</button>
         <button data-mode="autonome" onclick="setPalier('autonome')">Autonome</button>
+        <button data-mode="exploration" onclick="setPalier('exploration')">Exploration</button>
       </div>
       <div class="pe-fiche-btns" style="margin-left:auto">
         <button class="pe-btn pe-btn-fiche" id="btnImprimer" onclick="imprimerFiche()" disabled>&#128424; Imprimer la fiche</button>
@@ -463,6 +464,13 @@ const poste = new PosteEleve({
     if (cle === 'levee_doute') engine.leveeDoute();
     else if (cle === 'appel_18') engine.appel18(payload && payload.message);
     else if (cle === 'accueil_pompiers') engine.accueilPompiers();
+  },
+  onCompteRendu: function (feu, rapport) {
+    addJournalEntry({
+      time: updateLCDClock(),
+      type: feu ? 'ALARME' : 'INFO',
+      message: 'Équipier (compte-rendu) — ' + rapport
+    });
   }
 });
 poste.monter({

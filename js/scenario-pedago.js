@@ -44,10 +44,13 @@ class PosteEleve {
   constructor(opts) {
     opts = opts || {};
     this.onAction = opts.onAction || function () {};
+    this.onCompteRendu = opts.onCompteRendu || function () {};
     this.scenario = null;
-    this.mode = 'guide';            // 'guide' | 'autonome'
+    this.mode = 'guide';            // 'guide' | 'autonome' | 'exploration'
     this.refs = {};                 // conteneurs DOM
     this.etapes = [];               // état des étapes de conduite à tenir
+    this._leveeFaite = false;       // levée de doute déjà lancée ?
+    this._leveeTimer = null;        // compte à rebours retour équipier
     this._injecterModales();
   }
 
@@ -57,6 +60,9 @@ class PosteEleve {
   charger(scenario, mode) {
     this.scenario = scenario;
     if (mode) this.mode = mode;
+    if (this._leveeTimer) { clearInterval(this._leveeTimer); this._leveeTimer = null; }
+    this._leveeFaite = false;
+    this._fermerModale('peModalLevee');
     this.etapes = (scenario.conduite_a_tenir || []).map(function (e, i) {
       return { i: i, cle: e.cle || null, texte: e.texte, done: false };
     });
@@ -70,7 +76,10 @@ class PosteEleve {
 
   reset() {
     this.etapes.forEach(function (e) { e.done = false; });
+    if (this._leveeTimer) { clearInterval(this._leveeTimer); this._leveeTimer = null; }
+    this._leveeFaite = false;
     this._renderConduite();
+    this._renderActions();
     this._renderMainCourante(true);
   }
 
@@ -234,7 +243,7 @@ class PosteEleve {
   _declencherGeste(cle) {
     if (cle === 'appel_18') { this._ouvrirModaleAppel(); return; }
     if (cle === 'accueil_pompiers') { this._ouvrirModaleAccueil(); return; }
-    // levée de doute : direct
+    if (cle === 'levee_doute') { this._lancerLeveeDoute(); return; }
     this.onAction(cle, {});
   }
 
@@ -297,6 +306,13 @@ class PosteEleve {
       self.onAction('accueil_pompiers', {});
     });
 
+    // --- Levée de doute (compte-rendu de l'équipier) ---
+    var ov3 = document.createElement('div');
+    ov3.className = 'pe-modal-ov';
+    ov3.id = 'peModalLevee';
+    ov3.innerHTML = '<div class="pe-modal"><div id="peLeveeBody"></div></div>';
+    document.body.appendChild(ov3);
+
     // Fermeture (boutons annuler + clic overlay + Échap)
     [ov1, ov2].forEach(function (ov) {
       ov.addEventListener('click', function (e) {
@@ -321,6 +337,88 @@ class PosteEleve {
     ov.classList.add('active');
   }
   _fermerModale(id) { var el = document.getElementById(id); if (el) el.classList.remove('active'); }
+
+  // ------------------------------------------------------- levée de doute
+
+  _lancerLeveeDoute() {
+    if (this._leveeFaite) return;            // équipier déjà parti
+    this._leveeFaite = true;
+    var btn = this.refs.actions && this.refs.actions.querySelector('[data-cle="levee_doute"]');
+    if (btn) btn.disabled = true;
+    // L'élève a décidé d'envoyer l'équipier : action comptée immédiatement
+    this.onAction('levee_doute', {});
+    var ld = (this.scenario && this.scenario.levee_doute) || {};
+    var delai = ld.delai || 6;
+    var self = this;
+    this._renderLevee('route', { reste: delai });
+    document.getElementById('peModalLevee').classList.add('active');
+    var reste = delai;
+    if (this._leveeTimer) clearInterval(this._leveeTimer);
+    this._leveeTimer = setInterval(function () {
+      reste--;
+      var el = document.getElementById('peLeveeCompte');
+      if (el) el.textContent = reste;
+      if (reste <= 0) {
+        clearInterval(self._leveeTimer); self._leveeTimer = null;
+        self._etapeCompteRendu();
+      }
+    }, 1000);
+  }
+
+  _etapeCompteRendu() {
+    var ld = (this.scenario && this.scenario.levee_doute) || {};
+    if (this.mode === 'exploration') {
+      this._renderLevee('choix');
+    } else {
+      var feu = !!ld.feu;
+      this._renderLevee('rapport', { feu: feu, rapport: feu ? (ld.rapport_feu || 'Feu confirmé.') : (ld.rapport_ras || 'Rien à signaler.') });
+    }
+  }
+
+  _choisirConstat(feu) {
+    var ld = (this.scenario && this.scenario.levee_doute) || {};
+    this._renderLevee('rapport', { feu: feu, rapport: feu ? (ld.rapport_feu || 'Feu confirmé.') : (ld.rapport_ras || 'Rien à signaler.') });
+  }
+
+  _renderLevee(etat, data) {
+    data = data || {};
+    var body = document.getElementById('peLeveeBody');
+    if (!body) return;
+    var self = this;
+    if (etat === 'route') {
+      body.innerHTML = '<h3>🚶 Levée de doute en cours</h3>' +
+        '<div class="pe-modal-sub">Un équipier de ronde se rend sur la zone en alarme pour vérifier.</div>' +
+        '<p style="text-align:center;font-size:1.05em;margin:18px 0">Retour de l’équipier dans <b id="peLeveeCompte">' + (data.reste || '') + '</b> s…</p>';
+      return;
+    }
+    if (etat === 'choix') {
+      body.innerHTML = '<h3>📻 Compte-rendu de l’équipier</h3>' +
+        '<div class="pe-modal-sub">L’équipier est sur place. Que constate-t-il ? <em>(mode exploration : à vous de choisir la branche à tester)</em></div>' +
+        '<div class="pe-modal-row" style="justify-content:center;gap:14px;margin-top:16px">' +
+        '<button class="pe-btn pe-btn-primary" id="peLeveeFeu" style="background:#c62828">🔥 Feu confirmé</button>' +
+        '<button class="pe-btn pe-btn-primary" id="peLeveeRas" style="background:#2e7d32">✅ Rien à signaler</button>' +
+        '</div>';
+      body.querySelector('#peLeveeFeu').addEventListener('click', function () { self._choisirConstat(true); });
+      body.querySelector('#peLeveeRas').addEventListener('click', function () { self._choisirConstat(false); });
+      return;
+    }
+    if (etat === 'rapport') {
+      var feu = data.feu;
+      var conseil = feu
+        ? '➜ Feu confirmé : alertez le 18/112, passez en niveau d’accès 2 et déclenchez l’évacuation générale.'
+        : '➜ Fausse alarme : après vérification, vous pouvez réarmer le système.';
+      body.innerHTML = '<h3>' + (feu ? '🔥 Compte-rendu : FEU CONFIRMÉ' : '✅ Compte-rendu : rien à signaler') + '</h3>' +
+        '<div class="pe-modal-sub">Message radio de l’équipier :</div>' +
+        '<p style="background:#f6f8fb;border-left:3px solid ' + (feu ? '#c62828' : '#2e7d32') + ';padding:10px 12px;margin:8px 0;font-size:0.92em">« ' + _esc(data.rapport) + ' »</p>' +
+        '<p style="font-size:0.86em;color:#444;margin-top:8px">' + conseil + '</p>' +
+        '<div class="pe-modal-row"><button class="pe-btn pe-btn-primary" id="peLeveeOk">Compris</button></div>';
+      body.querySelector('#peLeveeOk').addEventListener('click', function () {
+        self._fermerModale('peModalLevee');
+        self.onCompteRendu(feu, data.rapport);
+      });
+      return;
+    }
+  }
 
   // ----------------------------------------------------------- fiche papier
 

@@ -19,9 +19,14 @@
     { "id": "ZD03", "nom": "Bureaux 1er" },
     { "id": "ZD04", "nom": "Stockage SS" }
   ],
+  "levee_doute": {
+    "feu": true,
+    "delai": 6,
+    "rapport_feu": "FEU CONFIRMÉ — palettes et cartons en feu au stockage, flammes visibles, fumée dense. Évacuation nécessaire.",
+    "rapport_ras": "RAS — odeur suspecte mais aucun foyer trouvé au stockage. À surveiller."
+  },
   "evenements": [
     { "t": 0, "type": "alarme", "zone": "ZD04", "detail": "Détecteur optique fumée — Stockage sous-sol" },
-    { "t": 40, "type": "info_formateur", "msg": "Équipier de ronde : FEU CONFIRMÉ — palettes et cartons en feu au stockage" },
     { "t": 100, "type": "propagation", "zone": "ZD02", "from": "ZD04", "detail": "Propagation des fumées — Hall d'accueil" },
     { "t": 160, "type": "info_formateur", "msg": "Pompiers en approche — préparez l'accueil avec les plans et les clés" }
   ],
