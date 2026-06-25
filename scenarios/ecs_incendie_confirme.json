@@ -1,0 +1,65 @@
+{
+  "id": "ecs_incendie_confirme",
+  "titre": "Incendie confirmé — Stockage",
+  "niveau": 1,
+  "equipement": "ECS",
+  "diplomes": ["CAP", "BAC_PRO", "BP"],
+  "erp_type": "N",
+  "duree_max": 240,
+  "description": "Alarme au local de stockage en sous-sol. L'équipier confirme un départ de feu. L'élève doit alerter les secours, déclencher l'évacuation (accès niveau 2) puis accueillir les pompiers.",
+  "contexte": {
+    "etablissement": "Restaurant d'application — ERP type N",
+    "effectif": 120,
+    "particularites": "Local de stockage au sous-sol (cartons, palettes). Public attablé en salle au RDC."
+  },
+  "mission": "Vous êtes l'agent de sécurité SSIAP au PC sécurité. Une alarme retentit. Après levée de doute, le feu est CONFIRMÉ : appliquez la procédure de mise en sécurité complète.",
+  "zones": [
+    { "id": "ZD01", "nom": "Cuisine RDC" },
+    { "id": "ZD02", "nom": "Hall accueil" },
+    { "id": "ZD03", "nom": "Bureaux 1er" },
+    { "id": "ZD04", "nom": "Stockage SS" }
+  ],
+  "evenements": [
+    { "t": 0, "type": "alarme", "zone": "ZD04", "detail": "Détecteur optique fumée — Stockage sous-sol" },
+    { "t": 40, "type": "info_formateur", "msg": "Équipier de ronde : FEU CONFIRMÉ — palettes et cartons en feu au stockage" },
+    { "t": 100, "type": "propagation", "zone": "ZD02", "from": "ZD04", "detail": "Propagation des fumées — Hall d'accueil" },
+    { "t": 160, "type": "info_formateur", "msg": "Pompiers en approche — préparez l'accueil avec les plans et les clés" }
+  ],
+  "actions_attendues": [
+    { "action": "acquittement", "delai_max": 20, "competence": "C2", "points": 15 },
+    { "action": "levee_doute", "delai_max": 40, "competence": "C2", "points": 15 },
+    { "action": "appel_18", "delai_max": 90, "competence": "C3", "points": 25 },
+    { "action": "evacuation_generale", "delai_max": 120, "competence": "C4", "points": 30 },
+    { "action": "accueil_pompiers", "delai_max": 210, "competence": "C8", "points": 25 }
+  ],
+  "conduite_a_tenir": [
+    { "cle": "acquittement", "texte": "Acquitter l'alarme sonore sur l'ECS" },
+    { "texte": "Localiser la zone en alarme (Stockage SS) sur le tableau" },
+    { "cle": "levee_doute", "texte": "Envoyer un équipier en levée de doute" },
+    { "cle": "appel_18", "texte": "Feu confirmé → alerter les secours (18/112) avec un message structuré" },
+    { "texte": "Passer le tableau en niveau d'accès 2 (code) pour les commandes engageantes" },
+    { "cle": "evacuation_generale", "texte": "Déclencher l'évacuation générale" },
+    { "texte": "Guider le public vers les issues et le point de rassemblement" },
+    { "cle": "accueil_pompiers", "texte": "Accueillir et guider les secours (plans, clés, point de situation)" }
+  ],
+  "questions": [
+    { "q": "Rédigez le message d'alerte que vous transmettez au 18 (rappel : nature, localisation précise, victimes éventuelles, établissement et accès).", "type": "libre" },
+    { "q": "Pourquoi le déclenchement de l'évacuation générale exige-t-il le niveau d'accès 2 du tableau ?", "type": "libre" },
+    {
+      "q": "À l'arrivée des sapeurs-pompiers, l'agent SSIAP doit en priorité :",
+      "type": "qcm",
+      "options": [
+        "Commencer à éteindre le feu lui-même",
+        "Remettre les plans et les clés, et faire un point de situation clair",
+        "Réintégrer le public dans le bâtiment"
+      ],
+      "reponse": 1
+    }
+  ],
+  "points_cles": [
+    "Message d'alerte structuré : qui j'appelle, nature du sinistre, adresse et accès précis, victimes éventuelles, je reste en ligne.",
+    "L'évacuation générale est une commande engageante : niveau d'accès 2 (code ou clé), réservé au personnel formé.",
+    "Après évacuation : pointage au point de rassemblement, NE PAS réintégrer tant que les secours n'ont pas donné l'ordre.",
+    "Accueil des secours : plans, clés, historique des événements SSI, guidage jusqu'au sinistre."
+  ]
+}

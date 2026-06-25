@@ -2,9 +2,23 @@
   "id": "n1_fausse_alarme",
   "titre": "Fausse alarme — Cuisine RDC",
   "niveau": 1,
+  "equipement": "ECS",
+  "diplomes": ["CAP", "BAC_PRO"],
   "erp_type": "N",
   "duree_max": 180,
   "description": "Un détecteur optique se déclenche en cuisine. Après levée de doute, il s'avère que c'est de la vapeur de cuisson. L'élève doit suivre la procédure standard.",
+  "contexte": {
+    "etablissement": "Restaurant d'application — ERP type N",
+    "effectif": 120,
+    "particularites": "Cuisine professionnelle au RDC (piano, friteuses). Public attablé en salle. Service en cours."
+  },
+  "mission": "Vous êtes l'agent de sécurité SSIAP au poste de sécurité (PC sécurité). Une alarme vient de retentir sur l'ECS. Appliquez la procédure de levée de doute, sans déclencher d'évacuation injustifiée.",
+  "zones": [
+    { "id": "ZD01", "nom": "Cuisine RDC" },
+    { "id": "ZD02", "nom": "Hall accueil" },
+    { "id": "ZD03", "nom": "Bureaux 1er" },
+    { "id": "ZD04", "nom": "Stockage SS" }
+  ],
   "evenements": [
     { "t": 0, "type": "alarme", "zone": "ZD01", "detail": "Détecteur optique fumée — Cuisine RDC" },
     { "t": 60, "type": "info_formateur", "msg": "Équipier de ronde : RAS, vapeur de cuisson détectée" },
@@ -13,7 +27,37 @@
   "actions_attendues": [
     { "action": "acquittement", "delai_max": 15, "competence": "C2", "points": 25 },
     { "action": "arret_signal", "delai_max": 20, "competence": "C2", "points": 15 },
+    { "action": "levee_doute", "delai_max": 45, "competence": "C2", "points": 20 },
     { "action": "rearmement", "delai_max": 120, "competence": "C2", "points": 30 },
     { "action": "test_signalisation", "delai_max": 150, "competence": "C2", "points": 30 }
+  ],
+  "conduite_a_tenir": [
+    { "cle": "acquittement", "texte": "Acquitter l'alarme sonore sur l'ECS" },
+    { "cle": "arret_signal", "texte": "Arrêter le signal sonore une fois pris en compte" },
+    { "texte": "Localiser la zone en alarme sur le tableau (voyant + afficheur)" },
+    { "cle": "levee_doute", "texte": "Envoyer un équipier de ronde en levée de doute" },
+    { "texte": "Attendre le compte-rendu de l'équipier (≤ 3 min)" },
+    { "cle": "rearmement", "texte": "Fausse alarme confirmée → réarmer le système" },
+    { "cle": "test_signalisation", "texte": "Vérifier le bon fonctionnement (test signalisation)" }
+  ],
+  "questions": [
+    { "q": "Quel type de détecteur s'est déclenché en cuisine ? Pourquoi les fausses alarmes y sont-elles fréquentes ?", "type": "libre" },
+    { "q": "Quelle vérification est indispensable AVANT de réarmer le système ?", "type": "libre" },
+    {
+      "q": "Le réarmement de l'ECS est possible :",
+      "type": "qcm",
+      "options": [
+        "Immédiatement après l'acquittement",
+        "Seulement après la levée de doute confirmant une fausse alarme",
+        "À tout moment, sans condition"
+      ],
+      "reponse": 1
+    }
+  ],
+  "points_cles": [
+    "Acquitter ≠ lever le risque : l'acquittement n'est que la prise en compte de l'alarme par l'agent.",
+    "La levée de doute par un équipier est obligatoire avant tout réarmement.",
+    "Un détecteur optique de fumée réagit aux fumées MAIS aussi aux vapeurs et buées de cuisson.",
+    "Ne jamais réarmer tant que l'origine de l'alarme n'est pas formellement identifiée."
   ]
 }

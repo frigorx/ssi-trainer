@@ -250,9 +250,14 @@ class SSIEngine {
     this._emit('action', { action: 'evacuation_generale', timestamp: Date.now() });
   }
 
-  appel18() {
-    this._log('APPEL_18', 'Appel 18/112 effectué');
-    this._emit('action', { action: 'appel_18', timestamp: Date.now() });
+  leveeDoute() {
+    this._log('LEVEE_DOUTE', 'Équipier envoyé en levée de doute');
+    this._emit('action', { action: 'levee_doute', timestamp: Date.now() });
+  }
+
+  appel18(message) {
+    this._log('APPEL_18', 'Appel 18/112 effectué' + (message ? ' — ' + message : ''));
+    this._emit('action', { action: 'appel_18', message: message || null, timestamp: Date.now() });
   }
 
   accueilPompiers() {

@@ -1,0 +1,163 @@
+/* ================================================================
+   SSI Trainer — Styles pédagogiques communs (Poste élève)
+   inerWeb Édu — F. Henninot
+   Préfixe « pe- » = Poste Élève. Réutilisable par tous les niveaux.
+   Règle accessibilité : jamais l'information par la couleur seule
+   (toujours libellé + picto + couleur).
+   ================================================================ */
+
+:root {
+  --pe-bleu: #1b3a63;
+  --pe-orange: #ff6b35;
+  --pe-ok: #2e7d32;
+  --pe-attente: #ef6c00;
+  --pe-danger: #c62828;
+  --pe-bord: #dde2ea;
+  --pe-fond: #f2f5fb;
+}
+
+/* ===== Conteneur poste élève ===== */
+.pe-poste { display: flex; flex-direction: column; gap: 14px; }
+
+/* ===== Bloc générique ===== */
+.pe-bloc { background: #fff; border: 1px solid var(--pe-bord); border-radius: 8px; padding: 14px 16px; }
+.pe-bloc-titre {
+  font-family: 'Trebuchet MS', sans-serif; font-size: 0.9em; color: var(--pe-bleu);
+  font-weight: bold; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+}
+.pe-bloc-titre .pe-ico { font-size: 1.1em; }
+
+/* ===== Mission / contexte ===== */
+.pe-mission { background: #fff8f4; border-left: 4px solid var(--pe-orange); }
+.pe-mission .pe-contexte { font-size: 0.82em; color: #555; margin-top: 8px; line-height: 1.5; }
+.pe-mission .pe-contexte b { color: var(--pe-bleu); }
+.pe-mission-txt { font-size: 0.9em; color: #222; line-height: 1.55; }
+
+/* ===== Conduite à tenir vivante ===== */
+.pe-conduite { list-style: none; margin: 0; padding: 0; counter-reset: etape; }
+.pe-etape {
+  display: flex; align-items: flex-start; gap: 10px; padding: 8px 10px; margin-bottom: 6px;
+  border: 1px solid var(--pe-bord); border-radius: 6px; font-size: 0.86em; line-height: 1.4;
+  background: #fafbfd; transition: background 0.2s, border-color 0.2s;
+}
+.pe-etape .pe-num {
+  counter-increment: etape; flex-shrink: 0; width: 22px; height: 22px; border-radius: 50%;
+  background: #e8ecf2; color: var(--pe-bleu); font-weight: bold; font-size: 0.8em;
+  display: flex; align-items: center; justify-content: center;
+}
+.pe-etape .pe-num::before { content: counter(etape); }
+.pe-etape .pe-etape-txt { flex: 1; }
+.pe-etape .pe-etat { flex-shrink: 0; font-size: 0.78em; font-weight: bold; }
+/* État À FAIRE (par défaut) */
+.pe-etape.todo .pe-etat::before { content: '○ à faire'; color: #999; }
+/* État ACTIVE = prochaine action attendue (mode guidé) */
+.pe-etape.active { background: #fff8f4; border-color: var(--pe-orange); }
+.pe-etape.active .pe-num { background: var(--pe-orange); color: #fff; }
+.pe-etape.active .pe-etat::before { content: '➜ à faire maintenant'; color: var(--pe-attente); }
+/* État FAIT */
+.pe-etape.done { background: #f1f8f2; border-color: #b6d9bb; }
+.pe-etape.done .pe-num { background: var(--pe-ok); color: #fff; }
+.pe-etape.done .pe-num::before { content: '✓'; }
+.pe-etape.done .pe-etape-txt { color: #557; text-decoration: line-through; }
+.pe-etape.done .pe-etat::before { content: '✓ fait'; color: var(--pe-ok); }
+/* Case à cocher manuelle (étapes sans action automatique) */
+.pe-etape .pe-check { width: 18px; height: 18px; flex-shrink: 0; cursor: pointer; accent-color: var(--pe-ok); }
+
+/* ===== Actions opérateur ===== */
+.pe-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.pe-act {
+  display: flex; align-items: center; gap: 8px; text-align: left; padding: 10px 12px;
+  border: 1px solid var(--pe-bord); border-radius: 8px; background: #fff; cursor: pointer;
+  font-family: Calibri, sans-serif; font-size: 0.82em; color: var(--pe-bleu); font-weight: bold;
+  transition: transform 0.05s, box-shadow 0.15s, border-color 0.15s;
+}
+.pe-act:hover { border-color: var(--pe-orange); box-shadow: 0 2px 8px rgba(27,58,99,0.12); }
+.pe-act:active { transform: translateY(1px); }
+.pe-act .pe-act-ico { font-size: 1.4em; line-height: 1; }
+.pe-act.pe-act-danger { color: var(--pe-danger); }
+.pe-act:disabled { opacity: 0.45; cursor: not-allowed; box-shadow: none; border-color: var(--pe-bord); }
+.pe-act-note { grid-column: 1/-1; font-size: 0.72em; color: #888; line-height: 1.4; }
+
+/* ===== Pavé niveau d'accès (sur l'équipement, fond sombre) ===== */
+.pe-acces {
+  display: flex; align-items: center; gap: 10px; background: #252930; border: 1px solid #3a3f48;
+  border-radius: 4px; padding: 8px 12px; font-family: 'Courier New', monospace; color: #ccc; font-size: 0.7em;
+}
+.pe-acces .pe-acces-niv { font-weight: bold; letter-spacing: 1px; }
+.pe-acces .pe-acces-niv b { color: #00ff44; }
+.pe-acces.niv2 .pe-acces-niv b { color: #ffcc00; }
+.pe-acces .pe-acces-btn {
+  margin-left: auto; font-family: 'Courier New', monospace; font-size: 1em; padding: 5px 10px;
+  border: 1px solid #666; border-radius: 3px; background: linear-gradient(180deg,#555,#444);
+  color: #eee; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.pe-acces .pe-acces-btn:active { transform: translateY(1px); }
+
+/* ===== Main courante ===== */
+.pe-mc { width: 100%; border-collapse: collapse; font-size: 0.8em; }
+.pe-mc th { background: var(--pe-bleu); color: #fff; padding: 6px 8px; text-align: left; font-size: 0.92em; }
+.pe-mc td { border: 1px solid var(--pe-bord); padding: 0; vertical-align: top; }
+.pe-mc td input, .pe-mc td textarea {
+  width: 100%; border: none; padding: 6px 8px; font-family: Calibri, sans-serif; font-size: 1em;
+  color: #222; background: transparent; resize: vertical; box-sizing: border-box;
+}
+.pe-mc td input:focus, .pe-mc td textarea:focus { outline: 2px solid var(--pe-orange); outline-offset: -2px; }
+.pe-mc .pe-mc-heure { width: 70px; text-align: center; }
+.pe-mc tr.pe-mc-auto td { background: #f6f8fb; color: #555; }
+.pe-mc-add {
+  margin-top: 8px; font-size: 0.78em; padding: 5px 12px; border: 1px dashed #b9c2d2; border-radius: 6px;
+  background: #fff; color: var(--pe-bleu); cursor: pointer;
+}
+.pe-mc-add:hover { border-color: var(--pe-orange); color: var(--pe-orange); }
+
+/* ===== Questions ===== */
+.pe-question { margin-bottom: 14px; }
+.pe-question:last-child { margin-bottom: 0; }
+.pe-question .pe-q-txt { font-size: 0.85em; color: #222; margin-bottom: 6px; line-height: 1.4; }
+.pe-question .pe-q-txt b { color: var(--pe-orange); }
+.pe-question textarea {
+  width: 100%; min-height: 56px; border: 1px solid var(--pe-bord); border-radius: 6px;
+  padding: 8px; font-family: Calibri, sans-serif; font-size: 0.85em; resize: vertical; box-sizing: border-box;
+}
+.pe-question textarea:focus { outline: none; border-color: var(--pe-orange); }
+.pe-qcm-opt { display: flex; align-items: center; gap: 8px; font-size: 0.84em; padding: 4px 0; cursor: pointer; }
+.pe-qcm-opt input { accent-color: var(--pe-orange); }
+
+/* ===== Modales d'action (appel 18, accueil secours) ===== */
+.pe-modal-ov { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 300; align-items: center; justify-content: center; }
+.pe-modal-ov.active { display: flex; }
+.pe-modal { background: #fff; border-radius: 12px; padding: 22px 26px; max-width: 480px; width: 92%; max-height: 88vh; overflow-y: auto; box-shadow: 0 8px 32px rgba(0,0,0,0.25); }
+.pe-modal h3 { font-family: 'Trebuchet MS', sans-serif; color: var(--pe-bleu); margin-bottom: 6px; font-size: 1.05em; }
+.pe-modal .pe-modal-sub { font-size: 0.82em; color: #666; margin-bottom: 14px; }
+.pe-modal label { display: block; font-size: 0.82em; color: var(--pe-bleu); font-weight: bold; margin: 10px 0 4px; }
+.pe-modal input[type="text"], .pe-modal textarea, .pe-modal input[type="tel"] {
+  width: 100%; border: 1px solid var(--pe-bord); border-radius: 6px; padding: 8px 10px;
+  font-family: Calibri, sans-serif; font-size: 0.9em; box-sizing: border-box;
+}
+.pe-modal textarea { min-height: 70px; resize: vertical; }
+.pe-modal .pe-modal-check { display: flex; align-items: flex-start; gap: 8px; font-size: 0.85em; margin: 8px 0; line-height: 1.4; }
+.pe-modal .pe-modal-check input { margin-top: 3px; accent-color: var(--pe-ok); }
+.pe-modal .pe-modal-row { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }
+.pe-btn { font-family: Calibri, sans-serif; font-size: 0.88em; padding: 9px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+.pe-btn-primary { background: var(--pe-orange); color: #fff; }
+.pe-btn-primary:hover { background: #e55a28; }
+.pe-btn-ghost { background: #eef1f6; color: var(--pe-bleu); }
+.pe-btn-ghost:hover { background: #e2e7ef; }
+
+/* ===== Sélecteur de palier (guidé / autonome) ===== */
+.pe-palier { display: inline-flex; border: 1px solid var(--pe-bord); border-radius: 8px; overflow: hidden; }
+.pe-palier button {
+  border: none; background: #fff; color: var(--pe-bleu); font-family: Calibri, sans-serif;
+  font-size: 0.78em; padding: 6px 14px; cursor: pointer; font-weight: bold;
+}
+.pe-palier button.actif { background: var(--pe-bleu); color: #fff; }
+
+/* En mode autonome, on masque les indices forts */
+.pe-poste.mode-autonome .pe-conduite,
+.pe-poste.mode-autonome .pe-etape.active .pe-etat::before { /* la conduite est masquée par JS, garde-fou CSS */ }
+
+/* ===== Boutons fiche papier ===== */
+.pe-fiche-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.pe-fiche-btns .pe-btn { font-size: 0.8em; padding: 7px 14px; }
+.pe-btn-fiche { background: #fff; color: var(--pe-bleu); border: 1px solid var(--pe-bleu); border: 1px solid #b9c2d2; }
+.pe-btn-fiche:hover { border-color: var(--pe-orange); color: var(--pe-orange); }
