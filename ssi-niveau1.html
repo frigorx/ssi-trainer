@@ -166,6 +166,24 @@ body{font-family:Calibri,sans-serif;font-size:14pt;line-height:1.5;background:#f
 /* Footer */
 .footer{text-align:center;padding:12px;color:#888;font-size:0.75em;border-top:1px solid #e0e4ea;background:#fff}
 .footer a{color:#ff6b35;text-decoration:none}
+
+/* ===== ACCESSIBILITÉ ===== */
+button:focus-visible,select:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #ffcc00;outline-offset:2px}
+@media(prefers-reduced-motion:reduce){
+  .led.blink,.led-red.blink,.led-yellow.blink,.lcd-line.blink-text{animation:none !important}
+  .led-red.blink{background:#ff2222;box-shadow:0 0 8px #ff2222}
+  .led-yellow.blink{background:#ffcc00;box-shadow:0 0 8px #ffcc00}
+}
+@media(max-width:640px){
+  body{font-size:12pt}
+  .header{padding:10px 14px}
+  .header .title-center{font-size:0.8em}
+  .ecs-panel,.pedagogy-panel{padding:12px}
+  .pedagogy-panel{max-height:none}
+  .buttons-section{grid-template-columns:1fr}
+  .btn-evac{grid-column:auto}
+  .zones-section{grid-template-columns:1fr 1fr}
+}
 </style>
 </head>
 <body>
@@ -339,7 +357,7 @@ body{font-family:Calibri,sans-serif;font-size:14pt;line-height:1.5;background:#f
     <!-- Journal horodaté (technique) -->
     <div class="journal-section">
       <div class="journal-title">Journal des &eacute;v&eacute;nements (syst&egrave;me)</div>
-      <div class="journal-list" id="journalList">
+      <div class="journal-list" id="journalList" aria-live="polite" aria-label="Journal des événements">
         <div class="journal-entry info"><span class="time">--:--:--</span> &mdash; Syst&egrave;me en attente. S&eacute;lectionnez un sc&eacute;nario.</div>
       </div>
     </div>

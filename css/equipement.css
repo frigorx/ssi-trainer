@@ -166,3 +166,28 @@ body { font-family: Calibri, sans-serif; font-size: 14pt; line-height: 1.5; back
 
 .footer { text-align: center; padding: 12px; color: #888; font-size: 0.75em; border-top: 1px solid #e0e4ea; background: #fff; }
 .footer a { color: #ff6b35; text-decoration: none; }
+
+/* ===== ACCESSIBILITÉ ===== */
+/* Navigation clavier : focus toujours visible */
+button:focus-visible, select:focus-visible, input:focus-visible, a:focus-visible, .pe-act:focus-visible, .btn-acquit-zone:focus-visible {
+  outline: 3px solid #ffcc00; outline-offset: 2px;
+}
+/* Mouvement réduit (photosensibilité, TDAH) : on fige les clignotements */
+@media (prefers-reduced-motion: reduce) {
+  .led.blink, .led-red.blink, .led-yellow.blink, .lcd-line.blink-text, .das-row.defaillant .das-led { animation: none !important; }
+  .led-red.blink { background: #ff2222; box-shadow: 0 0 8px #ff2222; }
+  .led-yellow.blink { background: #ffcc00; box-shadow: 0 0 8px #ffcc00; }
+  .das-row.defaillant .das-led { background: #ff2222; box-shadow: 0 0 6px #ff2222; }
+}
+/* Mobile / petite tablette */
+@media (max-width: 640px) {
+  body { font-size: 12pt; }
+  .header { padding: 10px 14px; gap: 8px; }
+  .header .title-center { font-size: 0.8em; }
+  .ecs-panel, .pedagogy-panel { padding: 12px; }
+  .pedagogy-panel { max-height: none; }
+  .zones-section { grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); }
+  .buttons-section { grid-template-columns: 1fr; }
+  .btn-evac { grid-column: auto; }
+  .general-indicators { grid-template-columns: repeat(3, 1fr); }
+}

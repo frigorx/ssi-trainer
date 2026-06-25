@@ -108,13 +108,14 @@
               '<button class="pe-btn pe-btn-fiche" id="btnImprimer" disabled>&#128424; Fiche</button>' +
               '<button class="pe-btn pe-btn-fiche" id="btnTelecharger" disabled>&#11015; T&eacute;l&eacute;charger</button></div>' +
           '</div>' +
+          '<div id="scenAvert" style="display:none;font-size:0.78em;color:#c62828;background:#fff3f3;border:1px solid #f3c6c6;border-radius:6px;padding:6px 10px">Aucun sc&eacute;nario ne correspond &agrave; ce dipl&ocirc;me &agrave; ce niveau (ce niveau s\'adresse &agrave; un dipl&ocirc;me plus avanc&eacute;).</div>' +
           '<div id="peMission" class="pe-bloc pe-mission"></div>' +
           '<div id="peActions" class="pe-bloc"></div>' +
           '<div id="peConduite" class="pe-bloc"></div>' +
           '<div id="peMainCourante" class="pe-bloc"></div>' +
           '<div id="peQuestions" class="pe-bloc"></div>' +
           '<div class="journal-section"><div class="journal-title">Journal des &eacute;v&eacute;nements (syst&egrave;me)</div>' +
-            '<div class="journal-list" id="journalList"><div class="journal-entry info"><span class="time">--:--:--</span> &mdash; S&eacute;lectionnez un sc&eacute;nario.</div></div></div>' +
+            '<div class="journal-list" id="journalList" aria-live="polite" aria-label="Journal des événements"><div class="journal-entry info"><span class="time">--:--:--</span> &mdash; S&eacute;lectionnez un sc&eacute;nario.</div></div></div>' +
           '<div class="scoring-section"><div class="scoring-title">Suivi de progression <span class="scoring-sub">(retour formatif &mdash; non transmis)</span></div>' +
             '<div class="scoring-bar"><div class="scoring-fill good" id="scoringFill" style="width:0%">0%</div></div>' +
             '<div class="scoring-details"><div class="scoring-item"><span class="scoring-dot scoring-dot-ok"></span> Correct : <strong id="scoreOk">0</strong></div>' +
@@ -125,7 +126,7 @@
       // Modales aide / bilan / accès
       var m = document.createElement('div');
       m.innerHTML =
-        '<div class="modal-overlay" id="aideModal"><div class="modal-aide"><button class="close-btn" id="aideClose">&times;</button>' +
+        '<div class="modal-overlay" id="aideModal"><div class="modal-aide" role="dialog" aria-modal="true" aria-label="Fiche de poste"><button class="close-btn" id="aideClose" aria-label="Fermer">&times;</button>' +
           '<h3>Fiche de poste &mdash; Op&eacute;rateur SSI</h3>' +
           '<ol><li><strong>Acquitter</strong> l\'alarme</li><li><strong>Localiser</strong> la zone</li><li><strong>Lev&eacute;e de doute</strong> par un &eacute;quipier</li>' +
           '<li><strong>Si feu</strong> : alerter le 18/112 (message structur&eacute;)</li><li>Passer en <strong>acc&egrave;s niveau 2</strong> puis <strong>commander les DAS</strong> (compartimentage, d&eacute;senfumage)</li>' +
@@ -134,12 +135,12 @@
           '<p class="fiche-title">R&eacute;f&eacute;rences</p><table><tr><th>Norme</th><th>Objet</th></tr>' +
           '<tr><td>NF S 61-931</td><td>SSI &mdash; dispositions g&eacute;n&eacute;rales</td></tr><tr><td>NF S 61-934</td><td>CMSI</td></tr>' +
           '<tr><td>NF S 61-937</td><td>DAS (PCF &lt; 30 s, ventouses)</td></tr><tr><td>Arr&ecirc;t&eacute; 2 mai 2005</td><td>Qualification SSIAP</td></tr></table></div></div>' +
-        '<div class="pe-modal-ov" id="modalAcces"><div class="pe-modal"><h3>&#128273; Niveau d\'acc&egrave;s 2</h3>' +
+        '<div class="pe-modal-ov" id="modalAcces"><div class="pe-modal" role="dialog" aria-modal="true" aria-label="Niveau d\'accès 2"><h3>&#128273; Niveau d\'acc&egrave;s 2</h3>' +
           '<div class="pe-modal-sub" id="accesMsg">Les commandes engageantes exigent le niveau d\'acc&egrave;s 2 (NF S 61-931). Saisissez le code.</div>' +
           '<label for="accesCode">Code d\'acc&egrave;s</label><input type="password" id="accesCode" maxlength="4" inputmode="numeric" placeholder="____" style="text-align:center;letter-spacing:8px;font-size:1.2em">' +
           '<div id="accesErr" style="color:#c62828;font-size:0.82em;min-height:1.2em;margin-top:4px"></div>' +
           '<div class="pe-modal-row"><button class="pe-btn pe-btn-ghost" id="accesAnnuler">Annuler</button><button class="pe-btn pe-btn-primary" id="accesValider">Valider</button></div></div></div>' +
-        '<div class="bilan-overlay" id="bilanOverlay"><div class="bilan-modal"><h3>Bilan de la mise en situation</h3><div id="bilanContent"></div>' +
+        '<div class="bilan-overlay" id="bilanOverlay"><div class="bilan-modal" role="dialog" aria-modal="true" aria-label="Bilan"><h3>Bilan de la mise en situation</h3><div id="bilanContent"></div>' +
           '<button class="btn-close-bilan" id="bilanClose">Fermer</button></div></div>';
       document.body.appendChild(m);
 
@@ -355,13 +356,32 @@
       var n = $('profNom'), c = $('profClasse'), d = $('profDiplome');
       n.value = profil.nom; n.addEventListener('input', function () { profil.set(this.value, undefined, undefined); });
       c.value = profil.classe; c.addEventListener('input', function () { profil.set(undefined, this.value, undefined); });
-      d.addEventListener('change', function () { profil.set(undefined, undefined, this.value); majPerimetre(); if (scenarioCourant) poste.setFormatMainCourante(formatMC()); });
+      d.addEventListener('change', function () { profil.set(undefined, undefined, this.value); majPerimetre(); filtrerScenarios(); if (scenarioCourant) poste.setFormatMainCourante(formatMC()); });
     }
 
     // ============================================================ Scénarios
     function remplirSelectScenario() {
       var sel = $('scenarioSelect');
-      (config.scenarios || []).forEach(function (s) { var o = document.createElement('option'); o.value = s.value; o.textContent = s.label; sel.appendChild(o); });
+      (config.scenarios || []).forEach(function (s) {
+        var o = document.createElement('option'); o.value = s.value; o.textContent = s.label;
+        o.setAttribute('data-diplomes', (s.diplomes || []).join(','));
+        sel.appendChild(o);
+      });
+    }
+
+    // Filtre le sélecteur de scénarios selon le diplôme suivi par l'élève.
+    function filtrerScenarios() {
+      var sel = $('scenarioSelect'); if (!sel) return;
+      var dip = profil.diplome; var visibles = 0;
+      Array.prototype.forEach.call(sel.options, function (o) {
+        if (!o.value) return;
+        var dl = (o.getAttribute('data-diplomes') || '').split(',').filter(Boolean);
+        var ok = !dl.length || dl.indexOf(dip) > -1;
+        o.hidden = !ok; o.disabled = !ok;
+        if (ok) visibles++;
+      });
+      if (sel.value && sel.selectedOptions[0] && sel.selectedOptions[0].hidden) { sel.value = ''; chargerScenarioDoc(); }
+      var av = $('scenAvert'); if (av) av.style.display = visibles ? 'none' : 'block';
     }
     function chargerScenarioDoc() {
       var sel = $('scenarioSelect').value;
@@ -478,6 +498,7 @@
     // ============================================================ Démarrage
     buildUI();
     remplirSelectScenario();
+    filtrerScenarios();
     chargerReferentiels();
     initProfilUI();
     majAccesUI();

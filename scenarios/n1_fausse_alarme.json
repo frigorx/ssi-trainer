@@ -3,7 +3,12 @@
   "titre": "Fausse alarme — Cuisine RDC",
   "niveau": 1,
   "equipement": "ECS",
-  "diplomes": ["CAP", "BAC_PRO"],
+  "diplomes": [
+    "CAP_AS",
+    "BACPRO_MS",
+    "BP_ATPS",
+    "BTS_MOS"
+  ],
   "erp_type": "N",
   "duree_max": 180,
   "description": "Un détecteur optique se déclenche en cuisine. Après levée de doute, il s'avère que c'est de la vapeur de cuisson. L'élève doit suivre la procédure standard.",
@@ -14,10 +19,22 @@
   },
   "mission": "Vous êtes l'agent de sécurité SSIAP au poste de sécurité (PC sécurité). Une alarme vient de retentir sur l'ECS. Appliquez la procédure de levée de doute, sans déclencher d'évacuation injustifiée.",
   "zones": [
-    { "id": "ZD01", "nom": "Cuisine RDC" },
-    { "id": "ZD02", "nom": "Hall accueil" },
-    { "id": "ZD03", "nom": "Bureaux 1er" },
-    { "id": "ZD04", "nom": "Stockage SS" }
+    {
+      "id": "ZD01",
+      "nom": "Cuisine RDC"
+    },
+    {
+      "id": "ZD02",
+      "nom": "Hall accueil"
+    },
+    {
+      "id": "ZD03",
+      "nom": "Bureaux 1er"
+    },
+    {
+      "id": "ZD04",
+      "nom": "Stockage SS"
+    }
   ],
   "levee_doute": {
     "feu": false,
@@ -26,31 +43,95 @@
     "rapport_feu": "FEU — départ de feu en cuisine, flammes sur le piano de cuisson, fumée."
   },
   "evenements": [
-    { "t": 0, "type": "alarme", "zone": "ZD01", "detail": "Détecteur optique fumée — Cuisine RDC" }
+    {
+      "t": 0,
+      "type": "alarme",
+      "zone": "ZD01",
+      "detail": "Détecteur optique fumée — Cuisine RDC"
+    }
   ],
   "actions_attendues": [
-    { "action": "acquittement", "delai_max": 15, "competence": "C2", "points": 25 },
-    { "action": "arret_signal", "delai_max": 20, "competence": "C2", "points": 15 },
-    { "action": "levee_doute", "delai_max": 45, "competence": "C2", "points": 20 },
-    { "action": "rearmement", "delai_max": 120, "competence": "C2", "points": 30 },
-    { "action": "test_signalisation", "delai_max": 150, "competence": "C2", "points": 30 }
+    {
+      "action": "acquittement",
+      "delai_max": 15,
+      "competence": "C2",
+      "points": 25
+    },
+    {
+      "action": "arret_signal",
+      "delai_max": 20,
+      "competence": "C2",
+      "points": 15
+    },
+    {
+      "action": "levee_doute",
+      "delai_max": 45,
+      "competence": "C2",
+      "points": 20
+    },
+    {
+      "action": "rearmement",
+      "delai_max": 120,
+      "competence": "C2",
+      "points": 30
+    },
+    {
+      "action": "test_signalisation",
+      "delai_max": 150,
+      "competence": "C2",
+      "points": 30
+    }
   ],
   "fautes_graves": [
-    { "type": "fait", "cle": "evacuation_generale", "libelle": "Évacuation générale déclenchée sur une fausse alarme (surréaction grave)" },
-    { "type": "fait_sans", "cle": "rearmement", "avant": "levee_doute", "libelle": "Réarmement effectué sans levée de doute préalable" }
+    {
+      "type": "fait",
+      "cle": "evacuation_generale",
+      "libelle": "Évacuation générale déclenchée sur une fausse alarme (surréaction grave)"
+    },
+    {
+      "type": "fait_sans",
+      "cle": "rearmement",
+      "avant": "levee_doute",
+      "libelle": "Réarmement effectué sans levée de doute préalable"
+    }
   ],
   "conduite_a_tenir": [
-    { "cle": "acquittement", "texte": "Acquitter l'alarme sonore sur l'ECS" },
-    { "cle": "arret_signal", "texte": "Arrêter le signal sonore une fois pris en compte" },
-    { "texte": "Localiser la zone en alarme sur le tableau (voyant + afficheur)" },
-    { "cle": "levee_doute", "texte": "Envoyer un équipier de ronde en levée de doute" },
-    { "texte": "Attendre et analyser le compte-rendu de l'équipier" },
-    { "cle": "rearmement", "texte": "Fausse alarme confirmée → réarmer le système" },
-    { "cle": "test_signalisation", "texte": "Vérifier le bon fonctionnement (test signalisation)" }
+    {
+      "cle": "acquittement",
+      "texte": "Acquitter l'alarme sonore sur l'ECS"
+    },
+    {
+      "cle": "arret_signal",
+      "texte": "Arrêter le signal sonore une fois pris en compte"
+    },
+    {
+      "texte": "Localiser la zone en alarme sur le tableau (voyant + afficheur)"
+    },
+    {
+      "cle": "levee_doute",
+      "texte": "Envoyer un équipier de ronde en levée de doute"
+    },
+    {
+      "texte": "Attendre et analyser le compte-rendu de l'équipier"
+    },
+    {
+      "cle": "rearmement",
+      "texte": "Fausse alarme confirmée → réarmer le système"
+    },
+    {
+      "cle": "test_signalisation",
+      "texte": "Vérifier le bon fonctionnement (test signalisation)"
+    }
   ],
   "questions": [
-    { "q": "Quel type de détecteur s'est déclenché en cuisine ? Pourquoi les fausses alarmes y sont-elles fréquentes ?", "type": "libre" },
-    { "q": "Quelle vérification est indispensable AVANT de réarmer le système ?", "type": "libre" },
+    {
+      "q": "Quel type de détecteur s'est déclenché en cuisine ? Pourquoi les fausses alarmes y sont-elles fréquentes ?",
+      "type": "libre"
+    },
+    {
+      "q": "Quelle vérification est indispensable AVANT de réarmer le système ?",
+      "type": "libre"
+    },
     {
       "q": "Le réarmement de l'ECS est possible :",
       "type": "qcm",

@@ -163,3 +163,16 @@
 .pe-fiche-btns .pe-btn { font-size: 0.8em; padding: 7px 14px; }
 .pe-btn-fiche { background: #fff; color: var(--pe-bleu); border: 1px solid var(--pe-bleu); border: 1px solid #b9c2d2; }
 .pe-btn-fiche:hover { border-color: var(--pe-orange); color: var(--pe-orange); }
+
+/* ===== ACCESSIBILITÉ (commun à tous les niveaux) ===== */
+.pe-act:focus-visible, .pe-btn:focus-visible, .pe-acces-btn:focus-visible, .pe-check:focus-visible,
+button:focus-visible, select:focus-visible, input:focus-visible, textarea:focus-visible {
+  outline: 3px solid #ffcc00; outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pe-etape, .pe-act, .scoring-fill, .comp-bar-fill { transition: none !important; }
+}
+@media (max-width: 640px) {
+  .pe-actions { grid-template-columns: 1fr; }
+  .pe-modal { padding: 18px 16px; }
+}
