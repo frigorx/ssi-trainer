@@ -267,13 +267,30 @@ class SSIEngine {
 
   commandeManuelle(dasId) {
     const das = this.das.get(dasId);
-    if (das) {
-      das.etat = 'COMMANDE';
-      das.commande = true;
-      this._log('COMMANDE_DAS', `Commande manuelle DAS ${dasId} — ${das.designation}`, null, { dasId });
-      this._emit('commandeDAS', { dasId });
-      this._emit('action', { action: 'commande_das', dasId, timestamp: Date.now() });
+    if (!das) return false;
+    // Un DAS défaillant ne peut pas être commandé : la commande n'aboutit pas.
+    if (das.etat === 'DEFAILLANT') {
+      this._log('COMMANDE_REFUS', `Commande DAS ${dasId} refusée — équipement défaillant`, null, { dasId });
+      this._emit('commandeDAS', { dasId, refus: true });
+      this._emit('action', { action: 'commande_das', dasId, echec: true, timestamp: Date.now() });
+      return false;
     }
+    das.etat = 'COMMANDE';
+    das.commande = true;
+    this._log('COMMANDE_DAS', `Commande manuelle DAS ${dasId} — ${das.designation}`, null, { dasId });
+    this._emit('commandeDAS', { dasId });
+    this._emit('action', { action: 'commande_das', dasId, timestamp: Date.now() });
+    return true;
+  }
+
+  reconnaitreDefautDAS(dasId) {
+    this._log('DEFAUT_RECONNU', 'Défaut DAS reconnu et consigné au journal' + (dasId ? ' — ' + dasId : ''));
+    this._emit('action', { action: 'reconnaitre_defaut_das', dasId: dasId || null, timestamp: Date.now() });
+  }
+
+  coupureEnergies(detail) {
+    this._log('COUPURE_ENERGIES', 'Coupure des énergies (gaz / électricité)' + (detail ? ' — ' + detail : ''));
+    this._emit('action', { action: 'coupure_energies', detail: detail || null, timestamp: Date.now() });
   }
 
   testSignalisation() {

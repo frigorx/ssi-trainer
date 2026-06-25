@@ -1,0 +1,377 @@
+{
+  "id": "n2_defaillance_das_decision",
+  "titre": "Incendie local technique — Gestion de défaillance DAS",
+  "niveau": 2,
+  "equipement": "CMSI",
+  "diplomes": [
+    "BACPRO_MS",
+    "BP_ATPS"
+  ],
+  "erp_type": "U",
+  "duree_max": 320,
+  "contexte": {
+    "etablissement": "Établissement de santé (ERP type U), 200 lits",
+    "effectif": 250,
+    "particularites": "Locaux techniques importants au sous-sol (électrique, chaufferie). Patients alités aux étages. Évacuation PMR délicate. Entretien des DAS défaillant depuis 3 mois (encrassement, motorisations non vérifiées)."
+  },
+  "mission": "Vous êtes l'opérateur CMSI d'une structure sanitaire. Alarme au sous-sol — feu confirmé au local électrique. Les exutoires motorisés ne fonctionnent pas. Vous devez reconnaître le défaut, adapter votre commande de DAS (plan B), coordonner l'évacuation et préparer l'accueil des secours en contexte dégradé.",
+  "zones": [
+    {
+      "id": "Z01",
+      "nom": "Accueil/urgences RDC"
+    },
+    {
+      "id": "Z02",
+      "nom": "Couloir RDC"
+    },
+    {
+      "id": "Z03",
+      "nom": "Escalier central RDC"
+    },
+    {
+      "id": "Z04",
+      "nom": "Étage 1 — lits"
+    },
+    {
+      "id": "Z05",
+      "nom": "Escalier central étage 1"
+    },
+    {
+      "id": "Z06",
+      "nom": "Étage 2 — lits"
+    },
+    {
+      "id": "Z07",
+      "nom": "Escalier central étage 2"
+    },
+    {
+      "id": "Z08",
+      "nom": "Bloc opératoire R+2"
+    },
+    {
+      "id": "Z09",
+      "nom": "Salle de radiologie RDC"
+    },
+    {
+      "id": "Z10",
+      "nom": "Pharmacie/médicaments RDC"
+    },
+    {
+      "id": "Z11",
+      "nom": "Local électrique SS"
+    },
+    {
+      "id": "Z12",
+      "nom": "Chaufferie/stockage SS"
+    }
+  ],
+  "levee_doute": {
+    "feu": true,
+    "delai": 25,
+    "rapport_feu": "FEU CONFIRMÉ — Local électrique sous-sol (Z11) : câblage en feu, défaut électrique majeur. Fumée importante, fort dégagement de chaleur. Escalier central déjà enfumé. Évacuation stratégique immédiate nécessaire.",
+    "rapport_ras": "RAS — surcharge électrique détectée mais aucun foyer visible. Refroidissement en cours."
+  },
+  "evenements": [
+    {
+      "t": 0,
+      "type": "alarme",
+      "zone": "Z11",
+      "detail": "Détecteur thermique — Local électrique sous-sol"
+    },
+    {
+      "t": 8,
+      "type": "alarme",
+      "zone": "Z11",
+      "detail": "Détecteur optique — Local électrique sous-sol (double détection)"
+    },
+    {
+      "t": 15,
+      "type": "info_formateur",
+      "msg": "Le système passe en ALARME GÉNÉRALE. Commande envoyée aux exutoires SS."
+    },
+    {
+      "t": 25,
+      "type": "info_formateur",
+      "msg": "Équipier : FEU CONFIRMÉ au local électrique SS. Escalier central enfumé."
+    },
+    {
+      "t": 35,
+      "type": "defaillance",
+      "das": "EXU-SS-ELECT",
+      "msg": "Défaillance EXUTOIRE local électrique — moteur bloqué, pas d'ouverture (perte de fonction)"
+    },
+    {
+      "t": 40,
+      "type": "derangement",
+      "zone": "Z03",
+      "msg": "Dérangement signalé escalier central RDC — fumée dense observée par l'équipier"
+    },
+    {
+      "t": 50,
+      "type": "propagation",
+      "zone": "Z05",
+      "from": "Z11",
+      "detail": "Propagation de la fumée par les gaines de ventilation — étage 1 (Z05)"
+    },
+    {
+      "t": 70,
+      "type": "info_formateur",
+      "msg": "Équipier : escalier central enfumé, passage par l'escalier de secours conseillé. Patients de l'étage 1 à évacuer en priorité."
+    },
+    {
+      "t": 90,
+      "type": "info_formateur",
+      "msg": "Pompiers alertés ? À leur transmettre : équipements défaillants, patients alités étages 1-2."
+    },
+    {
+      "t": 180,
+      "type": "info_formateur",
+      "msg": "Pompiers en approche (3 min). Prévoir l'accueil avec les clés du SS, les plans des gaines de ventilation et la liste des patients."
+    }
+  ],
+  "actions_attendues": [
+    {
+      "action": "acquittement",
+      "delai_max": 20,
+      "competence": "C2",
+      "points": 15
+    },
+    {
+      "action": "levee_doute",
+      "delai_max": 40,
+      "competence": "C2",
+      "points": 15
+    },
+    {
+      "action": "reconnaitre_defaut_das",
+      "delai_max": 55,
+      "competence": "C2",
+      "points": 20
+    },
+    {
+      "action": "appel_18",
+      "delai_max": 70,
+      "competence": "C3",
+      "points": 20
+    },
+    {
+      "action": "commande_das",
+      "delai_max": 75,
+      "competence": "C7",
+      "points": 35
+    },
+    {
+      "action": "evacuation_generale",
+      "delai_max": 110,
+      "competence": "C4",
+      "points": 35
+    },
+    {
+      "action": "accueil_pompiers",
+      "delai_max": 240,
+      "competence": "C8",
+      "points": 25
+    }
+  ],
+  "fautes_graves": [
+    {
+      "type": "manque",
+      "cle": "reconnaitre_defaut_das",
+      "libelle": "Defaut DAS non reconnu/consigne — strategie non adaptee, secours non informes"
+    },
+    {
+      "type": "manque",
+      "cle": "commande_das",
+      "libelle": "DAS de compartimentage non commandes — propagation par les gaines inevitable"
+    },
+    {
+      "type": "manque",
+      "cle": "appel_18",
+      "libelle": "Secours non alertes malgre feu confirme et defaillance d-equipement"
+    },
+    {
+      "type": "manque",
+      "cle": "accueil_pompiers",
+      "libelle": "Accueil pompiers omis ou defaillance exutoire non signalee aux secours"
+    }
+  ],
+  "conduite_a_tenir": [
+    {
+      "cle": "acquittement",
+      "texte": "Acquitter l'alarme sonore sur le CMSI"
+    },
+    {
+      "texte": "Localiser l'alarme : zone Z11 (local électrique SS)"
+    },
+    {
+      "cle": "arret_signal",
+      "texte": "Arrêter le signal sonore"
+    },
+    {
+      "cle": "levee_doute",
+      "texte": "Envoyer un équipier en levée de doute d'urgence (sous-sol = accès réglementé, équipier qualifié)"
+    },
+    {
+      "texte": "Attendre le rapport : FEU ou fausse alarme ?"
+    },
+    {
+      "texte": "Dès confirmation, passer le CMSI en niveau d'accès 2 (code/clé)"
+    },
+    {
+      "cle": "reconnaitre_defaut_das",
+      "texte": "Consulter le journal SSI : l'exutoire EXU-SS-ELECT est en DÉFAILLANCE (moteur bloqué). Reconnaître le défaut, le consigner, et basculer en stratégie dégradée (plan B)"
+    },
+    {
+      "cle": "appel_18",
+      "texte": "Feu confirmé → alerter le 18 : nature (feu électrique), localisation (SS local électrique), établissement (santé, 200 lits), victimes (patients étages 1-2 à évacuer), défaillance exutoire connue, accès pompiers, RESTER EN LIGNE jusqu'à instruction du CODIS"
+    },
+    {
+      "cle": "commande_das",
+      "texte": "Plan B : commander VEN-ESC-CENTR (ventilateur escalier, alimentation secours) en substitut de l'exutoire HS, puis PCF-ESC-1 et CLAP-GAINAGE-SS pour isoler la propagation par les gaines"
+    },
+    {
+      "texte": "Vérifier au journal que chaque DAS du plan B passe en état COMMANDÉ"
+    },
+    {
+      "cle": "evacuation_generale",
+      "texte": "Déclencher l'évacuation générale du bâtiment"
+    },
+    {
+      "texte": "Coordonner l'évacuation stratégique étage par étage (escalier de secours prioritaire si l'escalier central est enfumé)"
+    },
+    {
+      "texte": "Gérer les patients alités : matériel adapté (lits, brancards, accompagnement infirmier)"
+    },
+    {
+      "cle": "accueil_pompiers",
+      "texte": "À l'arrivée : remettre plans et clés du SS, signaler le foyer (Z11), la DÉFAILLANCE exutoire (moteur bloqué), la propagation par gaines vers les étages, les patients évacués et l'escalier utilisé"
+    }
+  ],
+  "questions": [
+    {
+      "q": "Un exutoire motorisé ne s'ouvre pas malgré la commande depuis le CMSI. Listez 3 causes possibles et comment les diagnostiquer rapidement.",
+      "type": "libre"
+    },
+    {
+      "q": "Vous découvrez une défaillance DAS en plein incident. Pourquoi est-il critique de la consigner au journal SSI ET de l'annoncer aux pompiers à leur arrivée ?",
+      "type": "libre"
+    },
+    {
+      "q": "Dans une structure sanitaire avec patients alités, comment adaptez-vous la priorité d'évacuation en cas de feu au sous-sol avec enfumage de l'escalier principal ?",
+      "type": "libre"
+    },
+    {
+      "q": "Rédigez un message d'alerte 18 adapté à cette situation (nature, localisation, établissement, victimes, défaillances connues, accès).",
+      "type": "libre"
+    },
+    {
+      "q": "La fermeture d'un clapet coupe-feu de gaine est commandée, mais la fumée continue de passer. Qu'a probablement échoué ?",
+      "type": "qcm",
+      "options": [
+        "Le signal n'a pas atteint le clapet",
+        "Le clapet est physiquement obstrué (dépôts, encrassement) et ne ferme pas de façon étanche",
+        "Le système est défaillant par conception",
+        "C'est normal — les clapets sont poreux à la fumée"
+      ],
+      "reponse": 1
+    },
+    {
+      "q": "Selon l'arrêté du 2 mai 2005, lors d'une défaillance d'équipement SSI pendant un incident, l'opérateur SSIAP doit :",
+      "type": "qcm",
+      "options": [
+        "Ignorer le défaut et suivre la procédure standard",
+        "Le signaler uniquement à la maintenance",
+        "Le consigner au journal SSI, le signaler aux secours à leur arrivée ET à la maintenance",
+        "Attendre la fin de l'incident pour le signaler"
+      ],
+      "reponse": 2
+    }
+  ],
+  "points_cles": [
+    "Une défaillance DAS (exutoire, clapet) = escalade de risque majeure : c'est un CHANGEMENT de scénario. L'opérateur doit reconnaître le défaut au journal SSI, puis « pivoter » vers un plan B.",
+    "En contexte dégradé, privilégier le compartimentage manuel (PCF/clapets) plutôt que de s'acharner sur une extraction automatique HS.",
+    "Les gaines de ventilation et de chauffage sont des vecteurs majeurs de propagation de fumée entre étages : les clapets coupe-feu y sont ESSENTIELS.",
+    "La NF S 61-933 impose des vérifications périodiques (notamment trimestrielles) des DAS + nettoyage : l'entretien défaillant (clapets encrassés, moteurs grippés) est la première cause de défaillance en sinistre réel. La prévention relève aussi de l'opérateur (signalement).",
+    "Défaut consigné au journal SSI = traçabilité légale ; signalé aux pompiers à l'arrivée = stratégie d'intervention adaptée aux risques connus.",
+    "Structure de santé : patients alités = vulnérabilité accentuée. L'escalier secondaire peut devenir primaire si le principal est enfumé.",
+    "Message d'alerte 18 en contexte dégradé : inclure l'équipement hors service ET son impact (« escalier principal enfumé, évacuation par escalier de secours »)."
+  ],
+  "das": [
+    {
+      "id": "EXU-SS-ELECT",
+      "designation": "Exutoire motorisé local électrique SS",
+      "type": "desenfumage",
+      "zone": "Z11"
+    },
+    {
+      "id": "VEN-ESC-CENTR",
+      "designation": "Ventilateur extraction escalier central (alimentation secours)",
+      "type": "desenfumage",
+      "zone": "Z02"
+    },
+    {
+      "id": "PCF-ESC-1",
+      "designation": "Porte coupe-feu escalier 1er étage (ventouse type rupture)",
+      "type": "compartimentage",
+      "zone": "Z06"
+    },
+    {
+      "id": "CLAP-GAINAGE-SS",
+      "designation": "Clapet coupe-feu gaines chauffage/ventilation SS",
+      "type": "compartimentage",
+      "zone": "Z11"
+    }
+  ],
+  "gestes_operateur": [
+    {
+      "cle": "acquittement",
+      "label": "Acquitter l'alarme",
+      "competence": "C2"
+    },
+    {
+      "cle": "arret_signal",
+      "label": "Arrêter le signal sonore",
+      "competence": "C2"
+    },
+    {
+      "cle": "acquit_zone",
+      "label": "Acquitter une zone",
+      "competence": "C2"
+    },
+    {
+      "cle": "levee_doute",
+      "label": "Envoyer équipier en levée de doute",
+      "competence": "C2"
+    },
+    {
+      "cle": "appel_18",
+      "label": "Alerter le 18/112",
+      "competence": "C3"
+    },
+    {
+      "cle": "commande_das",
+      "label": "Commander DAS (PCF / clapets / exutoires)",
+      "competence": "C6"
+    },
+    {
+      "cle": "evacuation_generale",
+      "label": "Déclencher l'évacuation générale",
+      "competence": "C4"
+    },
+    {
+      "cle": "accueil_pompiers",
+      "label": "Accueillir et guider les secours",
+      "competence": "C8"
+    },
+    {
+      "cle": "rearmement",
+      "label": "Réarmer le système",
+      "competence": "C2"
+    },
+    {
+      "cle": "test_signalisation",
+      "label": "Test signalisation",
+      "competence": "C2"
+    }
+  ]
+}

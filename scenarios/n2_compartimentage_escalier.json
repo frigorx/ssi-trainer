@@ -1,0 +1,363 @@
+{
+  "id": "n2_compartimentage_escalier",
+  "titre": "Incendie bureau R+1 — Maîtrise par compartimentage",
+  "niveau": 2,
+  "equipement": "CMSI",
+  "diplomes": [
+    "BACPRO_MS",
+    "BP_ATPS"
+  ],
+  "erp_type": "W",
+  "duree_max": 300,
+  "contexte": {
+    "etablissement": "Immeuble de bureaux — ERP type W, R+2 sur sous-sol technique",
+    "effectif": 120,
+    "particularites": "Bureaux ouverts (open space) en R+1. Escalier principal protégé par PCF à ventouse type rupture. Locaux techniques au sous-sol. Public partiellement évacuable."
+  },
+  "mission": "Vous êtes l'opérateur CMSI au poste de sécurité incendie. Une alarme vient de retentir. Après confirmation du feu par l'équipier, mettez le bâtiment en sécurité en maîtrisant la propagation par le compartimentage et le désenfumage, puis guidez les secours à leur arrivée.",
+  "zones": [
+    {
+      "id": "Z01",
+      "nom": "Accueil RDC"
+    },
+    {
+      "id": "Z02",
+      "nom": "Couloir RDC"
+    },
+    {
+      "id": "Z03",
+      "nom": "Locaux techniques RDC"
+    },
+    {
+      "id": "Z04",
+      "nom": "Bureau open 1 R+1"
+    },
+    {
+      "id": "Z05",
+      "nom": "Bureau open 2 R+1"
+    },
+    {
+      "id": "Z06",
+      "nom": "Escalier/Couloir R+1"
+    },
+    {
+      "id": "Z07",
+      "nom": "Bureau fermé 1 R+2"
+    },
+    {
+      "id": "Z08",
+      "nom": "Bureau fermé 2 R+2"
+    },
+    {
+      "id": "Z09",
+      "nom": "Bureau fermé 3 R+2"
+    },
+    {
+      "id": "Z10",
+      "nom": "Escalier/Couloir R+2"
+    },
+    {
+      "id": "Z11",
+      "nom": "Local électrique SS"
+    },
+    {
+      "id": "Z12",
+      "nom": "Chaufferie SS"
+    }
+  ],
+  "levee_doute": {
+    "feu": true,
+    "delai": 30,
+    "rapport_feu": "FEU CONFIRMÉ — Bureau open 1 (Z04), corbeille papiers en feu, flammes sur le bureau, fumée importante. Escalier non endommagé pour le moment mais la fumée progresse vers Z06.",
+    "rapport_ras": "RAS — odeur de brûlé mais aucun foyer détecté. À surveiller étroitement."
+  },
+  "evenements": [
+    {
+      "t": 0,
+      "type": "alarme",
+      "zone": "Z04",
+      "detail": "Détecteur optique de fumée — Bureau open 1 R+1"
+    },
+    {
+      "t": 12,
+      "type": "alarme",
+      "zone": "Z04",
+      "detail": "Détecteur thermique — Bureau open 1 R+1 (double détection)"
+    },
+    {
+      "t": 15,
+      "type": "info_formateur",
+      "msg": "Le système passe en ALARME GÉNÉRALE (double détection dans la même ZD)"
+    },
+    {
+      "t": 30,
+      "type": "propagation",
+      "zone": "Z06",
+      "from": "Z04",
+      "detail": "Propagation de la fumée vers l'escalier/couloir R+1"
+    },
+    {
+      "t": 40,
+      "type": "info_formateur",
+      "msg": "Équipier de ronde : FEU CONFIRMÉ au bureau open 1 (Z04). Escalier à isoler en urgence."
+    },
+    {
+      "t": 80,
+      "type": "propagation",
+      "zone": "Z05",
+      "from": "Z04",
+      "detail": "Extension de la fumée — Bureau open 2 R+1"
+    },
+    {
+      "t": 100,
+      "type": "info_formateur",
+      "msg": "ATTENTION — Si la PCF escalier n'est pas commandée, la fumée progresse vers le R+2 (Z10)"
+    },
+    {
+      "t": 120,
+      "type": "propagation",
+      "zone": "Z10",
+      "from": "Z06",
+      "detail": "Fumée dans l'escalier — étage R+2 (risque pour les occupants de l'étage)"
+    },
+    {
+      "t": 160,
+      "type": "info_formateur",
+      "msg": "Pompiers en approche (4 min). Préparez l'accueil : plans, clés, point de situation."
+    }
+  ],
+  "actions_attendues": [
+    {
+      "action": "acquittement",
+      "delai_max": 20,
+      "competence": "C2",
+      "points": 15
+    },
+    {
+      "action": "levee_doute",
+      "delai_max": 45,
+      "competence": "C2",
+      "points": 15
+    },
+    {
+      "action": "appel_18",
+      "delai_max": 60,
+      "competence": "C3",
+      "points": 20
+    },
+    {
+      "action": "commande_das",
+      "delai_max": 90,
+      "competence": "C6",
+      "points": 35
+    },
+    {
+      "action": "evacuation_generale",
+      "delai_max": 120,
+      "competence": "C4",
+      "points": 30
+    },
+    {
+      "action": "accueil_pompiers",
+      "delai_max": 240,
+      "competence": "C8",
+      "points": 25
+    }
+  ],
+  "fautes_graves": [
+    {
+      "type": "manque",
+      "cle": "commande_das",
+      "libelle": "Compartimentage/desenfumage non commandes — propagation incontrolee vers le R+2"
+    },
+    {
+      "type": "manque",
+      "cle": "appel_18",
+      "libelle": "Secours (18/112) non alertes alors que le feu est confirme"
+    },
+    {
+      "type": "fait_sans",
+      "cle": "evacuation_generale",
+      "avant": "levee_doute",
+      "libelle": "Evacuation generale declenchee avant la levee de doute (surreaction)"
+    },
+    {
+      "type": "manque",
+      "cle": "accueil_pompiers",
+      "libelle": "Accueil des secours omis — pas de point de situation transmis"
+    }
+  ],
+  "conduite_a_tenir": [
+    {
+      "cle": "acquittement",
+      "texte": "Acquitter l'alarme sonore sur le CMSI sans délai"
+    },
+    {
+      "texte": "Localiser la zone en alarme sur le tableau (Z04 — bureau open R+1)"
+    },
+    {
+      "cle": "arret_signal",
+      "texte": "Arrêter le signal sonore une fois la prise en compte effectuée"
+    },
+    {
+      "cle": "levee_doute",
+      "texte": "Envoyer immédiatement un équipier en levée de doute (feu ou fausse alarme ?)"
+    },
+    {
+      "texte": "Attendre et analyser le rapport de l'équipier — FEU CONFIRMÉ ?"
+    },
+    {
+      "cle": "appel_18",
+      "texte": "Feu confirmé → appeler les secours (18 ou 112) avec un message structuré : nature (feu de bureaux R+1), localisation précise (adresse, étage), victimes éventuelles, accès du bâtiment, et RESTER EN LIGNE jusqu'à instruction du CODIS"
+    },
+    {
+      "texte": "Passer le CMSI en niveau d'accès 2 (code/clé) pour autoriser les commandes engageantes des DAS"
+    },
+    {
+      "cle": "commande_das",
+      "texte": "IMMÉDIATEMENT : commander les DAS de compartimentage — PCF-ESC-R1 (isoler l'escalier) et le désenfumage EXU-R1 (extraire la fumée)"
+    },
+    {
+      "texte": "Vérifier au journal SSI que la PCF et l'exutoire passent bien en état COMMANDÉ"
+    },
+    {
+      "cle": "evacuation_generale",
+      "texte": "Déclencher l'évacuation générale du bâtiment"
+    },
+    {
+      "texte": "Faire guider le public vers les points de rassemblement et vérifier la vacuité des zones"
+    },
+    {
+      "cle": "accueil_pompiers",
+      "texte": "À l'arrivée des secours : remettre les plans et les clés, faire un point complet (foyer, étages occupés, PCF et exutoires commandés, défaillances connues)"
+    }
+  ],
+  "questions": [
+    {
+      "q": "Expliquez le terme « double détection » en détection incendie sur CMSI. Comment cela conditionne-t-il le passage en alarme générale ?",
+      "type": "libre"
+    },
+    {
+      "q": "Une porte coupe-feu (PCF) est commandée à t=30, mais le feu continue de se propager. Pourquoi ? Que devez-vous vérifier ?",
+      "type": "libre"
+    },
+    {
+      "q": "Rédigez le message structuré que vous transmettez au 18 pour cet incident (nature, localisation, accès, victimes).",
+      "type": "libre"
+    },
+    {
+      "q": "Pourquoi le désenfumage (exutoires, ventilateurs) est-il complémentaire du compartimentage dans cette situation ?",
+      "type": "libre"
+    },
+    {
+      "q": "Selon la NF S 61-937, le délai de fermeture complète d'une PCF après commande ne doit pas dépasser :",
+      "type": "qcm",
+      "options": [
+        "30 secondes",
+        "120 secondes",
+        "5 minutes",
+        "À tout moment"
+      ],
+      "reponse": 0
+    },
+    {
+      "q": "Le maintien d'une porte coupe-feu ouverte par une cale ou un crochet :",
+      "type": "qcm",
+      "options": [
+        "Est autorisé si c'est temporaire",
+        "Est strictement interdit — il compromet le compartimentage",
+        "Dépend de la localisation",
+        "Peut être accepté de nuit"
+      ],
+      "reponse": 1
+    }
+  ],
+  "points_cles": [
+    "Double détection (2 détecteurs dans la même ZD) = passage en alarme générale, sans temporisation d'acquittement (NF S 61-931). Terme normalisé français : « double détection » (pas l'anglicisme « double knock »).",
+    "Le compartimentage par PCF est la PREMIÈRE défense contre la propagation verticale dans les escaliers.",
+    "La PCF escalier est équipée d'une ventouse type RUPTURE (fail-safe) : la fermeture est garantie même en cas de coupure d'alimentation — c'est ce qui en fait une défense fiable.",
+    "Selon la NF S 61-937, une PCF doit se fermer complètement en moins de 30 secondes après commande (vitesse angulaire maîtrisée).",
+    "Exutoires et compartimentage travaillent ensemble : la PCF isole, l'extraction réduit la pression et la fumée (évite la rupture de la PCF par poussée thermique).",
+    "La commande des DAS exige le niveau d'accès 2 (code/clé) — mesure de sécurité contre les déclenchements accidentels.",
+    "Ne JAMAIS laisser une PCF bloquée ouverte → vérifier l'état physique (cales, crochets) lors des rondes de prévention (C1).",
+    "Le journal SSI est une PREUVE légale : chaque commande de DAS y est horodatée (traçabilité pour l'enquête post-sinistre)."
+  ],
+  "das": [
+    {
+      "id": "PCF-ESC-R1",
+      "designation": "Porte coupe-feu escalier R+1 (ventouse type rupture/fail-safe)",
+      "type": "compartimentage",
+      "zone": "Z06"
+    },
+    {
+      "id": "CLAP-COUL-RDC",
+      "designation": "Clapet coupe-feu couloir RDC",
+      "type": "compartimentage",
+      "zone": "Z02"
+    },
+    {
+      "id": "EXU-R1",
+      "designation": "Exutoire motorisé R+1",
+      "type": "desenfumage",
+      "zone": "Z06"
+    },
+    {
+      "id": "VEN-RDC",
+      "designation": "Ventilateur extraction escalier RDC",
+      "type": "desenfumage",
+      "zone": "Z02"
+    }
+  ],
+  "gestes_operateur": [
+    {
+      "cle": "acquittement",
+      "label": "Acquitter l'alarme",
+      "competence": "C2"
+    },
+    {
+      "cle": "arret_signal",
+      "label": "Arrêter le signal sonore",
+      "competence": "C2"
+    },
+    {
+      "cle": "acquit_zone",
+      "label": "Acquitter une zone",
+      "competence": "C2"
+    },
+    {
+      "cle": "levee_doute",
+      "label": "Envoyer équipier en levée de doute",
+      "competence": "C2"
+    },
+    {
+      "cle": "appel_18",
+      "label": "Alerter le 18/112",
+      "competence": "C3"
+    },
+    {
+      "cle": "commande_das",
+      "label": "Commander DAS (PCF / clapets / exutoires)",
+      "competence": "C6"
+    },
+    {
+      "cle": "evacuation_generale",
+      "label": "Déclencher l'évacuation générale",
+      "competence": "C4"
+    },
+    {
+      "cle": "accueil_pompiers",
+      "label": "Accueillir et guider les secours",
+      "competence": "C8"
+    },
+    {
+      "cle": "rearmement",
+      "label": "Réarmer le système",
+      "competence": "C2"
+    },
+    {
+      "cle": "test_signalisation",
+      "label": "Test signalisation",
+      "competence": "C2"
+    }
+  ]
+}
