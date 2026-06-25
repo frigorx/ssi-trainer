@@ -420,6 +420,49 @@ class PosteEleve {
     }
   }
 
+  // ------------------------------------------------------------ lecture état
+
+  /** Renvoie les lignes non vides de la main courante : [{heure, evenement, action}]. */
+  getMainCourante() {
+    if (!this._mcBody) return [];
+    var rows = [];
+    this._mcBody.querySelectorAll('tr').forEach(function (tr) {
+      var vals = [];
+      tr.querySelectorAll('td').forEach(function (td) {
+        var inp = td.querySelector('input, textarea');
+        vals.push(inp ? inp.value.trim() : td.textContent.trim());
+      });
+      if (vals.some(function (v) { return v; })) {
+        rows.push({ heure: vals[0] || '', evenement: vals[1] || '', action: vals[2] || '' });
+      }
+    });
+    return rows;
+  }
+
+  /** Renvoie les réponses aux questions : [{question, reponse}]. */
+  getReponses() {
+    if (!this.refs.questions) return [];
+    var out = [];
+    var qs = (this.scenario && this.scenario.questions) || [];
+    var blocs = this.refs.questions.querySelectorAll('.pe-question');
+    blocs.forEach(function (b, i) {
+      var q = qs[i] || {};
+      var ta = b.querySelector('textarea');
+      var rep = '';
+      if (ta) {
+        rep = ta.value.trim();
+      } else {
+        var checked = b.querySelector('input[type="radio"]:checked');
+        if (checked) {
+          var idx = parseInt(checked.value, 10);
+          rep = (q.options && q.options[idx]) ? q.options[idx] : ('option ' + checked.value);
+        }
+      }
+      out.push({ question: q.q || ('Question ' + (i + 1)), reponse: rep });
+    });
+    return out;
+  }
+
   // ----------------------------------------------------------- fiche papier
 
   /** Construit le document élève autoportant (HTML complet, styles inline). */

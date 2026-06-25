@@ -1,0 +1,76 @@
+{
+  "_meta": {
+    "objet": "Référentiels de la filière sécurité (composante incendie) — base de l'évaluation multi-diplômes de SSI Trainer",
+    "date_recherche": "2026-06-25",
+    "methode": "Recherche multi-agents sur sources officielles (France Compétences/RNCP, Éduscol, Légifrance, Onisep), avec citation des sources et niveau de fiabilité.",
+    "avertissement": "Le simulateur évalue UNIQUEMENT la composante sécurité incendie de chaque diplôme. Toute note /20 affichée est un INDICATEUR PÉDAGOGIQUE, distinct de la grille certificative officielle (notamment le CAP, dont les épreuves pro sont en points, pas en /20). Re-vérifier les validités RNCP avant déploiement (CAP RNCP38226 expire le 31/08/2027)."
+  },
+  "competences_ssiap_transverses": [
+    { "id": "identification_risques", "libelle": "Identifier les risques d'incendie" },
+    { "id": "exploitation_ssi", "libelle": "Exploiter le SSI (ECS/CMSI) : signalisations, acquittement, levée de doute" },
+    { "id": "alerte", "libelle": "Transmettre l'alerte aux secours (18/112)" },
+    { "id": "intervention", "libelle": "Réagir face à un début d'incendie" },
+    { "id": "evacuation", "libelle": "Mise en sécurité et évacuation du public" },
+    { "id": "accueil_secours", "libelle": "Accueillir et guider les secours" },
+    { "id": "perimetre", "libelle": "Délimiter un périmètre de sécurité" },
+    { "id": "prevention", "libelle": "Prévention du risque incendie" }
+  ],
+  "diplomes": [
+    {
+      "code": "CAP_AS",
+      "intitule": "CAP Agent de sécurité",
+      "rncp": "RNCP38226",
+      "niveau": 3,
+      "bloc_incendie": "BC03 / EP3 — Sécurité incendie",
+      "coef_incendie": 4,
+      "competences_incendie": ["identification_risques", "exploitation_ssi", "alerte", "intervention", "accueil_secours"],
+      "ssiap1": "Compétences SSIAP 1 intégrées (+ PSE1, SST).",
+      "notation": "Épreuves générales /20 ; épreuves pro en points (examen ponctuel 160 pts ; CCF 80+80). Coef EP1=9, EP2=4, EP3=4. Seuil 10/20.",
+      "note_sur_20": "defendable",
+      "fiabilite": "confirme"
+    },
+    {
+      "code": "BP_ATPS",
+      "intitule": "BP Agent technique de prévention et de sécurité (ATPS)",
+      "rncp": "RNCP38227",
+      "niveau": 4,
+      "bloc_incendie": "U12 — Intervention sur le feu (obligatoire)",
+      "competences_incendie": ["identification_risques", "intervention", "prevention"],
+      "ssiap1": "Titulaires équivalents SSIAP 1 par le diplôme ; accès SSIAP 2 sous conditions d'expérience.",
+      "notation": "Épreuves notées /20 ; diplôme à moyenne >= 10/20 ; rattrapage (notes 8-12/20).",
+      "note_sur_20": "defendable",
+      "fiabilite": "partiel"
+    },
+    {
+      "code": "BACPRO_MS",
+      "intitule": "Bac Pro Métiers de la sécurité",
+      "rncp": "RNCP39133",
+      "niveau": 4,
+      "bloc_incendie": "Compétences C5.01 à C5.04 (évaluées en U32)",
+      "competences_incendie": ["identification_risques", "prevention", "intervention", "perimetre"],
+      "ssiap1": "Compétences conformes SSIAP 1, mais SSIAP 1 NON délivré automatiquement par le diplôme (formation complémentaire souvent nécessaire).",
+      "notation": "Notation /20 ; chaque bloc validé >= 10/20 ; moyenne pondérée par coefficients.",
+      "note_sur_20": "indicatif",
+      "fiabilite": "partiel"
+    },
+    {
+      "code": "BTS_MOS",
+      "intitule": "BTS Management Opérationnel de la Sécurité (MOS)",
+      "rncp": "RNCP41000",
+      "niveau": 5,
+      "bloc_incendie": "Volet incendie du bloc BC04 — Participer à la sécurité globale (prévention du risque incendie, identification des SSI)",
+      "competences_incendie": ["prevention", "identification_risques", "exploitation_ssi"],
+      "ssiap1": "SSIAP non obligatoire dans le diplôme ; complément professionnel possible (SSIAP 1/2/3).",
+      "notation": "Notation /20 ; moyenne >= 10/20 ; coef épreuves (total 38, E4=8, E6=6...).",
+      "note_sur_20": "entrainement",
+      "fiabilite": "partiel"
+    }
+  ],
+  "regle_notation": "Socle commun = POSITIONNEMENT PAR COMPÉTENCE (acquis / en cours / non acquis), langage réel des 4 référentiels (blocs/unités). La note /20 est un indicateur SECONDAIRE, étiqueté selon le diplôme : défendable CAP (EP3) et BP (U12), indicatif Bac Pro (sous-partie de U32), entraînement BTS (sous-partie de BC04). Toujours afficher le PÉRIMÈTRE : le simulateur évalue la composante sécurité incendie, pas la note de diplôme.",
+  "points_a_confirmer": [
+    "BP/Bac Pro/BTS : coefficients exacts et codes d'unités (U2/U31/U32/U33 Bac Pro), modalités CCF vs ponctuel par voie de formation.",
+    "CAP : conversion officielle points (160) ↔ /20 si l'on affiche une /20 sur EP3.",
+    "Bac Pro / BTS : confirmer que SSIAP 1 n'est pas délivré automatiquement (impact sur le discours de l'outil).",
+    "Re-vérifier les fiches RNCP avant déploiement (cap projet = rentrée septembre 2026)."
+  ]
+}

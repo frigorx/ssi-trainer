@@ -37,6 +37,10 @@
     { "action": "evacuation_generale", "delai_max": 120, "competence": "C4", "points": 30 },
     { "action": "accueil_pompiers", "delai_max": 210, "competence": "C8", "points": 25 }
   ],
+  "fautes_graves": [
+    { "type": "manque", "cle": "appel_18", "libelle": "Secours (18/112) non alertés alors que le feu est confirmé" },
+    { "type": "manque", "cle": "evacuation_generale", "libelle": "Évacuation générale non déclenchée sur feu confirmé" }
+  ],
   "conduite_a_tenir": [
     { "cle": "acquittement", "texte": "Acquitter l'alarme sonore sur l'ECS" },
     { "texte": "Localiser la zone en alarme (Stockage SS) sur le tableau" },

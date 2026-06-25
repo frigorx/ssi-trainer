@@ -35,6 +35,10 @@
     { "action": "rearmement", "delai_max": 120, "competence": "C2", "points": 30 },
     { "action": "test_signalisation", "delai_max": 150, "competence": "C2", "points": 30 }
   ],
+  "fautes_graves": [
+    { "type": "fait", "cle": "evacuation_generale", "libelle": "Évacuation générale déclenchée sur une fausse alarme (surréaction grave)" },
+    { "type": "fait_sans", "cle": "rearmement", "avant": "levee_doute", "libelle": "Réarmement effectué sans levée de doute préalable" }
+  ],
   "conduite_a_tenir": [
     { "cle": "acquittement", "texte": "Acquitter l'alarme sonore sur l'ECS" },
     { "cle": "arret_signal", "texte": "Arrêter le signal sonore une fois pris en compte" },
