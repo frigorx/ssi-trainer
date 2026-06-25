@@ -21,7 +21,17 @@ const LIB_ACTIONS = {
   evacuation_generale: 'Déclenchement de l’évacuation générale',
   rearmement: 'Réarmement du système',
   test_signalisation: 'Test signalisation',
-  accueil_pompiers: 'Accueil et guidage des secours'
+  accueil_pompiers: 'Accueil et guidage des secours',
+  commande_das: 'Commande de DAS',
+  coupure_energies: 'Coupure des énergies (gaz / électricité)',
+  reconnaitre_defaut_das: 'Reconnaissance de défaut DAS'
+};
+
+// Gestes affichés dans le panneau « poste de l'agent » (hors boutons de l'équipement),
+// avec leur pictogramme. La liste réellement affichée provient du scénario (data-driven).
+const GESTES_POSTE = {
+  levee_doute: '🚶', appel_18: '📞', commande_das: '🛡️',
+  coupure_energies: '⚡', reconnaitre_defaut_das: '🛠️', accueil_pompiers: '🚒'
 };
 
 // Gestes « opérateur » du poste (hors boutons de l'équipement)
@@ -63,6 +73,9 @@ class PosteEleve {
     opts = opts || {};
     this.onAction = opts.onAction || function () {};
     this.onCompteRendu = opts.onCompteRendu || function () {};
+    this.getEtatDAS = opts.getEtatDAS || function () { return []; };
+    this.accesNiveau = opts.accesNiveau || function () { return 2; };
+    this.onAccesRequis = opts.onAccesRequis || function () {};
     this.scenario = null;
     this.mode = 'guide';            // 'guide' | 'autonome' | 'exploration'
     this.refs = {};                 // conteneurs DOM
@@ -71,6 +84,7 @@ class PosteEleve {
     this._leveeFaite = false;       // levée de doute déjà lancée ?
     this._leveeTimer = null;        // compte à rebours retour équipier
     this._injecterModales();
+    this._injecterModalesEquipement();
   }
 
   /** refs = { mission, conduite, actions, mainCourante, questions } (éléments DOM) */
@@ -188,11 +202,16 @@ class PosteEleve {
   _renderActions() {
     if (!this.refs.actions) return;
     var self = this;
+    // Liste data-driven : gestes « poste » déclarés par le scénario ; fallback N1.
+    var liste = ((this.scenario && this.scenario.gestes_operateur) || [])
+      .filter(function (g) { return GESTES_POSTE[g.cle]; });
+    if (!liste.length) liste = GESTES_OPERATEUR;
     var html = '<div class="pe-bloc-titre"><span class="pe-ico">🧑‍🚒</span> Gestes de l’agent</div>';
     html += '<div class="pe-actions">';
-    GESTES_OPERATEUR.forEach(function (g) {
+    liste.forEach(function (g) {
+      var ico = g.ico || GESTES_POSTE[g.cle] || '•';
       html += '<button class="pe-act" data-cle="' + g.cle + '">' +
-              '<span class="pe-act-ico">' + g.ico + '</span> ' + _esc(g.label) + '</button>';
+              '<span class="pe-act-ico">' + ico + '</span> ' + _esc(g.label) + '</button>';
     });
     html += '<div class="pe-act-note">Acquittement, réarmement, test et évacuation se commandent sur le tableau (à gauche).</div>';
     html += '</div>';
@@ -273,7 +292,91 @@ class PosteEleve {
     if (cle === 'appel_18') { this._ouvrirModaleAppel(); return; }
     if (cle === 'accueil_pompiers') { this._ouvrirModaleAccueil(); return; }
     if (cle === 'levee_doute') { this._lancerLeveeDoute(); return; }
+    if (cle === 'commande_das') { if (this.accesNiveau() < 2) { this.onAccesRequis(); return; } this._ouvrirModaleDAS(); return; }
+    if (cle === 'coupure_energies') { if (this.accesNiveau() < 2) { this.onAccesRequis(); return; } this._ouvrirModaleCoupure(); return; }
+    if (cle === 'reconnaitre_defaut_das') { this._ouvrirModaleDefaut(); return; }
     this.onAction(cle, {});
+  }
+
+  // ---- Modales équipement (DAS, coupure énergies, défaut) ----
+
+  _injecterModalesEquipement() {
+    var self = this;
+    [['peModalDAS', 'peDASBody'], ['peModalCoupure', 'peCoupureBody'], ['peModalDefaut', 'peDefautBody']].forEach(function (pair) {
+      if (document.getElementById(pair[0])) return;
+      var ov = document.createElement('div');
+      ov.className = 'pe-modal-ov';
+      ov.id = pair[0];
+      ov.innerHTML = '<div class="pe-modal"><div id="' + pair[1] + '"></div></div>';
+      document.body.appendChild(ov);
+      ov.addEventListener('click', function (e) {
+        if (e.target === ov || (e.target.getAttribute && e.target.getAttribute('data-close') === pair[0])) self._fermerModale(pair[0]);
+      });
+    });
+  }
+
+  _ouvrirModaleDAS() {
+    var self = this;
+    var das = this.getEtatDAS() || [];
+    var body = document.getElementById('peDASBody');
+    var h = '<h3>🛡️ Commander les DAS</h3>';
+    h += '<div class="pe-modal-sub">Sélectionnez les dispositifs à commander (compartimentage, désenfumage). Un équipement <b>défaillant</b> ne peut pas être commandé.</div>';
+    if (!das.length) h += '<p style="font-size:0.85em;color:#888">Aucun DAS sur cet équipement.</p>';
+    das.forEach(function (d) {
+      var defaillant = d.etat === 'DEFAILLANT';
+      var commande = d.etat === 'COMMANDE';
+      var etatLabel = defaillant ? '⛔ DÉFAILLANT' : commande ? '✔ commandé' : '○ en veille';
+      var etatCol = defaillant ? '#c62828' : commande ? '#2e7d32' : '#888';
+      h += '<label class="pe-modal-check"><input type="checkbox" value="' + _esc(d.id) + '"' + (defaillant || commande ? ' disabled' : '') + '> ' +
+           '<span><b>' + _esc(d.designation || d.id) + '</b> <span style="color:#888">(' + _esc(d.type || '') + ')</span><br>' +
+           '<span style="color:' + etatCol + ';font-size:0.85em">' + etatLabel + '</span></span></label>';
+    });
+    h += '<div class="pe-modal-row"><button class="pe-btn pe-btn-ghost" data-close="peModalDAS">Fermer</button>' +
+         '<button class="pe-btn pe-btn-primary" id="peDASValider">Commander</button></div>';
+    body.innerHTML = h;
+    body.querySelector('#peDASValider').addEventListener('click', function () {
+      var ids = [];
+      body.querySelectorAll('input[type=checkbox]:checked').forEach(function (c) { ids.push(c.value); });
+      self._fermerModale('peModalDAS');
+      if (ids.length) self.onAction('commande_das', { dasIds: ids });
+    });
+    document.getElementById('peModalDAS').classList.add('active');
+  }
+
+  _ouvrirModaleCoupure() {
+    var self = this;
+    var body = document.getElementById('peCoupureBody');
+    body.innerHTML = '<h3>⚡ Coupure des énergies</h3>' +
+      '<div class="pe-modal-sub">Couper le gaz et l\'électricité est une mesure engageante, généralement décidée <b>avec les sapeurs-pompiers</b>. Confirmez-vous la coupure ?</div>' +
+      '<div class="pe-modal-row"><button class="pe-btn pe-btn-ghost" data-close="peModalCoupure">Annuler</button>' +
+      '<button class="pe-btn pe-btn-primary" id="peCoupureOk" style="background:#c62828">Couper gaz + électricité</button></div>';
+    body.querySelector('#peCoupureOk').addEventListener('click', function () {
+      self._fermerModale('peModalCoupure');
+      self.onAction('coupure_energies', {});
+    });
+    document.getElementById('peModalCoupure').classList.add('active');
+  }
+
+  _ouvrirModaleDefaut() {
+    var self = this;
+    var das = (this.getEtatDAS() || []).filter(function (d) { return d.etat === 'DEFAILLANT'; });
+    var body = document.getElementById('peDefautBody');
+    var h = '<h3>🛠️ Reconnaître un défaut</h3>';
+    h += '<div class="pe-modal-sub">Consignez au journal SSI les équipements défaillants (à signaler aux secours et à la maintenance — NF S 61-933).</div>';
+    if (!das.length) h += '<p style="font-size:0.85em;color:#888">Aucune défaillance signalée pour le moment.</p>';
+    das.forEach(function (d) {
+      h += '<div class="pe-modal-check" style="align-items:center"><span><b>' + _esc(d.designation || d.id) + '</b></span>' +
+           '<button class="pe-btn pe-btn-primary" data-das="' + _esc(d.id) + '" style="margin-left:auto;padding:5px 12px;font-size:0.8em">Consigner</button></div>';
+    });
+    h += '<div class="pe-modal-row"><button class="pe-btn pe-btn-ghost" data-close="peModalDefaut">Fermer</button></div>';
+    body.innerHTML = h;
+    body.querySelectorAll('button[data-das]').forEach(function (b) {
+      b.addEventListener('click', function () {
+        self._fermerModale('peModalDefaut');
+        self.onAction('reconnaitre_defaut_das', { dasId: this.getAttribute('data-das') });
+      });
+    });
+    document.getElementById('peModalDefaut').classList.add('active');
   }
 
   // -------------------------------------------------------------- modales

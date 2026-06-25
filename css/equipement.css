@@ -1,0 +1,168 @@
+/* ================================================================
+   SSI Trainer — Styles de l'équipement (ECS / CMSI / baie)
+   inerWeb Édu — F. Henninot
+   Communs aux niveaux pilotés par js/ssi-niveau.js (N2, N3).
+   Zones et DAS générés dynamiquement depuis le scénario.
+   ================================================================ */
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: Calibri, sans-serif; font-size: 14pt; line-height: 1.5; background: #f2f5fb; color: #1b3a63; min-height: 100vh; }
+
+/* ===== HEADER ===== */
+.header { background: #1b3a63; color: #fff; padding: 14px 24px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; position: sticky; top: 0; z-index: 100; }
+.header .logo { font-family: 'Trebuchet MS', sans-serif; font-size: 1.4em; font-weight: bold; display: flex; align-items: center; gap: 6px; white-space: nowrap; }
+.header .logo .snowflake { font-size: 1.2em; }
+.header .badge { background: #ff6b35; color: #fff; padding: 1px 8px; border-radius: 4px; font-size: 0.55em; margin-left: 3px; }
+.header .author { font-size: 0.5em; opacity: 0.8; margin-left: 6px; }
+.header .title-center { margin-left: auto; font-family: 'Trebuchet MS', sans-serif; font-size: 1.05em; letter-spacing: 1px; text-align: right; }
+.header .back-link { color: #fff; text-decoration: none; font-size: 0.85em; opacity: 0.8; margin-right: 8px; }
+.header .back-link:hover { opacity: 1; }
+
+/* ===== LAYOUT 2 COLONNES ===== */
+.main-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 0; min-height: calc(100vh - 56px); }
+@media (max-width: 1100px) { .main-layout { grid-template-columns: 1fr; } }
+
+/* ===== COLONNE ÉQUIPEMENT ===== */
+.ecs-panel { background: #1e2228; padding: 18px; display: flex; flex-direction: column; gap: 14px; color: #ddd; min-height: 100%; }
+.ecs-banner { background: linear-gradient(180deg, #2a2f38 0%, #1e2228 100%); border: 2px solid #444; border-radius: 4px; padding: 10px 16px; text-align: center; font-family: 'Courier New', monospace; font-size: 0.72em; letter-spacing: 2px; color: #ccc; text-transform: uppercase; position: relative; }
+.ecs-banner::before, .ecs-banner::after { content: ''; position: absolute; top: 4px; width: 6px; height: 6px; background: #555; border-radius: 50%; }
+.ecs-banner::before { left: 8px; }
+.ecs-banner::after { right: 8px; }
+.ecs-brand { font-family: 'Trebuchet MS', sans-serif; font-size: 0.9em; color: #ff6b35; margin-top: 4px; letter-spacing: 3px; font-weight: bold; }
+
+/* Voyants */
+.general-indicators { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; background: #252930; border-radius: 4px; padding: 10px 8px; border: 1px solid #333; }
+.indicator { display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center; }
+.indicator-label { font-family: 'Courier New', monospace; font-size: 0.52em; text-transform: uppercase; letter-spacing: 0.5px; color: #999; line-height: 1.2; }
+.led { width: 14px; height: 14px; border-radius: 50%; border: 1px solid #555; position: relative; }
+.led-green { background: #0a3a0a; border-color: #1a5a1a; }
+.led-green.on { background: #00ff44; box-shadow: 0 0 8px #00ff44, 0 0 16px rgba(0,255,68,0.3); }
+.led-red { background: #3a0a0a; border-color: #5a1a1a; }
+.led-red.on { background: #ff2222; box-shadow: 0 0 8px #ff2222, 0 0 16px rgba(255,34,34,0.3); }
+.led-red.blink { animation: blinkRed 0.5s infinite; }
+.led-yellow { background: #3a3a0a; border-color: #5a5a1a; }
+.led-yellow.on { background: #ffcc00; box-shadow: 0 0 8px #ffcc00, 0 0 16px rgba(255,204,0,0.3); }
+.led-yellow.blink { animation: blinkYellow 1s infinite; }
+@keyframes blinkRed { 0%,49% { background: #ff2222; box-shadow: 0 0 8px #ff2222; } 50%,100% { background: #3a0a0a; box-shadow: none; } }
+@keyframes blinkYellow { 0%,49% { background: #ffcc00; box-shadow: 0 0 8px #ffcc00; } 50%,100% { background: #3a3a0a; box-shadow: none; } }
+
+/* LCD */
+.lcd-container { background: #0a1a0a; border: 2px solid #1a3a1a; border-radius: 4px; padding: 10px 12px; font-family: 'Courier New', monospace; }
+.lcd-title { font-size: 0.5em; color: #007733; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 4px; text-align: center; }
+.lcd-screen { font-size: 0.82em; color: #00ff55; line-height: 1.6; min-height: 6.4em; text-shadow: 0 0 6px rgba(0,255,68,0.4); white-space: pre; overflow: hidden; }
+.lcd-line { display: block; height: 1.6em; overflow: hidden; }
+.lcd-line.blink-text { animation: blinkText 0.8s infinite; }
+@keyframes blinkText { 0%,49% { opacity: 1; } 50%,100% { opacity: 0.15; } }
+
+/* Boutons équipement */
+.buttons-section { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.btn-ecs { font-family: 'Courier New', monospace; font-size: 0.65em; padding: 10px 6px; border: none; border-radius: 3px; cursor: pointer; text-transform: uppercase; letter-spacing: 0.5px; font-weight: bold; transition: transform 0.05s; user-select: none; line-height: 1.3; text-align: center; color: #fff; }
+.btn-ecs:active { transform: translateY(2px); }
+.btn-acq { background: linear-gradient(180deg, #3366aa, #224488); box-shadow: 0 3px 0 #1a3366; }
+.btn-rearm { background: linear-gradient(180deg, #33aa55, #228844); box-shadow: 0 3px 0 #1a6633; }
+.btn-test { background: linear-gradient(180deg, #888, #666); box-shadow: 0 3px 0 #444; }
+.btn-arret { background: linear-gradient(180deg, #cc3333, #aa2222); box-shadow: 0 3px 0 #881111; }
+.btn-evac { background: linear-gradient(180deg, #cc2222, #991111); border: 2px solid #ffcc00; box-shadow: 0 3px 0 #660808; grid-column: 1/3; padding: 14px 6px; font-size: 0.75em; }
+.btn-evac.verrou { filter: grayscale(0.6); opacity: 0.7; }
+.btn-evac .cadenas { font-size: 1.1em; margin-right: 4px; }
+
+/* Niveau d'accès (réutilise .pe-acces de pedago.css) */
+
+/* Cartes zones (générées) */
+.zones-section { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.zone-card { background: #252930; border: 1px solid #3a3f48; border-radius: 4px; padding: 8px; }
+.zone-card-label { font-family: 'Courier New', monospace; font-size: 0.56em; color: #ccc; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; border-bottom: 1px solid #3a3f48; padding-bottom: 4px; min-height: 2.4em; }
+.zone-leds { display: flex; gap: 8px; margin-bottom: 6px; align-items: center; justify-content: center; }
+.zone-led-group { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.zone-led-group .led { width: 9px; height: 9px; }
+.zone-led-label { font-family: 'Courier New', monospace; font-size: 0.4em; color: #888; text-transform: uppercase; }
+.btn-acquit-zone { font-family: 'Courier New', monospace; font-size: 0.48em; padding: 4px 6px; background: linear-gradient(180deg, #555, #444); color: #ccc; border: 1px solid #666; border-radius: 2px; cursor: pointer; width: 100%; text-transform: uppercase; }
+.btn-acquit-zone:active { transform: translateY(1px); background: #333; }
+
+/* Tableau DAS */
+.das-section { background: #252930; border: 1px solid #333; border-radius: 4px; padding: 10px 12px; }
+.das-title { font-family: 'Courier New', monospace; font-size: 0.6em; color: #aaa; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.das-row { display: flex; align-items: center; gap: 8px; padding: 5px 0; border-bottom: 1px solid #2f343c; font-family: 'Courier New', monospace; font-size: 0.62em; color: #cdd; }
+.das-row:last-child { border-bottom: none; }
+.das-row .das-led { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; background: #444; }
+.das-row.veille .das-led { background: #3a3a0a; }
+.das-row.commande .das-led { background: #00ff44; box-shadow: 0 0 6px #00ff44; }
+.das-row.defaillant .das-led { background: #ff2222; box-shadow: 0 0 6px #ff2222; animation: blinkRed 0.6s infinite; }
+.das-row .das-nom { flex: 1; }
+.das-row .das-etat { font-size: 0.9em; text-transform: uppercase; letter-spacing: 0.5px; }
+.das-row.veille .das-etat { color: #888; }
+.das-row.commande .das-etat { color: #00ff66; }
+.das-row.defaillant .das-etat { color: #ff5555; font-weight: bold; }
+.das-row .das-type { font-size: 0.82em; color: #777; }
+
+/* ===== COLONNE DOCUMENT ÉLÈVE ===== */
+.pedagogy-panel { background: #f2f5fb; padding: 18px 20px; display: flex; flex-direction: column; gap: 14px; overflow-y: auto; max-height: calc(100vh - 56px); }
+.scenario-header { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.scenario-badge { background: #1b3a63; color: #fff; padding: 4px 14px; border-radius: 16px; font-size: 0.8em; font-weight: bold; }
+.scenario-badge.active { background: #ff6b35; }
+.chrono { font-family: 'Courier New', monospace; font-size: 1.3em; color: #1b3a63; font-weight: bold; margin-left: auto; }
+.scenario-controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.scenario-controls select { font-family: Calibri, sans-serif; font-size: 0.85em; padding: 6px 10px; border: 1px solid #ccc; border-radius: 6px; background: #fff; color: #1b3a63; cursor: pointer; max-width: 100%; }
+.btn-pedagogy { font-family: Calibri, sans-serif; font-size: 0.8em; padding: 6px 16px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; }
+.btn-start { background: #2e7d32; color: #fff; } .btn-start:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-pause { background: #ef6c00; color: #fff; }
+.btn-stop { background: #c62828; color: #fff; }
+.btn-aide { background: #1b3a63; color: #fff; }
+.ctrl-sep { flex-basis: 100%; height: 0; }
+
+.journal-section { background: #fff; border-radius: 8px; border: 1px solid #dde2ea; display: flex; flex-direction: column; overflow: hidden; }
+.journal-title { font-family: 'Trebuchet MS', sans-serif; font-size: 0.85em; color: #1b3a63; padding: 10px 14px 6px; border-bottom: 1px solid #eee; font-weight: bold; }
+.journal-list { overflow-y: auto; padding: 6px 14px; font-family: 'Courier New', monospace; font-size: 0.7em; line-height: 1.7; max-height: 160px; }
+.journal-entry { padding: 2px 0; border-bottom: 1px solid #f5f5f5; }
+.journal-entry .time { color: #888; }
+.journal-entry.alarme { color: #c62828; font-weight: bold; }
+.journal-entry.acquittement { color: #1b3a63; }
+.journal-entry.info { color: #ef6c00; }
+.journal-entry.transition { color: #7b1fa2; }
+.journal-entry.derangement { color: #ef6c00; }
+.journal-entry.evacuation { color: #c62828; font-weight: bold; }
+.journal-entry.rearmement { color: #2e7d32; }
+.journal-entry.commande { color: #1565c0; }
+.journal-entry.defaillance { color: #c62828; }
+
+.scoring-section { background: #fff; border-radius: 8px; border: 1px solid #dde2ea; padding: 14px 16px; }
+.scoring-title { font-family: 'Trebuchet MS', sans-serif; font-size: 0.85em; color: #1b3a63; font-weight: bold; margin-bottom: 8px; }
+.scoring-sub { font-size: 0.7em; color: #999; font-weight: normal; }
+.scoring-bar { height: 22px; background: #e8ecf2; border-radius: 11px; overflow: hidden; margin-bottom: 8px; }
+.scoring-fill { height: 100%; border-radius: 11px; transition: width 0.4s; display: flex; align-items: center; justify-content: center; font-size: 0.65em; font-weight: bold; color: #fff; min-width: 40px; }
+.scoring-fill.good { background: linear-gradient(90deg, #2e7d32, #66bb6a); }
+.scoring-fill.medium { background: linear-gradient(90deg, #ef6c00, #ffb74d); }
+.scoring-fill.bad { background: linear-gradient(90deg, #c62828, #ef5350); }
+.scoring-details { display: flex; gap: 16px; font-size: 0.75em; flex-wrap: wrap; }
+.scoring-item { display: flex; align-items: center; gap: 4px; }
+.scoring-dot { width: 8px; height: 8px; border-radius: 50%; }
+.scoring-dot-ok { background: #2e7d32; } .scoring-dot-retard { background: #ef6c00; } .scoring-dot-manque { background: #c62828; }
+
+/* ===== MODALES aide / bilan ===== */
+.modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 200; align-items: center; justify-content: center; }
+.modal-overlay.active { display: flex; }
+.modal-aide { background: #fff; border-radius: 12px; padding: 24px 28px; max-width: 540px; width: 92%; max-height: 85vh; overflow-y: auto; box-shadow: 0 8px 32px rgba(0,0,0,0.25); }
+.modal-aide h3 { font-family: 'Trebuchet MS', sans-serif; color: #1b3a63; margin-bottom: 12px; font-size: 1.1em; }
+.modal-aide .close-btn { float: right; background: none; border: none; font-size: 1.5em; cursor: pointer; color: #888; }
+.modal-aide table { width: 100%; border-collapse: collapse; font-size: 0.85em; margin-top: 8px; }
+.modal-aide th { background: #1b3a63; color: #fff; padding: 6px 10px; text-align: left; font-size: 0.85em; }
+.modal-aide td { padding: 6px 10px; border-bottom: 1px solid #eee; }
+.modal-aide .fiche-title { color: #ff6b35; font-weight: bold; margin: 12px 0 6px; font-size: 0.95em; }
+.modal-aide ol { margin-left: 18px; font-size: 0.88em; line-height: 1.7; }
+.modal-aide .code-box { background: #fff8f4; border: 1px dashed #ff6b35; border-radius: 6px; padding: 8px 12px; margin-top: 8px; font-size: 0.88em; }
+
+.bilan-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 200; align-items: center; justify-content: center; }
+.bilan-overlay.active { display: flex; }
+.bilan-modal { background: #fff; border-radius: 12px; padding: 24px 28px; max-width: 580px; width: 92%; max-height: 88vh; overflow-y: auto; box-shadow: 0 8px 32px rgba(0,0,0,0.25); }
+.bilan-modal h3 { font-family: 'Trebuchet MS', sans-serif; color: #1b3a63; margin-bottom: 12px; }
+.bilan-modal table { width: 100%; border-collapse: collapse; font-size: 0.8em; margin: 10px 0; }
+.bilan-modal th { background: #1b3a63; color: #fff; padding: 6px 8px; text-align: left; }
+.bilan-modal td { padding: 6px 8px; border-bottom: 1px solid #eee; }
+.bilan-modal .score-big { font-size: 2em; font-weight: bold; text-align: center; margin: 10px 0; }
+.bilan-modal .score-big.good { color: #2e7d32; } .bilan-modal .score-big.medium { color: #ef6c00; } .bilan-modal .score-big.bad { color: #c62828; }
+.bilan-modal .points-cles { background: #f6f8fb; border-left: 3px solid #ff6b35; padding: 10px 14px; margin-top: 12px; font-size: 0.85em; line-height: 1.6; }
+.bilan-modal .points-cles li { margin-left: 16px; margin-bottom: 4px; }
+.bilan-modal .btn-close-bilan { background: #1b3a63; color: #fff; padding: 10px 28px; border: none; border-radius: 6px; cursor: pointer; font-size: 0.95em; font-weight: bold; display: block; margin: 16px auto 0; }
+
+.footer { text-align: center; padding: 12px; color: #888; font-size: 0.75em; border-top: 1px solid #e0e4ea; background: #fff; }
+.footer a { color: #ff6b35; text-decoration: none; }

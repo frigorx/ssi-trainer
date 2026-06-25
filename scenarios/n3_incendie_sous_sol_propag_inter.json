@@ -1,0 +1,478 @@
+{
+  "id": "n3_incendie_sous_sol_propag_inter",
+  "titre": "Feu électrique sous-sol — Propagation inter-bâtiments et défaillances en cascade",
+  "niveau": 3,
+  "equipement": "Baie multi-batiments",
+  "diplomes": [
+    "BP_ATPS",
+    "BTS_MOS"
+  ],
+  "erp_type": "W",
+  "duree_max": 600,
+  "contexte": {
+    "etablissement": "Siège administratif avec ateliers — 3 bâtiments reliés par galeries techniques souterraines",
+    "effectif": 285,
+    "particularites": "Bâtiment A : 120 pers (bureaux R+2), TGBT et chauffage central au sous-sol. Bâtiment B : 95 pers (ateliers/stockage). Bâtiment C : 70 pers (production). Galeries techniques A↔B↔C = axes de propagation. PMR signalées en Bât B R+1."
+  },
+  "mission": "Site multi-bâtiments relié par galeries techniques. Vous êtes à la baie CMSI (Bât A). Un incendie démarre au sous-sol technique du Bât A (TGBT). La fumée se propage par les galeries vers B et C, et plusieurs DAS défaillent en cascade. Gérez la crise : mise en sécurité complète, coordination des bâtiments, communication secours, gestion des défaillances, et coupure des énergies à la demande des pompiers.",
+  "zones": [
+    {
+      "id": "BAT-A-Z1",
+      "nom": "Sous-sol technique Bât A"
+    },
+    {
+      "id": "BAT-A-Z2",
+      "nom": "Couloir RDC Bât A"
+    },
+    {
+      "id": "BAT-A-Z3",
+      "nom": "Bureaux R+1 Bât A"
+    },
+    {
+      "id": "BAT-A-Z5",
+      "nom": "Escalier Bât A"
+    },
+    {
+      "id": "BAT-B-Z1",
+      "nom": "Accueil Bât B"
+    },
+    {
+      "id": "BAT-B-Z2",
+      "nom": "Gaines techniques Bât B"
+    },
+    {
+      "id": "BAT-B-Z3",
+      "nom": "Ateliers sous-sol Bât B"
+    },
+    {
+      "id": "BAT-B-Z4",
+      "nom": "Ateliers R+1 Bât B"
+    },
+    {
+      "id": "BAT-C-Z1",
+      "nom": "Production Bât C"
+    },
+    {
+      "id": "GAL-AB",
+      "nom": "Galerie A↔B"
+    },
+    {
+      "id": "GAL-BC",
+      "nom": "Galerie B↔C"
+    }
+  ],
+  "levee_doute": {
+    "feu": true,
+    "delai": 30,
+    "rapport_feu": "FEU CONFIRMÉ — arc électrique au TGBT (sous-sol Bât A), flammes sur le câblage, fumée noire dense. Risque de propagation par les galeries.",
+    "rapport_ras": "RAS — déclencheur manuel défaillant, fausse alarme confirmée."
+  },
+  "evenements": [
+    {
+      "t": 0,
+      "type": "alarme",
+      "zone": "BAT-A-Z1",
+      "detail": "Détecteur — Sous-sol technique Bât A (TGBT)"
+    },
+    {
+      "t": 12,
+      "type": "alarme",
+      "zone": "BAT-A-Z1",
+      "detail": "Détecteur thermique — Sous-sol Bât A (double détection)"
+    },
+    {
+      "t": 25,
+      "type": "info_formateur",
+      "msg": "Équipier : INCENDIE CONFIRMÉ — arc électrique TGBT, fumée noire, risque de propagation par les galeries"
+    },
+    {
+      "t": 45,
+      "type": "derangement",
+      "zone": "BAT-A-Z1",
+      "msg": "Perte d'alimentation secteur Bât A — passage sur source de sécurité (batteries)"
+    },
+    {
+      "t": 70,
+      "type": "propagation",
+      "zone": "BAT-A-Z2",
+      "from": "BAT-A-Z1",
+      "detail": "Fumée — RDC Bât A (vers escalier)"
+    },
+    {
+      "t": 90,
+      "type": "propagation",
+      "zone": "GAL-AB",
+      "from": "BAT-A-Z1",
+      "detail": "Fumée — galerie technique A↔B par les gaines"
+    },
+    {
+      "t": 110,
+      "type": "defaillance",
+      "das": "EXU-BAT-A",
+      "msg": "Exutoire Bât A — moteur HS (perte d'alimentation ?) — perte de fonction"
+    },
+    {
+      "t": 140,
+      "type": "propagation",
+      "zone": "BAT-B-Z2",
+      "from": "GAL-AB",
+      "detail": "Fumée — gaines techniques Bât B"
+    },
+    {
+      "t": 160,
+      "type": "defaillance",
+      "das": "PCF-GAL-AB",
+      "msg": "Porte coupe-feu galerie A↔B — non commandable (manque d'alimentation)"
+    },
+    {
+      "t": 180,
+      "type": "propagation",
+      "zone": "BAT-B-Z4",
+      "from": "BAT-B-Z2",
+      "detail": "Fumée — ateliers R+1 Bât B"
+    },
+    {
+      "t": 210,
+      "type": "derangement",
+      "zone": "BAT-C-Z1",
+      "msg": "Communication bus RS485 dégradée — perte de dialogue avec le CMSI du Bât C"
+    },
+    {
+      "t": 240,
+      "type": "info_formateur",
+      "msg": "ALERTE : 8 PMR signalées en Bât B R+1 (bureau accueil) — assistance à l'évacuation nécessaire"
+    },
+    {
+      "t": 270,
+      "type": "defaillance",
+      "das": "CLAP-GAL-AB",
+      "msg": "Clapets gaine A↔B — fermeture défaillante"
+    },
+    {
+      "t": 300,
+      "type": "info_formateur",
+      "msg": "Pompiers en approche (ETA 5 min) — demandent point de situation + plans d'accès au SS Bât A"
+    },
+    {
+      "t": 330,
+      "type": "propagation",
+      "zone": "GAL-BC",
+      "from": "BAT-B-Z2",
+      "detail": "Fumée — galerie technique B↔C par les gaines"
+    },
+    {
+      "t": 360,
+      "type": "defaillance",
+      "das": "PCF-A-E1",
+      "msg": "Porte coupe-feu escalier Bât A RDC — ventouse HS"
+    },
+    {
+      "t": 420,
+      "type": "info_formateur",
+      "msg": "Sapeurs-pompiers sur site — positionnement des engins, DEMANDENT la coupure gaz + électricité avant intervention au sous-sol"
+    },
+    {
+      "t": 480,
+      "type": "propagation",
+      "zone": "BAT-C-Z1",
+      "from": "GAL-BC",
+      "detail": "Fumée — production Bât C (enfumage depuis la galerie)"
+    }
+  ],
+  "actions_attendues": [
+    {
+      "action": "acquittement",
+      "delai_max": 20,
+      "competence": "C2",
+      "points": 15
+    },
+    {
+      "action": "levee_doute",
+      "delai_max": 45,
+      "competence": "C2",
+      "points": 15
+    },
+    {
+      "action": "appel_18",
+      "delai_max": 60,
+      "competence": "C3",
+      "points": 20
+    },
+    {
+      "action": "evacuation_generale",
+      "delai_max": 90,
+      "competence": "C4",
+      "points": 25
+    },
+    {
+      "action": "commande_das",
+      "delai_max": 120,
+      "competence": "C6",
+      "points": 20
+    },
+    {
+      "action": "reconnaitre_defaut_das",
+      "delai_max": 180,
+      "competence": "C2",
+      "points": 15
+    },
+    {
+      "action": "coupure_energies",
+      "delai_max": 450,
+      "competence": "C6",
+      "points": 15
+    },
+    {
+      "action": "accueil_pompiers",
+      "delai_max": 420,
+      "competence": "C8",
+      "points": 15
+    }
+  ],
+  "fautes_graves": [
+    {
+      "type": "manque",
+      "cle": "appel_18",
+      "libelle": "Secours (18/112) non alertes malgre le feu confirme"
+    },
+    {
+      "type": "manque",
+      "cle": "commande_das",
+      "libelle": "Compartimentage inter-batiments non commande — propagation par les galeries techniques"
+    },
+    {
+      "type": "manque",
+      "cle": "evacuation_generale",
+      "libelle": "Evacuation/mise en securite non declenchee"
+    },
+    {
+      "type": "fait_sans",
+      "cle": "coupure_energies",
+      "avant": "accueil_pompiers",
+      "libelle": "Coupure des energies decidee seul, avant l-arrivee et la demande des secours (la coupure releve de la decision des pompiers)"
+    }
+  ],
+  "conduite_a_tenir": [
+    {
+      "cle": "acquittement",
+      "texte": "Acquitter l'alarme feu → prise en compte du sinistre"
+    },
+    {
+      "texte": "Analyser la double détection (optique + thermique) → degré de certitude élevé"
+    },
+    {
+      "cle": "levee_doute",
+      "texte": "Envoyer un équipier en levée de doute (sous-sol Bât A, TGBT)"
+    },
+    {
+      "texte": "Consulter le plan du site et des galeries souterraines → anticiper la propagation"
+    },
+    {
+      "cle": "appel_18",
+      "texte": "Alerter le 18/112 : nature (feu électrique), localisation (SS Bât A, TGBT), effectif (285 pers sur 3 bâtiments), accès (galeries A↔B↔C), RESTER EN LIGNE jusqu'à instruction du CODIS"
+    },
+    {
+      "texte": "Passer en niveau d'accès 2 (code/clé) pour les commandes engageantes"
+    },
+    {
+      "cle": "evacuation_generale",
+      "texte": "Déclencher l'évacuation générale des 3 bâtiments (propagation inter-bâtiments avérée)"
+    },
+    {
+      "texte": "Communication dégradée RS485 → le CMSI du Bât C bascule en mode autonome (s'il en est équipé) ; l'opérateur passe en communication directe par téléphone avec le responsable sécurité du Bât C pour coordonner"
+    },
+    {
+      "cle": "commande_das",
+      "texte": "Analyser l'état RÉEL de chaque DAS avant commande : EXU-BAT-A défaillant (inutile d'insister), PCF-GAL-AB non commandable (perte alim) ; commander en priorité les clapets/PCF de galerie encore fonctionnels pour ralentir la propagation horizontale"
+    },
+    {
+      "cle": "reconnaitre_defaut_das",
+      "texte": "Consigner chaque défaillance au journal SSI (EXU-BAT-A, PCF-GAL-AB, CLAP-GAL-AB, PCF-A-E1) — ces informations seront transmises aux pompiers"
+    },
+    {
+      "texte": "Gérer les PMR en Bât B R+1 : assistance à l'évacuation, point de rassemblement adapté"
+    },
+    {
+      "cle": "coupure_energies",
+      "texte": "À la demande explicite des pompiers : préparer les données (localisation TGBT, vannes gaz) puis couper électricité et gaz. L'actionneur est le pompier si l'organe est en local sinistré, l'opérateur si la coupure est commandable à distance"
+    },
+    {
+      "cle": "accueil_pompiers",
+      "texte": "Remettre les plans détaillés des galeries + clés d'accès au SS + point de situation actualisé (propagation, défaillances DAS consignées, évacuation PMR)"
+    }
+  ],
+  "questions": [
+    {
+      "q": "Vous détectez une défaillance d'exutoire (EXU-BAT-A HS) ET une PCF non commandable (PCF-GAL-AB). Comment hiérarchisez-vous vos actions ?",
+      "type": "libre"
+    },
+    {
+      "q": "Les galeries techniques A↔B↔C présentent un risque majeur. Quels DAS commander en priorité pour ralentir la propagation ? Justifiez.",
+      "type": "libre"
+    },
+    {
+      "q": "Le bus RS485 est perdu avec le Bâtiment C. Décrivez la procédure de basculement : que devient le CMSI C, et comment maintenez-vous la coordination ?",
+      "type": "libre"
+    },
+    {
+      "q": "La coupure gaz/électricité doit intervenir :",
+      "type": "qcm",
+      "options": [
+        "Immédiatement après la confirmation du feu, avant l'alerte 18",
+        "Après l'alerte 18 mais avant l'évacuation générale",
+        "À la demande explicite des sapeurs-pompiers (après leur arrivée)"
+      ],
+      "reponse": 2
+    },
+    {
+      "q": "La porte coupe-feu de l'escalier Bât A est bloquée (ventouse HS) : l'escalier n'est plus un axe de compartimentage. Quel impact sur votre stratégie d'évacuation ?",
+      "type": "libre"
+    }
+  ],
+  "points_cles": [
+    "Site multi-bâtiments = coordination obligatoire. Perte du bus RS485 = isolement partiel : le CMSI concerné passe en mode autonome ; l'opérateur bascule sur une communication directe (téléphone) avec le responsable du bâtiment isolé.",
+    "Les galeries techniques sont des axes privilégiés de propagation horizontale : PCF et clapets de galerie y sont critiques.",
+    "Défaillance DAS ≠ inaction : reconnaître, consigner au journal SSI (horodatage), informer formateur et pompiers, adapter la stratégie.",
+    "La NF S 61-933 impose des vérifications périodiques des DAS : l'entretien défaillant est la cause majeure des défaillances en cascade. La prévention relève aussi de l'exploitant.",
+    "Coupure des énergies : décision des pompiers selon le sinistre. L'opérateur CMSI prépare les données (TGBT, disjoncteurs, vannes gaz) et exécute/guide. Actionneur = pompier si en local sinistré, opérateur si commandable à distance.",
+    "Distinction stricte : défaillance = perte de fonction d'un DAS (exutoire qui ne s'ouvre plus) ; dérangement = anomalie/information détectée (escalier enfumé, perte secteur).",
+    "En N3, la difficulté est la gestion continue d'une cascade de défaillances : rester méthodique et tout horodater."
+  ],
+  "das": [
+    {
+      "id": "PCF-A-E1",
+      "designation": "Porte coupe-feu escalier Bât A RDC↔R+1 (ventouse rupture)",
+      "type": "compartimentage",
+      "zone": "BAT-A-Z5"
+    },
+    {
+      "id": "PCF-A-E2",
+      "designation": "Porte coupe-feu escalier Bât A R+1↔R+2 (ventouse rupture)",
+      "type": "compartimentage",
+      "zone": "BAT-A-Z5"
+    },
+    {
+      "id": "PCF-GAL-AB",
+      "designation": "Porte coupe-feu galerie A↔B",
+      "type": "compartimentage",
+      "zone": "GAL-AB"
+    },
+    {
+      "id": "PCF-GAL-BC",
+      "designation": "Porte coupe-feu galerie B↔C",
+      "type": "compartimentage",
+      "zone": "GAL-BC"
+    },
+    {
+      "id": "EXU-BAT-A",
+      "designation": "Exutoires de désenfumage Bâtiment A",
+      "type": "desenfumage",
+      "zone": "BAT-A-Z3"
+    },
+    {
+      "id": "EXU-BAT-B",
+      "designation": "Exutoires de désenfumage Bâtiment B",
+      "type": "desenfumage",
+      "zone": "BAT-B-Z4"
+    },
+    {
+      "id": "EXU-GAL-AB",
+      "designation": "Exutoire galerie A↔B",
+      "type": "desenfumage",
+      "zone": "GAL-AB"
+    },
+    {
+      "id": "CLAP-TECH-A",
+      "designation": "Clapets coupe-feu gaines techniques Bâtiment A",
+      "type": "compartimentage",
+      "zone": "BAT-A-Z1"
+    },
+    {
+      "id": "CLAP-TECH-B",
+      "designation": "Clapets coupe-feu gaines techniques Bâtiment B",
+      "type": "compartimentage",
+      "zone": "BAT-B-Z2"
+    },
+    {
+      "id": "CLAP-GAL-AB",
+      "designation": "Clapets gaine de liaison A↔B",
+      "type": "compartimentage",
+      "zone": "GAL-AB"
+    },
+    {
+      "id": "CLAP-GAL-BC",
+      "designation": "Clapets gaine de liaison B↔C",
+      "type": "compartimentage",
+      "zone": "GAL-BC"
+    },
+    {
+      "id": "COUPE-ELEC",
+      "designation": "Coupure générale électricité (TGBT)",
+      "type": "coupure",
+      "zone": "BAT-A-Z1"
+    },
+    {
+      "id": "COUPE-GAZ",
+      "designation": "Coupure générale gaz",
+      "type": "coupure",
+      "zone": "BAT-A-Z1"
+    }
+  ],
+  "gestes_operateur": [
+    {
+      "cle": "acquittement",
+      "label": "Acquitter l'alarme feu",
+      "competence": "C2"
+    },
+    {
+      "cle": "arret_signal",
+      "label": "Arrêter le signal sonore",
+      "competence": "C2"
+    },
+    {
+      "cle": "levee_doute",
+      "label": "Envoyer équipier en levée de doute",
+      "competence": "C2"
+    },
+    {
+      "cle": "appel_18",
+      "label": "Alerter le 18/112",
+      "competence": "C3"
+    },
+    {
+      "cle": "evacuation_generale",
+      "label": "Déclencher l'évacuation générale",
+      "competence": "C4"
+    },
+    {
+      "cle": "commande_das",
+      "label": "Commander un DAS (compartimentage/désenfumage)",
+      "competence": "C6"
+    },
+    {
+      "cle": "coupure_energies",
+      "label": "Couper gaz et/ou électricité",
+      "competence": "C6"
+    },
+    {
+      "cle": "accueil_pompiers",
+      "label": "Accueillir et guider les secours",
+      "competence": "C8"
+    },
+    {
+      "cle": "reconnaitre_defaut_das",
+      "label": "Reconnaître/consigner une défaillance DAS",
+      "competence": "C2"
+    },
+    {
+      "cle": "test_signalisation",
+      "label": "Vérifier le bon fonctionnement du SSI",
+      "competence": "C2"
+    },
+    {
+      "cle": "rearmement",
+      "label": "Réarmer le système",
+      "competence": "C2"
+    }
+  ]
+}

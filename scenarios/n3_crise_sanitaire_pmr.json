@@ -1,0 +1,445 @@
+{
+  "id": "n3_crise_sanitaire_pmr",
+  "titre": "Évacuation horizontale — UTP avec PMR et zone refuge",
+  "niveau": 3,
+  "equipement": "Baie multi-batiments",
+  "diplomes": [
+    "BP_ATPS",
+    "BTS_MOS"
+  ],
+  "erp_type": "R",
+  "duree_max": 720,
+  "contexte": {
+    "etablissement": "Site mixte — Bât B : ateliers/Unité de Travail Protégé (UTP). Bât A : siège administratif servant de zone refuge. Bât C : production. Liaison par galeries souterraines sécurisées.",
+    "effectif": 320,
+    "particularites": "UTP en Bât B R+1 : 30 pers dont 28 à mobilité réduite (fauteuils, déambulateurs), 5 encadrants. Escaliers peu praticables. Monte-charge Bât B. Bât A = zone refuge avec capacité. Médecin/infirmier sur site. Défaillances possibles : monte-charge bloqué, PCF coincée, RS485 perturbé."
+  },
+  "mission": "Ateliers de production avec Unité de Travail Protégé (UTP). Feu signalé après un court-circuit électrique en R+1 Bât B. Zone de travail pour personnes handicapées (30 pers). Évacuation HORIZONTALE vers la zone refuge (Bât A) via la galerie. Vous gérez : alerte, évacuation PMR, coordination multi-baies, confinement de la fumée, guidage des secours. Décision autonome et communication sous pression.",
+  "zones": [
+    {
+      "id": "BAT-A-Z1",
+      "nom": "Accueil Bât A (refuge)"
+    },
+    {
+      "id": "BAT-A-Z5",
+      "nom": "Escalier Bât A"
+    },
+    {
+      "id": "BAT-B-Z3",
+      "nom": "Ateliers sous-sol Bât B (chaufferie, appareillage)"
+    },
+    {
+      "id": "BAT-B-Z4",
+      "nom": "Ateliers R+1 Bât B (UTP) — zone sinistrée"
+    },
+    {
+      "id": "BAT-B-Z2",
+      "nom": "Gaines techniques Bât B"
+    },
+    {
+      "id": "BAT-B-Z1",
+      "nom": "RDC Bât B (accès monte-charge)"
+    },
+    {
+      "id": "BAT-C-Z1",
+      "nom": "Production Bât C"
+    },
+    {
+      "id": "GAL-AB",
+      "nom": "Galerie refuge A↔B"
+    },
+    {
+      "id": "GAL-BC",
+      "nom": "Galerie technique B↔C"
+    }
+  ],
+  "levee_doute": {
+    "feu": true,
+    "delai": 30,
+    "rapport_feu": "FEU CONFIRMÉ — court-circuit au tableau électrique des ateliers R+1, flammes naissantes sur les isolants, fumée blanche acide.",
+    "rapport_ras": "Fausse alerte — défaillance de capteur, aucun sinistre détecté."
+  },
+  "evenements": [
+    {
+      "t": 0,
+      "type": "alarme",
+      "zone": "BAT-B-Z4",
+      "detail": "Détecteur optique — Ateliers UTP R+1 Bât B"
+    },
+    {
+      "t": 15,
+      "type": "alarme",
+      "zone": "BAT-B-Z4",
+      "detail": "Déclencheur manuel — Ateliers UTP (double information)"
+    },
+    {
+      "t": 30,
+      "type": "info_formateur",
+      "msg": "Équipier : INCENDIE CONFIRMÉ — court-circuit, flammes, risque sur les isolants"
+    },
+    {
+      "t": 50,
+      "type": "propagation",
+      "zone": "BAT-B-Z2",
+      "from": "BAT-B-Z4",
+      "detail": "Fumée acide — gaines techniques Bât B"
+    },
+    {
+      "t": 70,
+      "type": "defaillance",
+      "das": "PCF-A-E1",
+      "msg": "Porte coupe-feu Bât B RDC — ventouse HS (perte source de sécurité ?)"
+    },
+    {
+      "t": 90,
+      "type": "info_formateur",
+      "msg": "UTP signale : 30 pers encadrées, risque de panique, plusieurs personnes en fauteuil"
+    },
+    {
+      "t": 110,
+      "type": "defaillance",
+      "das": "EXU-BAT-B",
+      "msg": "Exutoires de désenfumage Bât B — moteur HS"
+    },
+    {
+      "t": 140,
+      "type": "propagation",
+      "zone": "BAT-B-Z4",
+      "from": "BAT-B-Z2",
+      "detail": "La fumée s'intensifie — ateliers UTP enfumés (visibilité réduite)"
+    },
+    {
+      "t": 160,
+      "type": "derangement",
+      "zone": "BAT-B-Z1",
+      "msg": "Monte-charge bloqué entre RDC et R+1 (surchauffe détectée)"
+    },
+    {
+      "t": 180,
+      "type": "info_formateur",
+      "msg": "ALERTE : 3 personnes en fauteuil signalées bloquées (escalier impraticable)"
+    },
+    {
+      "t": 210,
+      "type": "derangement",
+      "zone": "BAT-C-Z1",
+      "msg": "Communication RS485 dégradée — Bât C en mode dégradé (dialogue CMSI ralenti)"
+    },
+    {
+      "t": 240,
+      "type": "propagation",
+      "zone": "GAL-AB",
+      "from": "BAT-B-Z2",
+      "detail": "Fumée — galerie refuge A↔B (zone refuge en partie compromise)"
+    },
+    {
+      "t": 270,
+      "type": "info_formateur",
+      "msg": "Sapeurs-pompiers + SAMU arrivés — demandent l'accès immédiat à l'UTP R+1 et la liste des personnes fragiles"
+    },
+    {
+      "t": 300,
+      "type": "defaillance",
+      "das": "CLAP-GAL-AB",
+      "msg": "Clapets gaine galerie refuge A↔B — fermeture partielle"
+    },
+    {
+      "t": 360,
+      "type": "info_formateur",
+      "msg": "Les sapeurs organisent l'évacuation horizontale de l'UTP vers le Bât A (galerie refuge), assistance SAMU pour les 5 personnes les plus fragiles"
+    },
+    {
+      "t": 420,
+      "type": "propagation",
+      "zone": "BAT-B-Z3",
+      "from": "BAT-B-Z4",
+      "detail": "Feu — chaufferie sous-sol Bât B (extension par effet de cheminée)"
+    },
+    {
+      "t": 480,
+      "type": "defaillance",
+      "das": "PCF-GAL-AB",
+      "msg": "Porte coupe-feu galerie refuge — fermeture retardée (ralentit le flux d'évacuation)"
+    }
+  ],
+  "actions_attendues": [
+    {
+      "action": "acquittement",
+      "delai_max": 20,
+      "competence": "C2",
+      "points": 15
+    },
+    {
+      "action": "levee_doute",
+      "delai_max": 45,
+      "competence": "C2",
+      "points": 15
+    },
+    {
+      "action": "appel_18",
+      "delai_max": 60,
+      "competence": "C3",
+      "points": 20
+    },
+    {
+      "action": "evacuation_generale",
+      "delai_max": 90,
+      "competence": "C4",
+      "points": 25
+    },
+    {
+      "action": "commande_das",
+      "delai_max": 120,
+      "competence": "C6",
+      "points": 20
+    },
+    {
+      "action": "reconnaitre_defaut_das",
+      "delai_max": 180,
+      "competence": "C2",
+      "points": 10
+    },
+    {
+      "action": "accueil_pompiers",
+      "delai_max": 270,
+      "competence": "C8",
+      "points": 15
+    }
+  ],
+  "fautes_graves": [
+    {
+      "type": "manque",
+      "cle": "appel_18",
+      "libelle": "Secours (18/112) non alertes"
+    },
+    {
+      "type": "manque",
+      "cle": "evacuation_generale",
+      "libelle": "Mise en securite / evacuation horizontale vers la zone refuge non declenchee"
+    },
+    {
+      "type": "manque",
+      "cle": "accueil_pompiers",
+      "libelle": "Accueil des secours omis — informations PMR et zone refuge non transmises"
+    },
+    {
+      "type": "fait_sans",
+      "cle": "evacuation_generale",
+      "avant": "levee_doute",
+      "libelle": "Evacuation declenchee avant la levee de doute (surreaction)"
+    }
+  ],
+  "conduite_a_tenir": [
+    {
+      "cle": "acquittement",
+      "texte": "Acquitter rapidement l'alarme → prise en compte"
+    },
+    {
+      "texte": "Zone UTP critique : nombreuses PMR, escaliers inadaptés → risque élevé, anticiper l'évacuation horizontale"
+    },
+    {
+      "cle": "levee_doute",
+      "texte": "Envoyer immédiatement un équipier en R+1 Bât B (accès UTP)"
+    },
+    {
+      "texte": "Alerter les encadrants UTP : préparer le transfert horizontal via la galerie vers le Bât A (zone refuge)"
+    },
+    {
+      "cle": "appel_18",
+      "texte": "Alerte structurée : feu confirmé, lieu (UTP R+1 Bât B), EFFECTIF PMR (30 pers dont 28 à mobilité très réduite), besoins (monte-charge bloqué, escalier impraticable, assistance), accès (galerie refuge A↔B), demande de SAMU, RESTER EN LIGNE jusqu'à instruction du CODIS"
+    },
+    {
+      "cle": "evacuation_generale",
+      "texte": "Déclencher l'évacuation générale + consignes UTP : évacuation HORIZONTALE via la galerie refuge vers le Bât A"
+    },
+    {
+      "texte": "INTERDIRE explicitement l'usage du monte-charge / ascenseur, même s'il semble accessible : risque de piégeage et d'inhalation de fumée en cas de coupure d'alimentation (un ascenseur de type EN 81-73 se ramène à un niveau de sécurité et verrouille ses portes). Évacuation par les axes praticables uniquement."
+    },
+    {
+      "cle": "commande_das",
+      "texte": "Commander la PCF galerie refuge A↔B (encore fonctionnelle au début) pour contenir la fumée ; relancer les clapets de gaines Bât B si possible. Reconnaître EXU-BAT-B HS (ne pas insister)"
+    },
+    {
+      "cle": "reconnaitre_defaut_das",
+      "texte": "Consigner au journal SSI les défaillances (PCF-A-E1, EXU-BAT-B, CLAP-GAL-AB, PCF-GAL-AB) pour les transmettre aux secours"
+    },
+    {
+      "texte": "Coordonner avec les encadrants UTP : liste des personnes fragiles, ordre d'évacuation, point de rassemblement (Bât A refuge ou extérieur)"
+    },
+    {
+      "texte": "Intégrer le médecin/infirmier du site et le SAMU pour la prise en charge des plus fragiles"
+    },
+    {
+      "cle": "accueil_pompiers",
+      "texte": "Remettre plans UTP précis, signaler le monte-charge bloqué, l'enfumage progressif de la galerie refuge, la liste des personnes évacuées vs bloquées, le contact des encadrants et l'accès au R+1"
+    }
+  ],
+  "questions": [
+    {
+      "q": "Expliquez pourquoi l'ascenseur/monte-charge ne doit JAMAIS servir à l'évacuation en cas d'incendie, même s'il semble accessible au RDC.",
+      "type": "libre"
+    },
+    {
+      "q": "Comment, en tant qu'opérateur CMSI, identifiez-vous les situations qui imposent une évacuation horizontale ? Quels ERP et publics y obligent ?",
+      "type": "libre"
+    },
+    {
+      "q": "Vous avez 3 DAS à commander (PCF galerie refuge, PCF RDC Bât B, clapets gaines Bât B), mais seul le premier répond. Quel ordre adoptez-vous et pourquoi ?",
+      "type": "libre"
+    },
+    {
+      "q": "Pour une UTP, l'appel 18 doit mentionner en priorité :",
+      "type": "qcm",
+      "options": [
+        "Le nombre de bureaux et d'étages du bâtiment",
+        "Le type de feu et l'emplacement du TGBT",
+        "La présence de 30 PMR dont 28 à mobilité très réduite, le monte-charge bloqué et l'itinéraire d'évacuation (galerie refuge)"
+      ],
+      "reponse": 2
+    },
+    {
+      "q": "À t=420, les sapeurs signalent l'extension du feu à la chaufferie (SS Bât B). Comment réagissez-vous en tant qu'opérateur CMSI ? Que demandez-vous à la baie ?",
+      "type": "libre"
+    }
+  ],
+  "points_cles": [
+    "UTP / ERP accueillant des PMR = anticipation absolue de l'évacuation horizontale et des moyens (personnel, galerie sécurisée, zone refuge).",
+    "Ascenseur/monte-charge en incendie : risque de piégeage, de blocage de portes et de perte d'alimentation. JAMAIS pour une évacuation d'urgence (cf. EN 81-73 : ramène à un niveau de sécurité puis verrouille).",
+    "La galerie refuge est un espace tampon : sa traversabilité est essentielle. Surveiller la propagation de la fumée et l'état des DAS (PCF, clapets).",
+    "Communication RS485 dégradée = basculer sur des appels vocaux directs (téléphone) avec les autres bâtiments/baies.",
+    "Évacuation horizontale : coordination multi-baies, liste des personnes fragiles, contact SAMU, point de rassemblement adapté.",
+    "Message 18 : effectif fragile + besoins spécialisés = mobilisation SAMU (ambulances, équipes spécialisées).",
+    "Défaillances DAS en cascade : reconnaître, consigner au journal SSI (horodatage exact) et rester méthodique."
+  ],
+  "das": [
+    {
+      "id": "PCF-A-E1",
+      "designation": "Porte coupe-feu escalier Bât A RDC↔R+1 (ventouse rupture)",
+      "type": "compartimentage",
+      "zone": "BAT-A-Z5"
+    },
+    {
+      "id": "PCF-A-E2",
+      "designation": "Porte coupe-feu escalier Bât A R+1↔R+2 (ventouse rupture)",
+      "type": "compartimentage",
+      "zone": "BAT-A-Z5"
+    },
+    {
+      "id": "PCF-GAL-AB",
+      "designation": "Porte coupe-feu galerie A↔B",
+      "type": "compartimentage",
+      "zone": "GAL-AB"
+    },
+    {
+      "id": "PCF-GAL-BC",
+      "designation": "Porte coupe-feu galerie B↔C",
+      "type": "compartimentage",
+      "zone": "GAL-BC"
+    },
+    {
+      "id": "EXU-BAT-B",
+      "designation": "Exutoires de désenfumage Bâtiment B",
+      "type": "desenfumage",
+      "zone": "BAT-B-Z4"
+    },
+    {
+      "id": "EXU-GAL-AB",
+      "designation": "Exutoire galerie A↔B",
+      "type": "desenfumage",
+      "zone": "GAL-AB"
+    },
+    {
+      "id": "CLAP-TECH-A",
+      "designation": "Clapets coupe-feu gaines techniques Bâtiment A",
+      "type": "compartimentage",
+      "zone": "BAT-A-Z1"
+    },
+    {
+      "id": "CLAP-TECH-B",
+      "designation": "Clapets coupe-feu gaines techniques Bâtiment B",
+      "type": "compartimentage",
+      "zone": "BAT-B-Z2"
+    },
+    {
+      "id": "CLAP-GAL-AB",
+      "designation": "Clapets gaine de liaison A↔B",
+      "type": "compartimentage",
+      "zone": "GAL-AB"
+    },
+    {
+      "id": "CLAP-GAL-BC",
+      "designation": "Clapets gaine de liaison B↔C",
+      "type": "compartimentage",
+      "zone": "GAL-BC"
+    },
+    {
+      "id": "COUPE-ELEC",
+      "designation": "Coupure générale électricité (TGBT)",
+      "type": "coupure",
+      "zone": "BAT-A-Z1"
+    },
+    {
+      "id": "COUPE-GAZ",
+      "designation": "Coupure générale gaz",
+      "type": "coupure",
+      "zone": "BAT-A-Z1"
+    }
+  ],
+  "gestes_operateur": [
+    {
+      "cle": "acquittement",
+      "label": "Acquitter l'alarme feu",
+      "competence": "C2"
+    },
+    {
+      "cle": "arret_signal",
+      "label": "Arrêter le signal sonore",
+      "competence": "C2"
+    },
+    {
+      "cle": "levee_doute",
+      "label": "Envoyer équipier en levée de doute",
+      "competence": "C2"
+    },
+    {
+      "cle": "appel_18",
+      "label": "Alerter le 18/112",
+      "competence": "C3"
+    },
+    {
+      "cle": "evacuation_generale",
+      "label": "Déclencher l'évacuation générale",
+      "competence": "C4"
+    },
+    {
+      "cle": "commande_das",
+      "label": "Commander un DAS (compartimentage/désenfumage)",
+      "competence": "C6"
+    },
+    {
+      "cle": "coupure_energies",
+      "label": "Couper gaz et/ou électricité",
+      "competence": "C6"
+    },
+    {
+      "cle": "accueil_pompiers",
+      "label": "Accueillir et guider les secours",
+      "competence": "C8"
+    },
+    {
+      "cle": "reconnaitre_defaut_das",
+      "label": "Reconnaître/consigner une défaillance DAS",
+      "competence": "C2"
+    },
+    {
+      "cle": "test_signalisation",
+      "label": "Vérifier le bon fonctionnement du SSI",
+      "competence": "C2"
+    },
+    {
+      "cle": "rearmement",
+      "label": "Réarmer le système",
+      "competence": "C2"
+    }
+  ]
+}
