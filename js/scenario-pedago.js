@@ -31,6 +31,24 @@ const GESTES_OPERATEUR = [
   { cle: 'accueil_pompiers', ico: '🚒', label: 'Accueil & guidage des secours' }
 ];
 
+// Colonnes de la main courante selon le niveau d'exigence du diplôme.
+// « allege » (CAP) = entrée simplifiée ; « complet » (BP / Bac Pro / BTS) =
+// format d'un registre de PC sécurité (zone, suite donnée, visa de l'agent).
+const MC_FORMATS = {
+  allege: [
+    { cle: 'heure', label: 'Heure', cls: 'pe-mc-heure' },
+    { cle: 'evenement', label: 'Événement constaté' },
+    { cle: 'action', label: 'Action menée' }
+  ],
+  complet: [
+    { cle: 'heure', label: 'Heure', cls: 'pe-mc-heure' },
+    { cle: 'zone', label: 'Zone / Lieu', cls: 'pe-mc-zone' },
+    { cle: 'evenement', label: 'Événement constaté' },
+    { cle: 'action', label: 'Action menée / suite donnée' },
+    { cle: 'agent', label: 'Visa', cls: 'pe-mc-visa' }
+  ]
+};
+
 function _esc(s) {
   if (s === undefined || s === null) return '';
   return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -49,6 +67,7 @@ class PosteEleve {
     this.mode = 'guide';            // 'guide' | 'autonome' | 'exploration'
     this.refs = {};                 // conteneurs DOM
     this.etapes = [];               // état des étapes de conduite à tenir
+    this.mcColonnes = MC_FORMATS.complet; // colonnes de la main courante (selon diplôme)
     this._leveeFaite = false;       // levée de doute déjà lancée ?
     this._leveeTimer = null;        // compte à rebours retour équipier
     this._injecterModales();
@@ -57,9 +76,10 @@ class PosteEleve {
   /** refs = { mission, conduite, actions, mainCourante, questions } (éléments DOM) */
   monter(refs) { this.refs = refs || {}; }
 
-  charger(scenario, mode) {
+  charger(scenario, mode, mcFormat) {
     this.scenario = scenario;
     if (mode) this.mode = mode;
+    if (mcFormat && MC_FORMATS[mcFormat]) this.mcColonnes = MC_FORMATS[mcFormat];
     if (this._leveeTimer) { clearInterval(this._leveeTimer); this._leveeTimer = null; }
     this._leveeFaite = false;
     this._fermerModale('peModalLevee');
@@ -89,6 +109,12 @@ class PosteEleve {
     this._renderConduite();
   }
 
+  /** Change le format de la main courante (selon le diplôme) et la régénère. */
+  setFormatMainCourante(fmt) {
+    if (MC_FORMATS[fmt]) this.mcColonnes = MC_FORMATS[fmt];
+    this._renderMainCourante(true);
+  }
+
   /** Appelé à chaque action de l'élève (depuis l'ECS ou un geste opérateur). */
   notifierAction(actionKey, payload) {
     payload = payload || {};
@@ -98,7 +124,7 @@ class PosteEleve {
     // Trace dans la main courante
     var lib = LIB_ACTIONS[actionKey] || actionKey;
     if (payload.message) lib += ' — « ' + payload.message + ' »';
-    this._ajouterLigneMC(_heure(), lib, '', true);
+    this._ajouterLigneMC({ heure: _heure(), evenement: lib }, true);
   }
 
   // ---------------------------------------------------------------- rendus
@@ -180,36 +206,39 @@ class PosteEleve {
   _renderMainCourante(reset) {
     if (!this.refs.mainCourante) return;
     var self = this;
+    var ths = this.mcColonnes.map(function (c) {
+      return '<th' + (c.cls ? ' class="' + c.cls + '"' : '') + '>' + _esc(c.label) + '</th>';
+    }).join('');
     var html = '<div class="pe-bloc-titre"><span class="pe-ico">✍️</span> Main courante</div>';
-    html += '<table class="pe-mc"><thead><tr>' +
-            '<th class="pe-mc-heure">Heure</th><th>Événement constaté</th><th>Action menée</th>' +
-            '</tr></thead><tbody id="peMcBody"></tbody></table>';
+    html += '<table class="pe-mc"><thead><tr>' + ths + '</tr></thead><tbody id="peMcBody"></tbody></table>';
     html += '<button class="pe-mc-add" id="peMcAdd">+ Ajouter une ligne</button>';
     this.refs.mainCourante.className = 'pe-bloc';
     this.refs.mainCourante.innerHTML = html;
     this._mcBody = this.refs.mainCourante.querySelector('#peMcBody');
     this.refs.mainCourante.querySelector('#peMcAdd').addEventListener('click', function () {
-      self._ajouterLigneMC('', '', '', false);
+      self._ajouterLigneMC({}, false);
     });
     if (reset) {
-      // 3 lignes vierges au démarrage
-      for (var k = 0; k < 3; k++) this._ajouterLigneMC('', '', '', false);
+      for (var k = 0; k < 3; k++) this._ajouterLigneMC({}, false);
     }
   }
 
-  _ajouterLigneMC(heure, evenement, action, auto) {
+  /** valeurs = { heure, zone, evenement, action, agent } (clés selon le format). */
+  _ajouterLigneMC(valeurs, auto) {
     if (!this._mcBody) return;
+    valeurs = valeurs || {};
     var tr = document.createElement('tr');
     if (auto) tr.className = 'pe-mc-auto';
-    if (auto) {
-      tr.innerHTML = '<td class="pe-mc-heure">' + _esc(heure) + '</td>' +
-                     '<td>' + _esc(evenement) + '</td>' +
-                     '<td><input type="text" value="" placeholder="—"></td>';
-    } else {
-      tr.innerHTML = '<td class="pe-mc-heure"><input type="text" value="' + _esc(heure) + '" placeholder="hh:mm"></td>' +
-                     '<td><input type="text" value="' + _esc(evenement) + '"></td>' +
-                     '<td><input type="text" value="' + _esc(action) + '"></td>';
-    }
+    tr.innerHTML = this.mcColonnes.map(function (c) {
+      var v = valeurs[c.cle] != null ? valeurs[c.cle] : '';
+      var cls = c.cls ? ' class="' + c.cls + '"' : '';
+      // En ligne auto, l'heure et l'événement sont figés (texte) ; les autres restent saisissables.
+      if (auto && (c.cle === 'heure' || c.cle === 'evenement')) {
+        return '<td' + cls + '>' + _esc(v) + '</td>';
+      }
+      var ph = c.cle === 'heure' ? 'hh:mm' : '';
+      return '<td' + cls + '><input type="text" data-cle="' + c.cle + '" value="' + _esc(v) + '" placeholder="' + ph + '"></td>';
+    }).join('');
     this._mcBody.appendChild(tr);
   }
 
@@ -422,21 +451,20 @@ class PosteEleve {
 
   // ------------------------------------------------------------ lecture état
 
-  /** Renvoie les lignes non vides de la main courante : [{heure, evenement, action}]. */
+  /** Renvoie la main courante : { colonnes:[labels], lignes:[[v1,v2,...]] } (lignes non vides). */
   getMainCourante() {
-    if (!this._mcBody) return [];
-    var rows = [];
+    var labels = this.mcColonnes.map(function (c) { return c.label; });
+    if (!this._mcBody) return { colonnes: labels, lignes: [] };
+    var lignes = [];
     this._mcBody.querySelectorAll('tr').forEach(function (tr) {
       var vals = [];
       tr.querySelectorAll('td').forEach(function (td) {
         var inp = td.querySelector('input, textarea');
         vals.push(inp ? inp.value.trim() : td.textContent.trim());
       });
-      if (vals.some(function (v) { return v; })) {
-        rows.push({ heure: vals[0] || '', evenement: vals[1] || '', action: vals[2] || '' });
-      }
+      if (vals.some(function (v) { return v; })) lignes.push(vals);
     });
-    return rows;
+    return { colonnes: labels, lignes: lignes };
   }
 
   /** Renvoie les réponses aux questions : [{question, reponse}]. */
@@ -506,9 +534,14 @@ class PosteEleve {
       s.conduite_a_tenir.forEach(function (e) { h += '<li>' + _esc(e.texte) + '</li>'; });
       h += '</ol>';
     }
-    // Main courante vierge
-    h += '<h2>Main courante</h2><table><thead><tr><th class="hh">Heure</th><th>Événement constaté</th><th>Action menée</th></tr></thead><tbody>';
-    for (var k = 0; k < lignesMC; k++) h += '<tr><td class="hh">&nbsp;</td><td></td><td></td></tr>';
+    // Main courante vierge (format selon le diplôme)
+    var cols = this.mcColonnes;
+    h += '<h2>Main courante</h2>';
+    h += '<p style="font-size:0.85em;margin:4px 0">Poste de sécurité : <span class="line"></span>&nbsp;&nbsp; Agent : <span class="line"></span></p>';
+    h += '<table><thead><tr>' + cols.map(function (c) { return '<th' + (c.cle === 'heure' ? ' class="hh"' : '') + '>' + _esc(c.label) + '</th>'; }).join('') + '</tr></thead><tbody>';
+    for (var k = 0; k < lignesMC; k++) {
+      h += '<tr>' + cols.map(function (c) { return c.cle === 'heure' ? '<td class="hh">&nbsp;</td>' : '<td></td>'; }).join('') + '</tr>';
+    }
     h += '</tbody></table>';
     // Questions
     if (s.questions && s.questions.length) {

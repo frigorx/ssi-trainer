@@ -842,7 +842,7 @@ function chargerScenarioDoc() {
       document.getElementById('scenarioBadge').textContent = sc.titre;
       document.getElementById('scenarioBadge').classList.remove('active');
       document.getElementById('chronoDisplay').textContent = '00:00';
-      poste.charger(sc, modeActuel);
+      poste.charger(sc, modeActuel, formatMC());
       btnDem.disabled = false; btnImp.disabled = false; btnTel.disabled = false;
       refreshUI();
     })
@@ -855,7 +855,7 @@ function demarrerScenario() {
   audio.resume();
 
   player.charger(scenarioCourant);
-  poste.charger(scenarioCourant, modeActuel); // remise à zéro du document élève
+  poste.charger(scenarioCourant, modeActuel, formatMC()); // remise à zéro du document élève
   document.getElementById('journalList').innerHTML = '';
   document.getElementById('scenarioBadge').classList.add('active');
 
@@ -1055,9 +1055,11 @@ function genererBilanHTML() {
     h += '</tbody></table>';
   }
 
-  if (mc.length) {
-    h += '<h2>Main courante de l\'élève</h2><table><thead><tr><th style="width:70px">Heure</th><th>Événement</th><th>Action menée</th></tr></thead><tbody>';
-    mc.forEach(function (r) { h += '<tr><td>' + esc(r.heure) + '</td><td>' + esc(r.evenement) + '</td><td>' + esc(r.action) + '</td></tr>'; });
+  if (mc.lignes && mc.lignes.length) {
+    h += '<h2>Main courante de l\'élève</h2><table><thead><tr>';
+    mc.colonnes.forEach(function (c) { h += '<th>' + esc(c) + '</th>'; });
+    h += '</tr></thead><tbody>';
+    mc.lignes.forEach(function (row) { h += '<tr>'; row.forEach(function (v) { h += '<td>' + esc(v) + '</td>'; }); h += '</tr>'; });
     h += '</tbody></table>';
   }
 
@@ -1149,6 +1151,10 @@ function getDiplomeInfo() {
     { code: profil.diplome, intitule: profil.diplome, note_sur_20: 'defendable' };
 }
 
+function formatMC() {
+  return profil.diplome === 'CAP_AS' ? 'allege' : 'complet';
+}
+
 function majPerimetre() {
   const el = document.getElementById('profPerimetre');
   if (!el) return;
@@ -1163,7 +1169,7 @@ function initProfilUI() {
   const d = document.getElementById('profDiplome');
   if (n) { n.value = profil.nom; n.addEventListener('input', function () { profil.set(this.value, undefined, undefined); }); }
   if (c) { c.value = profil.classe; c.addEventListener('input', function () { profil.set(undefined, this.value, undefined); }); }
-  if (d) { d.addEventListener('change', function () { profil.set(undefined, undefined, this.value); majPerimetre(); }); }
+  if (d) { d.addEventListener('change', function () { profil.set(undefined, undefined, this.value); majPerimetre(); if (scenarioCourant) poste.setFormatMainCourante(formatMC()); }); }
 }
 
 // --- Init ---

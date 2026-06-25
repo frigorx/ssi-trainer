@@ -102,7 +102,9 @@
   color: #222; background: transparent; resize: vertical; box-sizing: border-box;
 }
 .pe-mc td input:focus, .pe-mc td textarea:focus { outline: 2px solid var(--pe-orange); outline-offset: -2px; }
-.pe-mc .pe-mc-heure { width: 70px; text-align: center; }
+.pe-mc .pe-mc-heure { width: 64px; text-align: center; }
+.pe-mc .pe-mc-zone { width: 108px; }
+.pe-mc .pe-mc-visa { width: 64px; text-align: center; }
 .pe-mc tr.pe-mc-auto td { background: #f6f8fb; color: #555; }
 .pe-mc-add {
   margin-top: 8px; font-size: 0.78em; padding: 5px 12px; border: 1px dashed #b9c2d2; border-radius: 6px;
