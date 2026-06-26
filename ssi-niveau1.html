@@ -959,16 +959,16 @@ function showBilan(bilan) {
 
   // Positionnement par compétence
   if (ev.competences.length) {
-    html += '<h3 style="font-family:\'Trebuchet MS\',sans-serif;font-size:0.95em;color:#1b3a63;margin:14px 0 8px">Compétences évaluées</h3>';
+    html += '<h3 style="font-family:\'Trebuchet MS\',sans-serif;font-size:0.95em;color:#1b3a63;margin:14px 0 8px">Positionnement par compétence</h3>';
     ev.competences.forEach(function (c) {
-      const picto = c.niveau === 'acquis' ? '✔' : c.niveau === 'en_cours' ? '◑' : '✘';
-      const col = c.niveau === 'acquis' ? '#2e7d32' : c.niveau === 'en_cours' ? '#ef6c00' : '#c62828';
+      const largeur = c.evaluee ? Math.max(c.pct, 4) : 100;
+      const fond = c.evaluee ? c.couleur : '#dfe3e9';
       html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:2px;font-size:0.82em">';
       html += '<span style="width:46px;flex-shrink:0"><b>' + esc(c.code) + '</b></span>';
-      html += '<div style="flex:1;background:#e8ecf2;border-radius:9px;height:16px;overflow:hidden"><div style="width:' + Math.max(c.pct, 4) + '%;height:100%;background:' + col + '"></div></div>';
-      html += '<span style="width:104px;flex-shrink:0;color:' + col + ';font-weight:bold;text-align:right;font-size:0.92em">' + picto + ' ' + c.niveau_label + '</span>';
+      html += '<div style="flex:1;background:#e8ecf2;border-radius:9px;height:16px;overflow:hidden"><div style="width:' + largeur + '%;height:100%;background:' + fond + '"></div></div>';
+      html += '<span style="width:120px;flex-shrink:0;color:' + c.couleur + ';font-weight:bold;text-align:right;font-size:0.86em">' + c.picto + ' ' + c.niveau_label + '</span>';
       html += '</div>';
-      html += '<div style="font-size:0.72em;color:#888;margin:0 0 8px 54px">' + esc(c.libelle) + ' (' + c.pct + '%)</div>';
+      html += '<div style="font-size:0.72em;color:#888;margin:0 0 8px 54px">' + esc(c.libelle) + (c.evaluee ? ' (' + c.pct + '%)' : '') + '</div>';
     });
   }
 
@@ -1056,10 +1056,10 @@ function genererBilanHTML() {
   }
 
   if (ev.competences.length) {
-    h += '<h2>Compétences évaluées</h2><table><thead><tr><th>Compétence</th><th>Niveau</th><th>%</th></tr></thead><tbody>';
+    h += '<h2>Positionnement par compétence</h2><table><thead><tr><th>Compétence</th><th>Niveau</th><th>%</th></tr></thead><tbody>';
     ev.competences.forEach(function (c) {
-      const col = c.niveau === 'acquis' ? '#2e7d32' : c.niveau === 'en_cours' ? '#ef6c00' : '#c62828';
-      h += '<tr><td><b>' + esc(c.code) + '</b> — ' + esc(c.libelle) + '</td><td style="color:' + col + ';font-weight:bold">' + c.niveau_label + '</td><td><span class="bar"><i style="width:' + Math.max(c.pct, 4) + '%;background:' + col + '"></i></span> ' + c.pct + '%</td></tr>';
+      const pctTxt = c.evaluee ? ('<span class="bar"><i style="width:' + Math.max(c.pct, 4) + '%;background:' + c.couleur + '"></i></span> ' + c.pct + '%') : '<span style="color:#9aa3af">—</span>';
+      h += '<tr><td><b>' + esc(c.code) + '</b> — ' + esc(c.libelle) + '</td><td style="color:' + c.couleur + ';font-weight:bold">' + c.picto + ' ' + c.niveau_label + '</td><td>' + pctTxt + '</td></tr>';
     });
     h += '</tbody></table>';
   }

@@ -12,7 +12,22 @@
  * la composante sécurité incendie. Voir referentiels/diplomes-securite.json.
  */
 
-const EVAL_SEUILS = { acquis: 70, en_cours: 40 };   // % du sous-score de la compétence
+// Échelle de positionnement à 4 niveaux + « non évalué » (conforme au livret de compétences / LSU).
+const EVAL_NIVEAUX = {
+  non_evalue: { label: 'Non évalué', couleur: '#9aa3af', picto: '–' },
+  non_acquis: { label: 'Non acquis', couleur: '#c62828', picto: '✘' },
+  partiel: { label: 'Partiellement acquis', couleur: '#ef6c00', picto: '◔' },
+  acquis: { label: 'Acquis', couleur: '#2e7d32', picto: '✔' },
+  parfait: { label: 'Parfaitement acquis', couleur: '#1b5e20', picto: '★' }
+};
+// Seuils (% des points de la compétence dans ce scénario) → niveau d'acquisition.
+const EVAL_SEUILS = { parfait: 85, acquis: 60, partiel: 30 };
+function niveauDe(pct) {
+  if (pct >= EVAL_SEUILS.parfait) return 'parfait';
+  if (pct >= EVAL_SEUILS.acquis) return 'acquis';
+  if (pct >= EVAL_SEUILS.partiel) return 'partiel';
+  return 'non_acquis';
+}
 const EVAL_PLAFOND_FAUTE_GRAVE = 8;                  // note /20 max si faute grave
 
 class Evaluation {
@@ -47,22 +62,22 @@ class Evaluation {
       parComp[c].points += (d.points || 0);
       parComp[c].max += (d.max || 0);
     });
-    const competences = Object.keys(parComp).sort().map((code) => {
+    // Liste = toutes les compétences du référentiel (pour faire apparaître les « non évaluées »),
+    // complétée des compétences réellement présentes au scénario.
+    const codesSet = {};
+    Object.keys(this.referentiel).forEach((c) => { codesSet[c] = 1; });
+    Object.keys(parComp).forEach((c) => { codesSet[c] = 1; });
+    const ref = this.referentiel;
+    const competences = Object.keys(codesSet).sort().map((code) => {
       const s = parComp[code];
-      const p = s.max > 0 ? Math.round((s.points / s.max) * 100) : 0;
-      let niveau = 'non_acquis';
-      if (p >= EVAL_SEUILS.acquis) niveau = 'acquis';
-      else if (p >= EVAL_SEUILS.en_cours) niveau = 'en_cours';
-      const ref = this.referentiel[code] || {};
-      return {
-        code: code,
-        libelle: ref.libelle || code,
-        pct: p,
-        points: s.points,
-        max: s.max,
-        niveau: niveau,
-        niveau_label: niveau === 'acquis' ? 'Acquis' : niveau === 'en_cours' ? 'En cours' : 'Non acquis'
-      };
+      const libelle = (ref[code] && ref[code].libelle) || code;
+      if (!s || s.max === 0) {
+        const n = EVAL_NIVEAUX.non_evalue;
+        return { code: code, libelle: libelle, pct: null, points: 0, max: 0, evaluee: false, niveau: 'non_evalue', niveau_label: n.label, couleur: n.couleur, picto: n.picto };
+      }
+      const p = Math.round((s.points / s.max) * 100);
+      const niv = niveauDe(p); const n = EVAL_NIVEAUX[niv];
+      return { code: code, libelle: libelle, pct: p, points: s.points, max: s.max, evaluee: true, niveau: niv, niveau_label: n.label, couleur: n.couleur, picto: n.picto };
     });
 
     // --- Fautes graves ---

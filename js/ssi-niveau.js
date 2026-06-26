@@ -442,14 +442,14 @@
       if (ev.plafonnee) h += '<p style="text-align:center;color:#c62828;font-size:0.82em;font-weight:bold">Note plafonnée en raison d\'une faute grave.</p>';
       if (ev.fautes.length) { h += '<div style="background:#ffebee;border-left:4px solid #c62828;padding:10px 14px;margin:10px 0;border-radius:6px;font-size:0.85em"><strong>⛔ Faute(s) grave(s) :</strong><ul style="margin:6px 0 0 18px">'; ev.fautes.forEach(function (f) { h += '<li>' + esc(f) + '</li>'; }); h += '</ul></div>'; }
       if (ev.competences.length) {
-        h += '<h3 style="font-family:\'Trebuchet MS\',sans-serif;font-size:0.95em;color:#1b3a63;margin:14px 0 8px">Compétences évaluées</h3>';
+        h += '<h3 style="font-family:\'Trebuchet MS\',sans-serif;font-size:0.95em;color:#1b3a63;margin:14px 0 8px">Positionnement par compétence</h3>';
         ev.competences.forEach(function (c) {
-          var picto = c.niveau === 'acquis' ? '✔' : c.niveau === 'en_cours' ? '◑' : '✘';
-          var col = c.niveau === 'acquis' ? '#2e7d32' : c.niveau === 'en_cours' ? '#ef6c00' : '#c62828';
+          var largeur = c.evaluee ? Math.max(c.pct, 4) : 100;
+          var fond = c.evaluee ? c.couleur : '#dfe3e9';
           h += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:2px;font-size:0.82em"><span style="width:46px;flex-shrink:0"><b>' + esc(c.code) + '</b></span>' +
-            '<div style="flex:1;background:#e8ecf2;border-radius:9px;height:16px;overflow:hidden"><div style="width:' + Math.max(c.pct, 4) + '%;height:100%;background:' + col + '"></div></div>' +
-            '<span style="width:104px;flex-shrink:0;color:' + col + ';font-weight:bold;text-align:right;font-size:0.92em">' + picto + ' ' + c.niveau_label + '</span></div>' +
-            '<div style="font-size:0.72em;color:#888;margin:0 0 8px 54px">' + esc(c.libelle) + ' (' + c.pct + '%)</div>';
+            '<div style="flex:1;background:#e8ecf2;border-radius:9px;height:16px;overflow:hidden"><div style="width:' + largeur + '%;height:100%;background:' + fond + '"></div></div>' +
+            '<span style="width:120px;flex-shrink:0;color:' + c.couleur + ';font-weight:bold;text-align:right;font-size:0.86em">' + c.picto + ' ' + c.niveau_label + '</span></div>' +
+            '<div style="font-size:0.72em;color:#888;margin:0 0 8px 54px">' + esc(c.libelle) + (c.evaluee ? ' (' + c.pct + '%)' : '') + '</div>';
         });
       }
       if (bilan.details.length) {
@@ -484,7 +484,7 @@
       h += '<h2>Résultat</h2><div class="note" style="color:' + noteCol + '">' + fmtNote(ev.noteFinale) + ' / 20</div><p style="text-align:center;color:#666;font-size:0.85em">' + esc(ev.etiquetteNote) + ' · ' + ev.pct + '% · durée ' + bilan.duree + ' s</p>';
       if (ev.plafonnee) h += '<p style="text-align:center;color:#c62828;font-weight:bold">Note plafonnée (faute grave).</p>';
       if (ev.fautes.length) { h += '<div class="faute"><b>Faute(s) grave(s) :</b><ul style="margin:4px 0 0 16px">'; ev.fautes.forEach(function (f) { h += '<li>' + esc(f) + '</li>'; }); h += '</ul></div>'; }
-      if (ev.competences.length) { h += '<h2>Compétences</h2><table><thead><tr><th>Compétence</th><th>Niveau</th><th>%</th></tr></thead><tbody>'; ev.competences.forEach(function (c) { var col = c.niveau === 'acquis' ? '#2e7d32' : c.niveau === 'en_cours' ? '#ef6c00' : '#c62828'; h += '<tr><td><b>' + esc(c.code) + '</b> — ' + esc(c.libelle) + '</td><td style="color:' + col + ';font-weight:bold">' + c.niveau_label + '</td><td><span class="bar"><i style="width:' + Math.max(c.pct, 4) + '%;background:' + col + '"></i></span> ' + c.pct + '%</td></tr>'; }); h += '</tbody></table>'; }
+      if (ev.competences.length) { h += '<h2>Positionnement par compétence</h2><table><thead><tr><th>Compétence</th><th>Niveau</th><th>%</th></tr></thead><tbody>'; ev.competences.forEach(function (c) { var pctTxt = c.evaluee ? ('<span class="bar"><i style="width:' + Math.max(c.pct, 4) + '%;background:' + c.couleur + '"></i></span> ' + c.pct + '%') : '<span style="color:#9aa3af">—</span>'; h += '<tr><td><b>' + esc(c.code) + '</b> — ' + esc(c.libelle) + '</td><td style="color:' + c.couleur + ';font-weight:bold">' + c.picto + ' ' + c.niveau_label + '</td><td>' + pctTxt + '</td></tr>'; }); h += '</tbody></table>'; }
       if (bilan.details.length) { h += '<h2>Détail des actions</h2><table><thead><tr><th>Action</th><th>Résultat</th><th>Temps</th><th>Points</th></tr></thead><tbody>'; bilan.details.forEach(function (d) { var lib = (typeof LIB_ACTIONS !== 'undefined' && LIB_ACTIONS[d.action]) ? LIB_ACTIONS[d.action] : d.action; h += '<tr><td>' + esc(lib) + '</td><td>' + esc(d.resultat) + '</td><td>' + esc(d.realise) + '</td><td>' + d.points + '/' + d.max + '</td></tr>'; }); h += '</tbody></table>'; }
       if (mc.lignes && mc.lignes.length) { h += '<h2>Main courante de l\'élève</h2><table><thead><tr>'; mc.colonnes.forEach(function (c) { h += '<th>' + esc(c) + '</th>'; }); h += '</tr></thead><tbody>'; mc.lignes.forEach(function (row) { h += '<tr>'; row.forEach(function (v) { h += '<td>' + esc(v) + '</td>'; }); h += '</tr>'; }); h += '</tbody></table>'; }
       if (reps.length) { h += '<h2>Réponses aux questions</h2>'; reps.forEach(function (q, i) { h += '<p style="font-size:0.9em"><b>Q' + (i + 1) + '.</b> ' + esc(q.question) + '<br><span style="color:#1b3a63">→ ' + (esc(q.reponse) || '<i style="color:#999">(sans réponse)</i>') + '</span></p>'; }); }
