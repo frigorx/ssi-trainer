@@ -100,7 +100,7 @@ class Evaluation {
       fautes: fautes,
       diplome: diplome.intitule || diplome.code || '',
       etiquetteNote: etiquette,
-      perimetre: 'Évaluation de la composante sécurité incendie — indicateur pédagogique, non certificatif.'
+      perimetre: 'Évaluation de la composante sécurité incendie, sur une grille de positionnement interne (inspirée du SSIAP 1 — arrêté du 2 mai 2005 / RS5641) — indicateur pédagogique, non certificatif.'
     };
   }
 

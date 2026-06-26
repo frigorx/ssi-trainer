@@ -1,6 +1,8 @@
 {
-  "referentiel": "SSIAP 1",
-  "reference_reglementaire": "Arrêté du 2 mai 2005 modifié — relatif aux missions, à l'emploi et à la qualification du personnel permanent des services de sécurité incendie des ERP et IGH",
+  "grille": "Positionnement par compétence — sécurité incendie (C1–C8)",
+  "nature": "Grille de positionnement pédagogique MAISON, conçue pour le simulateur SSI Trainer.",
+  "inspiration": "Inspirée des activités de l'agent de sécurité incendie SSIAP 1 (arrêté du 2 mai 2005 modifié — missions, emploi et qualification des services de sécurité incendie des ERP/IGH ; titre enregistré au Répertoire Spécifique sous le code RS5641).",
+  "avertissement": "Ce n'est PAS le référentiel SSIAP officiel : l'arrêté du 2 mai 2005 ne structure pas la qualification en blocs « C1 à C8 ». Les codes C1–C8 et les barèmes sont une construction interne, à des fins de positionnement et d'entraînement — indicateur pédagogique, non certificatif. À distinguer aussi des diplômes Éducation nationale (CAP, Bac Pro, BTS), qui ont leurs propres référentiels.",
   "competences": [
     {
       "id": "C1",
@@ -12,8 +14,7 @@
         "Vérifier la vacuité des dégagements et circulations",
         "Contrôler l'état des moyens de secours"
       ],
-      "bareme": { "max": 20, "seuil": 12 },
-      "ref_arrete": "Annexe I — 1re partie — Chapitre 1"
+      "bareme": { "max": 20, "seuil": 12 }
     },
     {
       "id": "C2",
@@ -26,8 +27,7 @@
         "Interpréter les messages du tableau de signalisation",
         "Distinguer alarme restreinte et alarme générale"
       ],
-      "bareme": { "max": 30, "seuil": 18 },
-      "ref_arrete": "Annexe I — 1re partie — Chapitre 2"
+      "bareme": { "max": 30, "seuil": 18 }
     },
     {
       "id": "C3",
@@ -39,8 +39,7 @@
         "Confirmer l'adresse et les accès de l'établissement",
         "Rester en ligne jusqu'à instruction du CODIS"
       ],
-      "bareme": { "max": 25, "seuil": 15 },
-      "ref_arrete": "Annexe I — 1re partie — Chapitre 3"
+      "bareme": { "max": 25, "seuil": 15 }
     },
     {
       "id": "C4",
@@ -53,8 +52,7 @@
         "Gérer les personnes à mobilité réduite (PMR)",
         "Effectuer le pointage à la zone de rassemblement"
       ],
-      "bareme": { "max": 30, "seuil": 18 },
-      "ref_arrete": "Annexe I — 1re partie — Chapitre 4"
+      "bareme": { "max": 30, "seuil": 18 }
     },
     {
       "id": "C5",
@@ -67,8 +65,7 @@
         "Alerter ou faire alerter les secours médicaux",
         "Surveiller la victime jusqu'à l'arrivée des secours"
       ],
-      "bareme": { "max": 20, "seuil": 12 },
-      "ref_arrete": "Annexe I — 1re partie — Chapitre 5"
+      "bareme": { "max": 20, "seuil": 12 }
     },
     {
       "id": "C6",
@@ -80,8 +77,7 @@
         "Identifier et signaler les PCF défaillantes",
         "Comprendre le rôle des clapets coupe-feu dans les gaines"
       ],
-      "bareme": { "max": 20, "seuil": 12 },
-      "ref_arrete": "Annexe I — 1re partie — Chapitre 6"
+      "bareme": { "max": 20, "seuil": 12 }
     },
     {
       "id": "C7",
@@ -93,8 +89,7 @@
         "Vérifier le fonctionnement des dispositifs commandés",
         "Signaler tout dysfonctionnement du désenfumage"
       ],
-      "bareme": { "max": 20, "seuil": 12 },
-      "ref_arrete": "Annexe I — 1re partie — Chapitre 7"
+      "bareme": { "max": 20, "seuil": 12 }
     },
     {
       "id": "C8",
@@ -107,8 +102,7 @@
         "Guider les secours jusqu'à la zone sinistrée",
         "Mettre à disposition l'historique des événements SSI"
       ],
-      "bareme": { "max": 25, "seuil": 15 },
-      "ref_arrete": "Annexe I — 1re partie — Chapitre 8"
+      "bareme": { "max": 25, "seuil": 15 }
     }
   ]
 }
