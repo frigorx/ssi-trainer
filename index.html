@@ -151,11 +151,6 @@ h1{font-family:'Trebuchet MS',sans-serif;color:#1b3a63;font-size:1.6em;margin-bo
     </a>
   </div>
 
-  <!-- Accès formateur -->
-  <div class="formateur-access">
-    <button onclick="showPinModal()">&#128274; Accès Formateur</button>
-  </div>
-
   <!-- Référentiel -->
   <div class="ref-section">
     <h3>Cadre réglementaire</h3>
@@ -183,46 +178,5 @@ h1{font-family:'Trebuchet MS',sans-serif;color:#1b3a63;font-size:1.6em;margin-bo
   <p>LP Privé Jacques Raynaud — Campus ÉQUATIO, Marseille</p>
 </div>
 
-<!-- Modal PIN -->
-<div class="modal-overlay" id="pinModal">
-  <div class="modal">
-    <h3>&#128274; Accès Formateur</h3>
-    <p style="color:#666;font-size:0.9em;margin-bottom:16px">Saisissez le code d'accès</p>
-    <input type="password" id="pinInput" maxlength="4" placeholder="____" autofocus>
-    <div class="err" id="pinErr"></div>
-    <button onclick="checkPin()">Valider</button>
-    <br><br>
-    <a href="#" onclick="closePinModal();return false" style="color:#888;font-size:0.9em">Annuler</a>
-  </div>
-</div>
-
-<script>
-function showPinModal(){
-  document.getElementById('pinModal').classList.add('active');
-  document.getElementById('pinInput').value='';
-  document.getElementById('pinErr').textContent='';
-  setTimeout(()=>document.getElementById('pinInput').focus(),100);
-}
-function closePinModal(){
-  document.getElementById('pinModal').classList.remove('active');
-}
-function checkPin(){
-  const pin=document.getElementById('pinInput').value;
-  if(pin==='1234'){
-    window.location.href='formateur.html';
-  } else {
-    document.getElementById('pinErr').textContent='Code incorrect';
-    document.getElementById('pinInput').value='';
-    document.getElementById('pinInput').focus();
-  }
-}
-document.getElementById('pinInput').addEventListener('keydown',function(e){
-  if(e.key==='Enter') checkPin();
-  if(e.key==='Escape') closePinModal();
-});
-document.getElementById('pinModal').addEventListener('click',function(e){
-  if(e.target===this) closePinModal();
-});
-</script>
 </body>
 </html>
