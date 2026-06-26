@@ -162,5 +162,11 @@
     "L'évacuation générale est une commande engageante : niveau d'accès 2 (code ou clé), réservé au personnel formé.",
     "Après évacuation : pointage au point de rassemblement, NE PAS réintégrer tant que les secours n'ont pas donné l'ordre.",
     "Accueil des secours : plans, clés, historique des événements SSI, guidage jusqu'au sinistre."
+  ],
+  "objectifs": [
+    "Appliquer la procedure complete de mise en securite face a un feu confirme",
+    "Transmettre une alerte structuree au 18 / 112",
+    "Declencher l-evacuation generale en passant en niveau d-acces 2",
+    "Accueillir et guider les sapeurs-pompiers"
   ]
 }

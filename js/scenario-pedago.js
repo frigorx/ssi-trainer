@@ -34,6 +34,16 @@ const GESTES_POSTE = {
   coupure_energies: '⚡', reconnaitre_defaut_das: '🛠️', accueil_pompiers: '🚒'
 };
 
+// Consignes génériques affichées à l'élève avant chaque exercice (déroulé type).
+const CONSIGNE_ETAPES = [
+  'Lis la mission et les objectifs ci-dessus.',
+  'Choisis ton mode : Guidé (tu es accompagné) ou Autonome (tu décides seul).',
+  'Clique sur « Démarrer » : le scénario se déroule en temps réel.',
+  'Réagis : boutons du tableau (à gauche) + « Gestes de l\'agent » (à droite). Code d\'accès niveau 2 = 2222 pour les commandes engageantes (évacuation, DAS, coupures).',
+  'Consigne tes actions dans la main courante et réponds aux questions.',
+  'Clique « Arrêter » pour obtenir ta note, ton bilan et ta fiche à rendre.'
+];
+
 // Gestes « opérateur » du poste (hors boutons de l'équipement)
 const GESTES_OPERATEUR = [
   { cle: 'levee_doute', ico: '🚶', label: 'Envoyer un équipier (levée de doute)' },
@@ -146,13 +156,25 @@ class PosteEleve {
   _renderMission() {
     if (!this.refs.mission) return;
     var s = this.scenario, c = s.contexte || {};
-    var html = '<div class="pe-bloc-titre"><span class="pe-ico">🎯</span> Mission</div>';
+    var html = '<div class="pe-bloc-titre"><span class="pe-ico">🎯</span> Mission, objectifs &amp; consignes</div>';
     html += '<div class="pe-mission-txt">' + _esc(s.mission || s.description || '') + '</div>';
     var ctx = [];
     if (c.etablissement) ctx.push('<b>Établissement :</b> ' + _esc(c.etablissement));
     if (c.effectif) ctx.push('<b>Effectif :</b> ' + _esc(c.effectif) + ' personnes');
     if (c.particularites) ctx.push('<b>Particularités :</b> ' + _esc(c.particularites));
     if (ctx.length) html += '<div class="pe-contexte">' + ctx.join('<br>') + '</div>';
+    // Objectifs pédagogiques
+    if (s.objectifs && s.objectifs.length) {
+      html += '<div class="pe-objectifs"><div class="pe-sous-titre">🎓 Ce que tu vas travailler</div><ul>';
+      s.objectifs.forEach(function (o) { html += '<li>' + _esc(o) + '</li>'; });
+      html += '</ul></div>';
+    }
+    // Consignes (spécifique éventuelle + déroulé générique)
+    html += '<div class="pe-consignes"><div class="pe-sous-titre">📋 Comment faire</div>';
+    if (s.consigne) html += '<p style="margin:0 0 6px">' + _esc(s.consigne) + '</p>';
+    html += '<ol class="pe-consignes-list">';
+    CONSIGNE_ETAPES.forEach(function (e) { html += '<li>' + _esc(e) + '</li>'; });
+    html += '</ol></div>';
     this.refs.mission.className = 'pe-bloc pe-mission';
     this.refs.mission.innerHTML = html;
   }

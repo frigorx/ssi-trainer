@@ -359,5 +359,11 @@
       "label": "Test signalisation",
       "competence": "C2"
     }
+  ],
+  "objectifs": [
+    "Exploiter un CMSI : signalisations, double detection, alarme generale",
+    "Commander les DAS de compartimentage et de desenfumage (acces niveau 2)",
+    "Limiter la propagation par les escaliers (portes coupe-feu, exutoires)",
+    "Coordonner alerte, evacuation et accueil des secours"
   ]
 }

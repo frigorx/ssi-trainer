@@ -441,5 +441,11 @@
       "label": "Réarmer le système",
       "competence": "C2"
     }
+  ],
+  "objectifs": [
+    "Organiser une evacuation horizontale vers une zone refuge",
+    "Prendre en charge les personnes a mobilite reduite (PMR)",
+    "Coordonner plusieurs batiments et leurs equipes",
+    "Transmettre aux secours les informations PMR et les acces"
   ]
 }

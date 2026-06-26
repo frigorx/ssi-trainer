@@ -373,5 +373,11 @@
       "label": "Test signalisation",
       "competence": "C2"
     }
+  ],
+  "objectifs": [
+    "Reconnaitre une defaillance d-equipement (exutoire HS) et la consigner",
+    "Adapter sa strategie : basculer vers un plan B de compartimentage",
+    "Signaler la defaillance aux secours et a la maintenance",
+    "Gerer une evacuation en etablissement de sante (patients alites)"
   ]
 }

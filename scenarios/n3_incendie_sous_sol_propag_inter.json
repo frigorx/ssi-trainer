@@ -474,5 +474,11 @@
       "label": "Réarmer le système",
       "competence": "C2"
     }
+  ],
+  "objectifs": [
+    "Gerer une crise multi-batiments depuis une baie (bus RS485)",
+    "Maitriser la propagation inter-batiments par le compartimentage",
+    "Coordonner la coupure des energies AVEC les secours",
+    "Tenir une main courante de crise exploitable par les pompiers"
   ]
 }

@@ -148,5 +148,11 @@
     "La levée de doute par un équipier est obligatoire avant tout réarmement.",
     "Un détecteur optique de fumée réagit aux fumées MAIS aussi aux vapeurs et buées de cuisson.",
     "Ne jamais réarmer tant que l'origine de l'alarme n'est pas formellement identifiée."
+  ],
+  "objectifs": [
+    "Identifier une alarme feu et l-acquitter dans les temps sur l-ECS",
+    "Organiser une levee de doute par un equipier avant toute decision",
+    "Decider face a une fausse alarme : rearmer en securite, sans surreagir",
+    "Tenir une main courante claire et horodatee"
   ]
 }

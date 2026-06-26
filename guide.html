@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guide de l'élève — SSI Trainer — inerWeb Édu</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Calibri,Arial,sans-serif;font-size:13pt;line-height:1.55;background:#f2f5fb;color:#1b3a63}
+.header{background:#1b3a63;color:#fff;padding:14px 24px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.header .logo{font-family:'Trebuchet MS',sans-serif;font-size:1.3em;font-weight:bold}
+.header .badge{background:#ff6b35;color:#fff;padding:1px 8px;border-radius:4px;font-size:0.55em}
+.header .back-link{color:#fff;text-decoration:none;font-size:0.85em;opacity:0.85;margin-right:6px}
+.header .actions{margin-left:auto;display:flex;gap:8px}
+.header .actions button{background:#ff6b35;color:#fff;border:none;border-radius:6px;padding:7px 16px;font-size:0.85em;font-weight:bold;cursor:pointer}
+.container{max-width:820px;margin:24px auto;padding:0 18px}
+h1{font-family:'Trebuchet MS',sans-serif;font-size:1.6em;margin-bottom:4px}
+.sub{color:#555;margin-bottom:22px}
+.card{background:#fff;border-radius:10px;box-shadow:0 2px 10px rgba(27,58,99,0.08);padding:18px 22px;margin-bottom:18px}
+.card h2{font-family:'Trebuchet MS',sans-serif;font-size:1.15em;color:#1b3a63;border-bottom:2px solid #ff6b35;padding-bottom:5px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.card h3{font-size:0.98em;color:#ff6b35;margin:12px 0 4px}
+.card p{margin-bottom:8px}
+.card ul,.card ol{margin:6px 0 6px 22px}
+.card li{margin-bottom:5px}
+.steps{counter-reset:st;list-style:none;margin-left:0}
+.steps li{position:relative;padding:8px 8px 8px 44px;border:1px solid #e8ecf2;border-radius:8px;margin-bottom:8px;background:#fafbfd}
+.steps li::before{counter-increment:st;content:counter(st);position:absolute;left:10px;top:50%;transform:translateY(-50%);width:24px;height:24px;border-radius:50%;background:#1b3a63;color:#fff;font-weight:bold;display:flex;align-items:center;justify-content:center;font-size:0.85em}
+.gestes{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.geste{border:1px solid #e8ecf2;border-radius:8px;padding:10px 12px;font-size:0.92em}
+.geste b{color:#1b3a63}
+.geste .ico{font-size:1.3em;margin-right:6px}
+.note{background:#fff8f4;border-left:4px solid #ff6b35;border-radius:6px;padding:10px 14px;font-size:0.95em}
+.acc{background:#f1f6ff;border-left:4px solid #1b3a63;border-radius:6px;padding:10px 14px;font-size:0.95em}
+table{width:100%;border-collapse:collapse;font-size:0.92em;margin-top:6px}
+th,td{border:1px solid #dde2ea;padding:6px 10px;text-align:left}
+th{background:#1b3a63;color:#fff}
+.footer{text-align:center;padding:18px;color:#888;font-size:0.8em}
+.footer a{color:#ff6b35;text-decoration:none}
+@media print{
+  body{background:#fff;font-size:11pt}
+  .header .actions,.header .back-link{display:none}
+  .header{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .card{box-shadow:none;border:1px solid #ccc;page-break-inside:avoid}
+  th{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <a href="index.html" class="back-link">&larr; Accueil</a>
+  <div class="logo">&#10052; inerWeb<span class="badge">&Eacute;du</span></div>
+  <div class="actions"><button onclick="window.print()">&#128424; Imprimer ce guide</button></div>
+</div>
+
+<div class="container">
+  <h1>Guide de l'élève</h1>
+  <p class="sub">SSI Trainer — comment réussir un exercice de sécurité incendie, étape par étape. À lire avant de commencer ; tu peux travailler en autonomie.</p>
+
+  <div class="card">
+    <h2>🎯 À quoi sert cet outil ?</h2>
+    <p>Tu joues le rôle de l'<strong>agent de sécurité au poste de sécurité (PC sécurité)</strong>. Une alarme retentit : à toi de <strong>réagir correctement et dans l'ordre</strong>, comme sur un vrai Système de Sécurité Incendie (SSI). Chaque exercice est <strong>évalué</strong> : tu obtiens une note, un bilan par compétence, et une fiche à rendre.</p>
+    <p>L'écran est partagé en deux : à <strong>gauche, le tableau SSI</strong> (l'équipement que tu manipules) ; à <strong>droite, ton document de travail</strong> (mission, objectifs, conduite à tenir, main courante, questions).</p>
+  </div>
+
+  <div class="card">
+    <h2>🚦 Avant de commencer</h2>
+    <ol>
+      <li>Renseigne ton <strong>nom, ta classe et ton diplôme</strong> en haut à droite (le diplôme adapte les exercices proposés et la notation).</li>
+      <li>Choisis un <strong>scénario</strong> dans la liste, puis lis attentivement le bloc <strong>« Mission, objectifs &amp; consignes »</strong> : il t'indique ce que tu vas travailler et ce qu'on attend de toi.</li>
+      <li>Choisis ton <strong>mode</strong> : <em>Guidé</em> (la conduite à tenir s'affiche et se coche), <em>Autonome</em> (à toi de mener, tu rédiges dans la main courante), <em>Exploration</em> (tu testes librement les situations).</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>▶️ Le déroulé d'un exercice</h2>
+    <ol class="steps">
+      <li>Clique sur <strong>« Démarrer »</strong> : le scénario se déroule en temps réel (alarmes, propagation, défaillances…).</li>
+      <li><strong>Acquitte</strong> l'alarme sur le tableau, puis <strong>localise</strong> la zone concernée.</li>
+      <li>Lance une <strong>levée de doute</strong> (envoyer un équipier) : son compte-rendu te dira si c'est une fausse alarme ou un vrai feu.</li>
+      <li><strong>Décide et agis</strong> selon la situation : réarmer (fausse alarme) OU alerter le 18, commander les dispositifs de sécurité, évacuer (vrai feu).</li>
+      <li><strong>Consigne chaque action</strong> dans la main courante, et réponds aux questions.</li>
+      <li>Clique <strong>« Arrêter »</strong> : tu obtiens ta <strong>note /20</strong>, ton bilan par compétence et ta <strong>fiche à rendre</strong>.</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2>🧑‍🚒 Les gestes que tu peux faire</h2>
+    <div class="gestes">
+      <div class="geste"><span class="ico">▶</span><b>Acquittement</b> — prendre en compte l'alarme (ce n'est PAS lever le risque).</div>
+      <div class="geste"><span class="ico">🔇</span><b>Arrêt du signal</b> — couper la sonnerie une fois l'alarme prise en compte.</div>
+      <div class="geste"><span class="ico">🚶</span><b>Levée de doute</b> — envoyer un équipier vérifier sur place.</div>
+      <div class="geste"><span class="ico">📞</span><b>Appel 18 / 112</b> — alerter les secours avec un message structuré (nature, lieu, victimes, accès).</div>
+      <div class="geste"><span class="ico">🛡️</span><b>Commander les DAS</b> — portes coupe-feu, désenfumage (nécessite l'accès niveau 2).</div>
+      <div class="geste"><span class="ico">⚠</span><b>Évacuation générale</b> — commande engageante (accès niveau 2).</div>
+      <div class="geste"><span class="ico">🚒</span><b>Accueil des secours</b> — plans, clés, point de situation.</div>
+      <div class="geste"><span class="ico">⚡</span><b>Coupure des énergies</b> — gaz/électricité, en lien avec les pompiers (niveau 3).</div>
+    </div>
+    <div class="note" style="margin-top:12px">🔑 <strong>Niveau d'accès 2</strong> : les commandes les plus engageantes (évacuation, DAS, coupures) demandent un <strong>code (2&nbsp;2&nbsp;2&nbsp;2)</strong>, comme sur un vrai tableau — c'est une sécurité contre les déclenchements accidentels.</div>
+  </div>
+
+  <div class="card">
+    <h2>✍️ La main courante</h2>
+    <p>C'est le <strong>registre du poste de sécurité</strong> : tu y notes l'heure, l'événement constaté et l'action menée. Tes gestes s'y inscrivent automatiquement ; complète-les et ajoute tes observations. C'est une <strong>preuve</strong> de ce que tu as fait — soigne-la (heure précise, zone, vocabulaire correct).</p>
+  </div>
+
+  <div class="card">
+    <h2>🏆 Comment tu es évalué</h2>
+    <p>À la fin, tu obtiens :</p>
+    <ul>
+      <li>une <strong>note sur 20</strong> ;</li>
+      <li>un <strong>positionnement par compétence</strong> (acquis / en cours / non acquis) ;</li>
+      <li>la liste des <strong>fautes graves</strong> éventuelles (elles plafonnent la note).</li>
+    </ul>
+    <table>
+      <tr><th>Exemples de fautes graves</th></tr>
+      <tr><td>Déclencher l'évacuation sur une fausse alarme (surréaction)</td></tr>
+      <tr><td>Réarmer sans avoir fait la levée de doute</td></tr>
+      <tr><td>Oublier d'alerter le 18 / d'évacuer alors que le feu est confirmé</td></tr>
+    </table>
+    <p style="margin-top:8px">Tu peux <strong>imprimer ou télécharger ta fiche</strong> (bilan + main courante) pour la rendre à ton professeur.</p>
+  </div>
+
+  <div class="card">
+    <h2>💡 Conseils</h2>
+    <ul>
+      <li><strong>Agis dans l'ordre</strong> : acquitter → localiser → lever le doute → décider. Ne saute pas la levée de doute.</li>
+      <li><strong>Respecte les délais</strong> : agir trop tard fait perdre des points.</li>
+      <li><strong>Ne surréagis pas</strong> : une fausse alarme ne se traite pas comme un incendie.</li>
+      <li><strong>En mode dégradé</strong> (un équipement en panne), adapte ta stratégie au lieu de t'acharner.</li>
+    </ul>
+    <div class="acc" style="margin-top:10px">♿ <strong>Accessibilité</strong> : l'outil fonctionne au clavier, annonce les événements aux lecteurs d'écran et respecte le réglage « animations réduites » de ton appareil. Il s'utilise aussi sur téléphone et tablette.</div>
+  </div>
+</div>
+
+<div class="footer">
+  SSI Trainer — <a href="https://frigorx.github.io/ssi-trainer/">inerWeb Édu</a> — par F. Henninot — LP Jacques Raynaud, Marseille
+</div>
+
+</body>
+</html>
