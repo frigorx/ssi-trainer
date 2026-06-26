@@ -7,12 +7,13 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:Calibri,sans-serif;font-size:14pt;line-height:1.5;background:#f2f5fb;color:#1b3a63;text-align:left}
-.header{background:#1b3a63;color:#fff;padding:20px 30px;display:flex;align-items:center;gap:18px}
-.header .logo{font-family:'Trebuchet MS',sans-serif;font-size:1.6em;font-weight:bold;display:flex;align-items:center;gap:8px}
-.header .logo .snowflake{font-size:1.3em}
-.header .badge{background:#ff6b35;color:#fff;padding:2px 10px;border-radius:4px;font-size:0.6em;margin-left:4px;vertical-align:middle}
-.header .author{font-size:0.55em;opacity:0.8;margin-left:10px}
-.header .title-ssi{margin-left:auto;font-family:'Trebuchet MS',sans-serif;font-size:1.1em;letter-spacing:1px}
+/* Bandeau institutionnel — logos de l'établissement mis en avant, en haut */
+.instit-bar{background:#fff;display:flex;gap:42px;align-items:center;justify-content:center;flex-wrap:wrap;padding:18px 30px;border-bottom:1px solid #e6eaf2}
+.instit-bar img{height:58px;width:auto;display:block}
+.instit-bar a{text-decoration:none}
+/* Bandeau du simulateur */
+.header{background:#1b3a63;color:#fff;padding:14px 30px;display:flex;align-items:center;justify-content:center}
+.header .title-ssi{font-family:'Trebuchet MS',sans-serif;font-size:1.5em;letter-spacing:2px;font-weight:bold}
 .container{max-width:1100px;margin:40px auto;padding:0 20px}
 h1{font-family:'Trebuchet MS',sans-serif;color:#1b3a63;font-size:1.6em;margin-bottom:10px;text-align:center}
 .subtitle{text-align:center;color:#555;margin-bottom:40px;font-size:1em}
@@ -47,12 +48,10 @@ h1{font-family:'Trebuchet MS',sans-serif;color:#1b3a63;font-size:1.6em;margin-bo
 .formateur-access button:hover{background:#142d4e}
 .footer{text-align:center;padding:20px;color:#888;font-size:0.85em;border-top:1px solid #e0e4ea}
 .footer a{color:#ff6b35;text-decoration:none}
-.logos-instit{display:flex;gap:28px;align-items:center;justify-content:center;flex-wrap:wrap;margin-bottom:14px}
-.logos-instit img{height:48px;width:auto;opacity:0.92;transition:opacity 0.2s}
-.logos-instit a:hover img{opacity:1}
-.logo-lycee{display:inline-flex;flex-direction:column;line-height:1.04;text-align:left;font-family:'Trebuchet MS',Arial,sans-serif;font-weight:800;letter-spacing:0.4px;text-transform:uppercase}
-.logo-lycee .ll-1{color:#16163a;font-size:1.12em}
-.logo-lycee .ll-2{color:#6d5cf0;font-size:1.12em}
+.logo-lycee{display:inline-flex;flex-direction:column;line-height:1.05;text-align:left;font-family:'Trebuchet MS',Arial,sans-serif;font-weight:800;letter-spacing:0.4px;text-transform:uppercase}
+.logo-lycee .ll-1{color:#16163a;font-size:1.4em}
+.logo-lycee .ll-2{color:#6d5cf0;font-size:1.4em}
+.credit-discret{font-size:0.82em;opacity:0.7;margin-top:4px}
 
 /* Modal PIN */
 .modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center}
@@ -68,12 +67,18 @@ h1{font-family:'Trebuchet MS',sans-serif;color:#1b3a63;font-size:1.6em;margin-bo
 </head>
 <body>
 
+<div class="instit-bar">
+  <a href="https://equatio.org/lycee-ufa-jacques-raynaud/" target="_blank" rel="noopener" title="Lycée / UFA Jacques Raynaud">
+    <span class="logo-lycee" role="img" aria-label="Lycée / UFA Jacques Raynaud">
+      <span class="ll-1">Lycée / UFA</span>
+      <span class="ll-2">Jacques Raynaud</span>
+    </span>
+  </a>
+  <a href="https://equatio.org/" target="_blank" rel="noopener" title="Campus ÉQUATIO">
+    <img src="assets/logo-equation.png" alt="Campus ÉQUATIO">
+  </a>
+</div>
 <div class="header">
-  <div class="logo">
-    <span class="snowflake">&#10052;</span>
-    inerWeb<span class="badge">Édu</span>
-    <span class="author">par F. Henninot</span>
-  </div>
   <div class="title-ssi">SSI TRAINER</div>
 </div>
 
@@ -180,19 +185,8 @@ h1{font-family:'Trebuchet MS',sans-serif;color:#1b3a63;font-size:1.6em;margin-bo
 </div>
 
 <div class="footer">
-  <div class="logos-instit">
-    <a href="https://equatio.org/lycee-ufa-jacques-raynaud/" target="_blank" rel="noopener" title="Lycée / UFA Jacques Raynaud" style="text-decoration:none">
-      <span class="logo-lycee" role="img" aria-label="Lycée / UFA Jacques Raynaud">
-        <span class="ll-1">Lycée / UFA</span>
-        <span class="ll-2">Jacques Raynaud</span>
-      </span>
-    </a>
-    <a href="https://equatio.org/" target="_blank" rel="noopener" title="Campus ÉQUATIO">
-      <img src="assets/logo-equation.png" alt="Campus ÉQUATIO">
-    </a>
-  </div>
-  <p>SSI Trainer v1.0 — <a href="https://frigorx.github.io/ssi-trainer/">inerWeb Édu</a> — par F. Henninot</p>
-  <p>LP Privé Jacques Raynaud — Campus ÉQUATIO, Marseille</p>
+  <p>LP Privé Jacques Raynaud — Campus ÉQUATIO · 59 Trav. Charles Susini, 13013 Marseille</p>
+  <p class="credit-discret">SSI Trainer v1.0 — outil pédagogique réalisé par F. Henninot · <a href="https://frigorx.github.io/ssi-trainer/">inerWeb Édu</a></p>
 </div>
 
 </body>
