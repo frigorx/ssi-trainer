@@ -1,0 +1,273 @@
+﻿<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tableau de bord enseignant — SSI Trainer</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Calibri,sans-serif;font-size:13pt;line-height:1.5;background:#f2f5fb;color:#1b3a63}
+.header{background:#1b3a63;color:#fff;padding:14px 30px;display:flex;align-items:center;gap:16px}
+.header .back{color:#cfe0ff;text-decoration:none;font-size:0.85em;white-space:nowrap}
+.header .title{font-family:'Trebuchet MS',sans-serif;font-size:1.25em;letter-spacing:1px;font-weight:bold}
+.container{max-width:1180px;margin:26px auto;padding:0 18px}
+h1{font-family:'Trebuchet MS',sans-serif;font-size:1.35em;margin-bottom:4px;text-align:center}
+.sub{text-align:center;color:#555;font-size:0.9em;margin-bottom:18px}
+.local-note{background:#e9f6ec;border:1px solid #b6dcc0;border-left:4px solid #2e7d32;border-radius:8px;padding:10px 14px;font-size:0.85em;color:#23492f;margin-bottom:22px}
+.panels{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:22px}
+.panel{background:#fff;border-radius:12px;box-shadow:0 2px 10px rgba(27,58,99,0.08);padding:18px 20px}
+.panel h2{font-family:'Trebuchet MS',sans-serif;font-size:1.02em;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.panel p.hint{font-size:0.82em;color:#666;margin-bottom:10px}
+textarea{width:100%;min-height:110px;border:1px solid #dde2ea;border-radius:8px;padding:9px;font-family:Calibri,sans-serif;font-size:0.9em;resize:vertical;box-sizing:border-box}
+.btn{display:inline-block;background:#ff6b35;color:#fff;padding:9px 20px;border:none;border-radius:7px;font-size:0.92em;font-weight:bold;cursor:pointer;transition:background 0.2s}
+.btn:hover{background:#e55a28}
+.btn-blue{background:#1b3a63}.btn-blue:hover{background:#142d4e}
+.btn-ghost{background:#fff;color:#1b3a63;border:1.5px solid #c7d0de}.btn-ghost:hover{background:#eef2f8}
+.btn-danger{background:#fff;color:#c62828;border:1.5px solid #e3b4b4}.btn-danger:hover{background:#fdeeee}
+.row-btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.drop{border:2px dashed #c7d0de;border-radius:10px;padding:18px;text-align:center;color:#667;font-size:0.88em;cursor:pointer;transition:border-color 0.2s,background 0.2s}
+.drop.over{border-color:#ff6b35;background:#fff6f1}
+.drop b{color:#1b3a63}
+.import-log{font-size:0.82em;color:#555;margin-top:8px;min-height:1.2em}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.toolbar .count{font-size:0.85em;color:#555;margin-left:auto}
+.matrix-wrap{background:#fff;border-radius:12px;box-shadow:0 2px 10px rgba(27,58,99,0.08);padding:14px 14px 18px;overflow-x:auto}
+table.matrix{border-collapse:collapse;width:100%;font-size:0.82em}
+table.matrix th,table.matrix td{border:1px solid #e2e7f0;padding:5px 7px;text-align:center;white-space:nowrap}
+table.matrix thead th{background:#1b3a63;color:#fff;position:sticky;top:0}
+table.matrix th.eleve,table.matrix td.eleve{text-align:left;position:sticky;left:0;background:#fff;z-index:1}
+table.matrix thead th.eleve{background:#1b3a63;z-index:2}
+table.matrix td.eleve b{color:#1b3a63}
+table.matrix td.eleve small{color:#888;display:block;font-size:0.82em}
+table.matrix tbody tr:nth-child(even) td{background:#f7f9fc}
+table.matrix tbody tr:nth-child(even) td.eleve{background:#f7f9fc}
+.cell{display:inline-block;min-width:26px;border-radius:5px;padding:2px 4px;font-weight:bold;color:#fff;font-size:0.95em}
+.note-cell{font-weight:bold}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:0.8em;color:#555;margin:12px 2px 0}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:16px;height:16px;border-radius:4px;display:inline-block}
+.empty{text-align:center;color:#888;padding:40px 10px;font-size:0.95em}
+.col-comp{cursor:help}
+.footer{text-align:center;padding:18px;color:#888;font-size:0.82em}
+@media (max-width:820px){.panels{grid-template-columns:1fr}}
+@media print{
+  .header,.panels,.toolbar .btn,.toolbar .btn-blue,.toolbar .btn-danger,.local-note,.footer,.back{display:none!important}
+  body{background:#fff}.matrix-wrap{box-shadow:none;padding:0}
+  table.matrix th,table.matrix td{border:1px solid #999}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <a href="index.html" class="back">&larr; Accueil</a>
+  <span class="title">Tableau de bord enseignant</span>
+</div>
+
+<div class="container">
+  <h1>Suivi par compétences — composante sécurité incendie</h1>
+  <p class="sub">Importez les jetons de résultat des élèves pour obtenir la matrice de positionnement par compétence.</p>
+
+  <div class="local-note">
+    🔒 <b>100 % local.</b> Cet outil ne communique avec aucun serveur : les jetons que vous importez restent
+    dans <b>ce navigateur, sur cet ordinateur</b> (stockage local). Aucune donnée d'élève n'est envoyée nulle part.
+    Utilisez « Tout effacer » sur un poste partagé.
+  </div>
+
+  <div class="panels">
+    <div class="panel">
+      <h2>📥 Importer les jetons</h2>
+      <p class="hint">Sélectionnez (ou glissez ici) les fichiers <code>jeton-ssi_*.json</code> remis par les élèves. L'import est cumulatif ; les doublons sont ignorés.</p>
+      <div class="drop" id="drop">
+        <b>Cliquez pour choisir</b> ou glissez-déposez les fichiers JSON ici
+        <input type="file" id="fileInput" accept=".json,application/json" multiple hidden>
+      </div>
+      <div class="import-log" id="importLog"></div>
+    </div>
+
+    <div class="panel">
+      <h2>👥 Liste de classe (optionnel)</h2>
+      <p class="hint">Collez une liste — un élève par ligne, <code>Nom</code> ou <code>Nom;Classe</code> — pour faire apparaître aussi les élèves pas encore évalués.</p>
+      <textarea id="listeClasse" placeholder="Dupont;1CAP&#10;Martin;1CAP&#10;Durand;1CAP"></textarea>
+      <div class="row-btns">
+        <button class="btn btn-blue" id="btnAppliquerListe">Appliquer la liste</button>
+        <button class="btn btn-ghost" id="btnViderListe">Effacer la liste</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <button class="btn" id="btnExportCSV">⬇ Export CSV (tableur)</button>
+    <button class="btn btn-blue" id="btnImprimer">🖨 Imprimer / PDF</button>
+    <button class="btn btn-danger" id="btnVider">🗑 Tout effacer</button>
+    <span class="count" id="count"></span>
+  </div>
+
+  <div class="matrix-wrap">
+    <div id="matrix"></div>
+    <div class="legend" id="legend"></div>
+  </div>
+</div>
+
+<div class="footer">SSI Trainer — outil pédagogique local · inerWeb Édu</div>
+
+<script src="js/tableau-agregation.js"></script>
+<script>
+'use strict';
+var K_JETONS = 'ssi-trainer:jetons';
+var K_LISTE = 'ssi-trainer:liste';
+
+// Style d'affichage des niveaux (doit suivre l'échelle de js/evaluation.js).
+var NIV = {
+  non_evalue: { label: 'Non évalué', court: '–', couleur: '#9aa3af' },
+  non_acquis: { label: 'Non acquis', court: '✘', couleur: '#c62828' },
+  partiel: { label: 'Partiellement acquis', court: '◔', couleur: '#ef6c00' },
+  acquis: { label: 'Acquis', court: '✔', couleur: '#2e7d32' },
+  parfait: { label: 'Parfaitement acquis', court: '★', couleur: '#1b5e20' }
+};
+
+function $(id) { return document.getElementById(id); }
+function esc(s) { return (s == null ? '' : String(s)).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+
+function lireJetons() { try { return JSON.parse(localStorage.getItem(K_JETONS) || '[]'); } catch (e) { return []; } }
+function ecrireJetons(arr) { localStorage.setItem(K_JETONS, JSON.stringify(arr)); }
+function signature(j) {
+  return ((j.eleve && j.eleve.nom) || '') + '|' + ((j.eleve && j.eleve.classe) || '') + '|' +
+         ((j.scenario && j.scenario.id) || '') + '|' + (j.genere_le || '');
+}
+
+// ---- Import ----
+function importerFichiers(fileList) {
+  var fichiers = Array.prototype.slice.call(fileList || []);
+  if (!fichiers.length) return;
+  var stock = lireJetons();
+  var sigs = {}; stock.forEach(function (j) { sigs[signature(j)] = 1; });
+  var stats = { ok: 0, doublon: 0, rejet: 0, total: fichiers.length, restants: fichiers.length };
+
+  fichiers.forEach(function (f) {
+    var reader = new FileReader();
+    reader.onload = function () {
+      try {
+        var j = JSON.parse(reader.result);
+        if (!j || j.schema !== 'ssi-trainer/bilan') { stats.rejet++; }
+        else if (j.schema_version !== 1) { stats.rejet++; }
+        else {
+          var sig = signature(j);
+          if (sigs[sig]) { stats.doublon++; }
+          else { sigs[sig] = 1; stock.push(j); stats.ok++; }
+        }
+      } catch (e) { stats.rejet++; }
+      finir();
+    };
+    reader.onerror = function () { stats.rejet++; finir(); };
+    reader.readAsText(f);
+  });
+
+  function finir() {
+    stats.restants--;
+    if (stats.restants > 0) return;
+    ecrireJetons(stock);
+    var msg = stats.ok + ' jeton(s) importé(s)';
+    if (stats.doublon) msg += ' · ' + stats.doublon + ' doublon(s) ignoré(s)';
+    if (stats.rejet) msg += ' · ⚠ ' + stats.rejet + ' fichier(s) non reconnu(s)';
+    $('importLog').textContent = msg;
+    rendre();
+  }
+}
+
+// ---- Rendu de la matrice ----
+function rendre() {
+  var jetons = lireJetons();
+  var liste = TableauAgregation.parserListeClasse(localStorage.getItem(K_LISTE) || '');
+  var res = TableauAgregation.agreger(jetons, liste);
+  $('count').textContent = jetons.length + ' jeton(s) · ' + res.eleves.length + ' élève(s)';
+
+  if (!res.eleves.length) {
+    $('matrix').innerHTML = '<div class="empty">Aucune donnée pour l\'instant.<br>Importez des jetons d\'élèves ou collez une liste de classe.</div>';
+    $('legend').innerHTML = '';
+    return;
+  }
+
+  var h = '<table class="matrix"><thead><tr><th class="eleve">Élève</th><th>Diplôme</th><th>Note moy.</th>';
+  res.codes.forEach(function (c) { h += '<th class="col-comp" title="' + esc(res.libelles[c]) + '">' + esc(c) + '</th>'; });
+  h += '<th>Éval.</th></tr></thead><tbody>';
+
+  res.eleves.forEach(function (e) {
+    h += '<tr><td class="eleve"><b>' + esc(e.nom) + '</b>' + (e.classe ? '<small>' + esc(e.classe) + '</small>' : '') + '</td>';
+    h += '<td style="font-size:0.85em;color:#555">' + esc(e.diplome || '—') + '</td>';
+    var noteTxt = (e.noteMoy == null) ? '<span style="color:#aaa">—</span>'
+      : '<span class="note-cell" style="color:' + (e.noteMoy >= 10 ? '#2e7d32' : '#c62828') + '">' + String(e.noteMoy).replace('.', ',') + '</span>';
+    h += '<td>' + noteTxt + '</td>';
+    res.codes.forEach(function (c) {
+      var n = (e.competences[c] && e.competences[c].niveau) || 'non_evalue';
+      var s = NIV[n] || NIV.non_evalue;
+      h += '<td><span class="cell" style="background:' + s.couleur + '" title="' + esc(s.label) + '">' + s.court + '</span></td>';
+    });
+    h += '<td style="color:#888">' + e.nbEval + '</td>';
+    h += '</tr>';
+  });
+  h += '</tbody></table>';
+  $('matrix').innerHTML = h;
+
+  var lg = '';
+  ['parfait', 'acquis', 'partiel', 'non_acquis', 'non_evalue'].forEach(function (k) {
+    lg += '<span><i style="background:' + NIV[k].couleur + '"></i>' + NIV[k].court + ' ' + NIV[k].label + '</span>';
+  });
+  $('legend').innerHTML = lg;
+}
+
+// ---- Export CSV ----
+function exporterCSV() {
+  var jetons = lireJetons();
+  var liste = TableauAgregation.parserListeClasse(localStorage.getItem(K_LISTE) || '');
+  var res = TableauAgregation.agreger(jetons, liste);
+  if (!res.eleves.length) { alert('Rien à exporter.'); return; }
+  var sep = ';';
+  function cell(v) { v = (v == null ? '' : String(v)); return /[";\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
+  var lignes = [];
+  var entete = ['Élève', 'Classe', 'Diplôme', 'Nb éval', 'Note moy /20'].concat(res.codes.map(function (c) { return c + ' — ' + res.libelles[c]; }));
+  lignes.push(entete.map(cell).join(sep));
+  res.eleves.forEach(function (e) {
+    var row = [e.nom, e.classe, e.diplome, e.nbEval, (e.noteMoy == null ? '' : String(e.noteMoy).replace('.', ','))];
+    res.codes.forEach(function (c) {
+      var n = (e.competences[c] && e.competences[c].niveau) || 'non_evalue';
+      row.push((NIV[n] || NIV.non_evalue).label);
+    });
+    lignes.push(row.map(cell).join(sep));
+  });
+  var contenu = '﻿' + lignes.join('\r\n'); // BOM pour Excel/UTF-8
+  var b = new Blob([contenu], { type: 'text/csv;charset=utf-8' });
+  var u = URL.createObjectURL(b); var a = document.createElement('a');
+  a.href = u; a.download = 'suivi-competences-ssi.csv'; a.click(); URL.revokeObjectURL(u);
+}
+
+// ---- Liaisons UI ----
+var drop = $('drop'), fileInput = $('fileInput');
+drop.onclick = function () { fileInput.click(); };
+fileInput.onchange = function () { importerFichiers(fileInput.files); fileInput.value = ''; };
+drop.addEventListener('dragover', function (e) { e.preventDefault(); drop.classList.add('over'); });
+drop.addEventListener('dragleave', function () { drop.classList.remove('over'); });
+drop.addEventListener('drop', function (e) {
+  e.preventDefault(); drop.classList.remove('over');
+  importerFichiers(e.dataTransfer.files);
+});
+
+$('listeClasse').value = localStorage.getItem(K_LISTE) || '';
+$('btnAppliquerListe').onclick = function () { localStorage.setItem(K_LISTE, $('listeClasse').value); rendre(); };
+$('btnViderListe').onclick = function () { $('listeClasse').value = ''; localStorage.removeItem(K_LISTE); rendre(); };
+
+$('btnExportCSV').onclick = exporterCSV;
+$('btnImprimer').onclick = function () { window.print(); };
+$('btnVider').onclick = function () {
+  if (!confirm('Effacer tous les jetons importés et la liste de classe de ce navigateur ? Cette action est irréversible.')) return;
+  localStorage.removeItem(K_JETONS); localStorage.removeItem(K_LISTE);
+  $('listeClasse').value = ''; $('importLog').textContent = '';
+  rendre();
+};
+
+rendre();
+</script>
+
+<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "86c8808b88f3489c8f37af96810d5f1e"}'></script><!-- End Cloudflare Web Analytics -->
+</body>
+</html>

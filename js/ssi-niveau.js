@@ -460,10 +460,11 @@
       if (scenarioCourant && scenarioCourant.points_cles && scenarioCourant.points_cles.length) { h += '<div class="points-cles"><strong>À retenir :</strong><ul>'; scenarioCourant.points_cles.forEach(function (p) { h += '<li>' + esc(p) + '</li>'; }); h += '</ul></div>'; }
       h += '<h3 style="font-family:\'Trebuchet MS\',sans-serif;font-size:0.95em;color:#1b3a63;margin:14px 0 6px">Observations du formateur</h3><textarea id="bilanObs" placeholder="Appréciation, remédiation…" style="width:100%;min-height:60px;border:1px solid #dde2ea;border-radius:6px;padding:8px;font-family:Calibri,sans-serif;font-size:0.85em;box-sizing:border-box"></textarea>';
       h += '<p style="font-size:0.72em;color:#888;margin-top:10px;font-style:italic">' + esc(ev.perimetre) + '</p>';
-      h += '<div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:14px"><button class="pe-btn pe-btn-primary" id="bilanImprimer">🖨 Imprimer / PDF</button><button class="pe-btn pe-btn-ghost" id="bilanTelecharger">⬇ Télécharger (HTML)</button></div>';
+      h += '<div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:14px"><button class="pe-btn pe-btn-primary" id="bilanImprimer">🖨 Imprimer / PDF</button><button class="pe-btn pe-btn-ghost" id="bilanTelecharger">⬇ Télécharger (HTML)</button><button class="pe-btn pe-btn-ghost" id="bilanJeton" title="Fichier à remettre au professeur pour le tableau de bord">🎫 Jeton pour le prof</button></div>';
       $('bilanContent').innerHTML = h;
       $('bilanImprimer').onclick = function () { imprimerBilan(); };
       $('bilanTelecharger').onclick = function () { telechargerBilan(); };
+      $('bilanJeton').onclick = function () { genererJeton(); };
       $('bilanOverlay').classList.add('active');
     }
 
@@ -494,6 +495,18 @@
     }
     function imprimerBilan() { var h = genererBilanHTML(); if (!h) return; var w = window.open('', '_blank'); if (!w) { alert('Autorisez les pop-up pour imprimer.'); return; } w.document.write(h); w.document.close(); w.onload = function () { w.focus(); w.print(); }; }
     function telechargerBilan() { var h = genererBilanHTML(); if (!h) return; var nom = 'bilan-ssi_' + (profil.nom ? profil.nom.replace(/\s+/g, '-') : 'eleve') + '_' + (scenarioCourant ? scenarioCourant.id : '') + '.html'; var b = new Blob([h], { type: 'text/html;charset=utf-8' }); var u = URL.createObjectURL(b); var a = document.createElement('a'); a.href = u; a.download = nom; a.click(); URL.revokeObjectURL(u); }
+    function genererJeton() {
+      var bilan = global._dernierBilan, ev = global._derniereEval;
+      if (!bilan || !ev || typeof BilanJeton === 'undefined') { alert('Aucun bilan à exporter.'); return; }
+      var obsEl = $('bilanObs');
+      var jeton = BilanJeton.construireJeton(ev, {
+        profil: profil, scenario: scenarioCourant, diplome: getDiplomeInfo(),
+        genereLe: new Date().toISOString(), observations: obsEl ? obsEl.value.trim() : '', duree: bilan.duree
+      });
+      var nom = 'jeton-ssi_' + (profil.nom ? profil.nom.replace(/\s+/g, '-') : 'eleve') + '_' + (scenarioCourant ? scenarioCourant.id : 'scenario') + '.json';
+      var b = new Blob([JSON.stringify(jeton, null, 2)], { type: 'application/json' });
+      var u = URL.createObjectURL(b); var a = document.createElement('a'); a.href = u; a.download = nom; a.click(); URL.revokeObjectURL(u);
+    }
 
     // ============================================================ Démarrage
     buildUI();

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
@@ -456,6 +456,7 @@ button:focus-visible,select:focus-visible,input:focus-visible,a:focus-visible{ou
 <script src="js/scenario-pedago.js"></script>
 <script src="js/profil-eleve.js"></script>
 <script src="js/evaluation.js"></script>
+<script src="js/bilan-jeton.js"></script>
 
 <script>
 /* ================================================================
@@ -1002,6 +1003,7 @@ function showBilan(bilan) {
   html += '<div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:14px">';
   html += '<button class="pe-btn pe-btn-primary" onclick="imprimerBilan()">&#128424; Imprimer / PDF</button>';
   html += '<button class="pe-btn pe-btn-ghost" onclick="telechargerBilan()">&#11015; Télécharger (HTML)</button>';
+  html += '<button class="pe-btn pe-btn-ghost" onclick="genererJeton()" title="Fichier à remettre au professeur pour le tableau de bord">&#127915; Jeton pour le prof</button>';
   html += '</div>';
 
   document.getElementById('bilanContent').innerHTML = html;
@@ -1013,6 +1015,26 @@ function closeBilan() { document.getElementById('bilanOverlay').classList.remove
 // --- Fiche papier ---
 function imprimerFiche() { poste.imprimerFiche(); }
 function telechargerFiche() { poste.telechargerFiche(); }
+
+// --- Jeton de résultat (fichier JSON pour le tableau de bord enseignant) ---
+function genererJeton() {
+  const bilan = window._dernierBilan, ev = window._derniereEval;
+  if (!bilan || !ev || typeof BilanJeton === 'undefined') { alert('Aucun bilan à exporter.'); return; }
+  const obsEl = document.getElementById('bilanObs');
+  const jeton = BilanJeton.construireJeton(ev, {
+    profil: profil,
+    scenario: scenarioCourant,
+    diplome: getDiplomeInfo(),
+    genereLe: new Date().toISOString(),
+    observations: obsEl ? obsEl.value.trim() : '',
+    duree: bilan.duree
+  });
+  const nom = 'jeton-ssi_' + (profil.nom ? profil.nom.replace(/\s+/g, '-') : 'eleve') +
+              '_' + (scenarioCourant ? scenarioCourant.id : 'scenario') + '.json';
+  const b = new Blob([JSON.stringify(jeton, null, 2)], { type: 'application/json' });
+  const u = URL.createObjectURL(b); const a = document.createElement('a');
+  a.href = u; a.download = nom; a.click(); URL.revokeObjectURL(u);
+}
 
 // --- Bilan d'évaluation exportable (PDF via impression / HTML autoportant) ---
 function genererBilanHTML() {
@@ -1088,7 +1110,9 @@ function genererBilanHTML() {
 
   h += '<h2>Observations du formateur</h2><div class="obs">' + esc(obs) + '</div>';
   h += '<p class="peri">' + esc(ev.perimetre) + ' — Réf. ' + esc(getDiplomeInfo().rncp || '') + '. Document généré par SSI Trainer (inerWeb Édu).</p>';
-  h += '</body></html>';
+  h += '
+<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "86c8808b88f3489c8f37af96810d5f1e"}'></script><!-- End Cloudflare Web Analytics -->
+</body></html>';
   return h;
 }
 
@@ -1196,5 +1220,7 @@ initProfilUI();
 majAccesUI();
 refreshUI();
 </script>
+
+<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "86c8808b88f3489c8f37af96810d5f1e"}'></script><!-- End Cloudflare Web Analytics -->
 </body>
 </html>
