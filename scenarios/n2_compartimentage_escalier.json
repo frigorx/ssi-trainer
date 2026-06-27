@@ -4,8 +4,10 @@
   "niveau": 2,
   "equipement": "CMSI",
   "diplomes": [
+    "CAP_AS",
     "BACPRO_MS",
-    "BP_ATPS"
+    "BP_ATPS",
+    "BTS_MOS"
   ],
   "erp_type": "W",
   "duree_max": 300,
