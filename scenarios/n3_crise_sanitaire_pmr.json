@@ -201,7 +201,7 @@
     },
     {
       "action": "accueil_pompiers",
-      "delai_max": 270,
+      "delai_max": 350,
       "competence": "C8",
       "points": 15
     }

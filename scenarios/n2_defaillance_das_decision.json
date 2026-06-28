@@ -353,7 +353,12 @@
     {
       "cle": "commande_das",
       "label": "Commander DAS (PCF / clapets / exutoires)",
-      "competence": "C6"
+      "competence": "C7"
+    },
+    {
+      "cle": "reconnaitre_defaut_das",
+      "label": "Reconnaître / consigner une défaillance DAS",
+      "competence": "C2"
     },
     {
       "cle": "evacuation_generale",

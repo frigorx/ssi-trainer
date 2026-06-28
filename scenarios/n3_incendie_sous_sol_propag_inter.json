@@ -218,13 +218,13 @@
     },
     {
       "action": "coupure_energies",
-      "delai_max": 450,
+      "delai_max": 520,
       "competence": "C6",
       "points": 15
     },
     {
       "action": "accueil_pompiers",
-      "delai_max": 420,
+      "delai_max": 500,
       "competence": "C8",
       "points": 15
     }

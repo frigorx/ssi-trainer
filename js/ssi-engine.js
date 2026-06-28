@@ -211,6 +211,8 @@ class SSIEngine {
    * veille, ce qui lève la condition d'alarme et autorise le réarmement.
    */
   leverCause(zoneId) {
+    // La cause disparaît : on annule la temporisation de passage en alarme générale.
+    if (this.timers.veilleRestreinte) { clearTimeout(this.timers.veilleRestreinte); this.timers.veilleRestreinte = null; }
     let traitees = 0;
     this.zones.forEach(z => {
       if (z.alarme && (!zoneId || z.id === zoneId)) {
@@ -233,6 +235,8 @@ class SSIEngine {
       this._emit('refus', { reason: 'zone_en_alarme' });
       return false;
     }
+    // Purge des temporisations en cours (évite un passage en alarme générale fantôme après réarmement).
+    if (this.timers.veilleRestreinte) { clearTimeout(this.timers.veilleRestreinte); this.timers.veilleRestreinte = null; }
     this.zones.forEach(z => {
       z.alarme = false;
       z.derangement = false;
@@ -328,7 +332,7 @@ class SSIEngine {
     // Les DAS d'autres zones (compartimentage anti-propagation) restent à la main
     // de l'opérateur : c'est l'objet pédagogique du niveau CMSI.
     this.das.forEach(d => {
-      var concerne = (d.zone && d.zone === zoneId) || d.id.includes(zoneId);
+      var concerne = d.zone && d.zone === zoneId;   // corrélation stricte par zone d'asservissement
       if (concerne && d.etat !== 'DEFAILLANT') {
         d.etat = 'COMMANDE';
         d.commande = true;
