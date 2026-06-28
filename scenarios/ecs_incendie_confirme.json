@@ -38,7 +38,7 @@
   ],
   "levee_doute": {
     "feu": true,
-    "delai": 6,
+    "delai": 30,
     "rapport_feu": "FEU CONFIRMÉ — palettes et cartons en feu au stockage, flammes visibles, fumée dense. Évacuation nécessaire.",
     "rapport_ras": "RAS — odeur suspecte mais aucun foyer trouvé au stockage. À surveiller."
   },
@@ -164,9 +164,9 @@
     "Accueil des secours : plans, clés, historique des événements SSI, guidage jusqu'au sinistre."
   ],
   "objectifs": [
-    "Appliquer la procedure complete de mise en securite face a un feu confirme",
-    "Transmettre une alerte structuree au 18 / 112",
-    "Declencher l-evacuation generale en passant en niveau d-acces 2",
+    "Appliquer la procédure complète de mise en sécurité face à un feu confirmé",
+    "Transmettre une alerte structurée au 18 / 112",
+    "Déclencher l'évacuation générale en passant en niveau d'accès 2",
     "Accueillir et guider les sapeurs-pompiers"
   ]
 }

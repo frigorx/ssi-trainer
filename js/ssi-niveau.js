@@ -35,6 +35,7 @@
         else if (cle === 'accueil_pompiers') engine.accueilPompiers();
         else if (cle === 'reconnaitre_defaut_das') engine.reconnaitreDefautDAS(payload.dasId);
         else if (cle === 'coupure_energies') engine.coupureEnergies();
+        else if (cle === 'traiter_cause') engine.leverCause();
         else if (cle === 'commande_das') {
           (payload.dasIds || []).forEach(function (id) { engine.commandeManuelle(id); });
         }
@@ -58,6 +59,19 @@
     function nowHeure() { return new Date().toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }); }
     function padLCD(t) { t = t || ''; var s = t.substring(0, 20); return s + ' '.repeat(Math.max(0, 20 - s.length)); }
     function $(id) { return document.getElementById(id); }
+    var _toastTimer = null;
+    function showToast(msg, type) {
+      var t = document.getElementById('ssiToast');
+      if (!t) {
+        t = document.createElement('div'); t.id = 'ssiToast';
+        t.style.cssText = 'position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:2000;max-width:90%;padding:12px 20px;border-radius:8px;font-size:0.9em;font-weight:bold;box-shadow:0 6px 24px rgba(0,0,0,0.25);text-align:center';
+        document.body.appendChild(t);
+      }
+      t.style.background = type === 'error' ? '#c62828' : '#1b3a63';
+      t.style.color = '#fff'; t.textContent = msg; t.style.display = 'block';
+      if (_toastTimer) clearTimeout(_toastTimer);
+      _toastTimer = setTimeout(function () { t.style.display = 'none'; }, 5000);
+    }
 
     // ============================================================ UI : squelette
     function buildUI() {
@@ -185,6 +199,9 @@
       engine.onEvent(function (event, data) {
         if (event === 'journal') addJournalEntry(data);
         if (event === 'action') poste.notifierAction(data.action, data);
+        if (event === 'refus' && data && data.reason === 'zone_en_alarme') {
+          showToast('⛔ Réarmement impossible : une zone est encore en alarme. Traitez d\'abord l\'origine avant de réarmer.', 'error');
+        }
         if (event === 'son') {
           audio.resume();
           if (data.type === 'alarme') audio.alarmeRestreinte();

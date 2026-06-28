@@ -215,7 +215,7 @@
     {
       "type": "manque",
       "cle": "evacuation_generale",
-      "libelle": "Mise en securite / evacuation horizontale vers la zone refuge non declenchee"
+      "libelle": "Mise en sécurité / évacuation horizontale vers la zone refuge non déclenchée"
     },
     {
       "type": "manque",
@@ -226,7 +226,7 @@
       "type": "fait_sans",
       "cle": "evacuation_generale",
       "avant": "levee_doute",
-      "libelle": "Evacuation declenchee avant la levee de doute (surreaction)"
+      "libelle": "Évacuation déclenchée avant la levée de doute (surréaction)"
     }
   ],
   "conduite_a_tenir": [
@@ -443,9 +443,9 @@
     }
   ],
   "objectifs": [
-    "Organiser une evacuation horizontale vers une zone refuge",
-    "Prendre en charge les personnes a mobilite reduite (PMR)",
-    "Coordonner plusieurs batiments et leurs equipes",
-    "Transmettre aux secours les informations PMR et les acces"
+    "Organiser une évacuation horizontale vers une zone refuge",
+    "Prendre en charge les personnes à mobilité réduite (PMR)",
+    "Coordonner plusieurs bâtiments et leurs équipes",
+    "Transmettre aux secours les informations PMR et les accès"
   ]
 }

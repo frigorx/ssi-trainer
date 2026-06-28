@@ -496,6 +496,7 @@ const poste = new PosteEleve({
     if (cle === 'levee_doute') engine.leveeDoute();
     else if (cle === 'appel_18') engine.appel18(payload && payload.message);
     else if (cle === 'accueil_pompiers') engine.accueilPompiers();
+    else if (cle === 'traiter_cause') engine.leverCause();
   },
   onCompteRendu: function (feu, rapport) {
     addJournalEntry({
@@ -735,10 +736,31 @@ function refreshUI() {
   updateScoring();
 }
 
+// --- Message transitoire (toast) ---
+let toastTimer = null;
+function showToast(msg, type) {
+  let t = document.getElementById('ssiToast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'ssiToast';
+    t.style.cssText = 'position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:2000;max-width:90%;padding:12px 20px;border-radius:8px;font-size:0.9em;font-weight:bold;box-shadow:0 6px 24px rgba(0,0,0,0.25);text-align:center';
+    document.body.appendChild(t);
+  }
+  t.style.background = type === 'error' ? '#c62828' : '#1b3a63';
+  t.style.color = '#fff';
+  t.textContent = msg;
+  t.style.display = 'block';
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(function () { t.style.display = 'none'; }, 5000);
+}
+
 // --- Écoute événements moteur ---
 engine.onEvent(function (event, data) {
   if (event === 'journal') addJournalEntry(data);
   if (event === 'action') poste.notifierAction(data.action, data);
+  if (event === 'refus' && data && data.reason === 'zone_en_alarme') {
+    showToast('⛔ Réarmement impossible : une zone est encore en alarme. Traitez d’abord l’origine (ex. « 💨 Faire aérer / traiter la cause ») avant de réarmer.', 'error');
+  }
   if (event === 'son') {
     audio.resume();
     switch (data.type) {
@@ -1110,9 +1132,7 @@ function genererBilanHTML() {
 
   h += '<h2>Observations du formateur</h2><div class="obs">' + esc(obs) + '</div>';
   h += '<p class="peri">' + esc(ev.perimetre) + ' — Réf. ' + esc(getDiplomeInfo().rncp || '') + '. Document généré par SSI Trainer (inerWeb Édu).</p>';
-  h += '
-<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "86c8808b88f3489c8f37af96810d5f1e"}'></script><!-- End Cloudflare Web Analytics -->
-</body></html>';
+  h += '</body></html>';
   return h;
 }
 

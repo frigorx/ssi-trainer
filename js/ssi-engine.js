@@ -55,6 +55,7 @@ class SSIEngine {
         id: d.id,
         designation: d.designation,
         type: d.type,
+        zone: d.zone || null,      // conserver la zone d'asservissement (sinon auto-commande parasite)
         etat: 'VEILLE',
         commande: false
       });
@@ -204,11 +205,32 @@ class SSIEngine {
     }
   }
 
+  /**
+   * Traiter l'origine d'une alarme (ex. faire aérer une cuisine après une fausse
+   * alarme sur vapeur de cuisson) : le(s) détecteur(s) concerné(s) reviennent en
+   * veille, ce qui lève la condition d'alarme et autorise le réarmement.
+   */
+  leverCause(zoneId) {
+    let traitees = 0;
+    this.zones.forEach(z => {
+      if (z.alarme && (!zoneId || z.id === zoneId)) {
+        z.alarme = false;
+        z.detecteursActifs = 0;
+        z.etat = z.derangement ? 'DERANGEMENT' : 'VEILLE';
+        traitees++;
+      }
+    });
+    this._log('CAUSE_TRAITEE', 'Origine de l\'alarme traitée — détection levée' + (zoneId ? ` (${zoneId})` : ''), zoneId || null);
+    this._emit('action', { action: 'traiter_cause', zone: zoneId || null, timestamp: Date.now() });
+    this._emit('causeTraitee', { zone: zoneId || null });
+    return traitees;
+  }
+
   rearmement() {
     const zonesEnAlarme = this.getZones().filter(z => z.alarme && !z.acquittee);
     if (zonesEnAlarme.length > 0) {
-      this._log('REFUS', 'Réarmement refusé — zones non acquittées');
-      this._emit('refus', { reason: 'zones_non_acquittees' });
+      this._log('REFUS', 'Réarmement refusé — une zone est encore en alarme : traitez d\'abord l\'origine (ex. aérer le local) avant de réarmer');
+      this._emit('refus', { reason: 'zone_en_alarme' });
       return false;
     }
     this.zones.forEach(z => {
@@ -302,13 +324,15 @@ class SSIEngine {
   // --- DAS ---
 
   _commanderDASZone(zoneId) {
+    // N'auto-commande QUE les DAS asservis à la zone sinistrée (corrélation ZD→ZS).
+    // Les DAS d'autres zones (compartimentage anti-propagation) restent à la main
+    // de l'opérateur : c'est l'objet pédagogique du niveau CMSI.
     this.das.forEach(d => {
-      if (d.id.includes(zoneId) || !d.zone || d.zone === zoneId) {
-        if (d.etat !== 'DEFAILLANT') {
-          d.etat = 'COMMANDE';
-          d.commande = true;
-          this._log('DAS_COMMANDE', `DAS ${d.id} commandé — ${d.designation}`);
-        }
+      var concerne = (d.zone && d.zone === zoneId) || d.id.includes(zoneId);
+      if (concerne && d.etat !== 'DEFAILLANT') {
+        d.etat = 'COMMANDE';
+        d.commande = true;
+        this._log('DAS_COMMANDE', `DAS ${d.id} commandé — ${d.designation}`);
       }
     });
     this._emit('dasUpdate', {});

@@ -24,14 +24,16 @@ const LIB_ACTIONS = {
   accueil_pompiers: 'Accueil et guidage des secours',
   commande_das: 'Commande de DAS',
   coupure_energies: 'Coupure des énergies (gaz / électricité)',
-  reconnaitre_defaut_das: 'Reconnaissance de défaut DAS'
+  reconnaitre_defaut_das: 'Reconnaissance de défaut DAS',
+  traiter_cause: 'Traitement de l’origine (aération du local)'
 };
 
 // Gestes affichés dans le panneau « poste de l'agent » (hors boutons de l'équipement),
 // avec leur pictogramme. La liste réellement affichée provient du scénario (data-driven).
 const GESTES_POSTE = {
   levee_doute: '🚶', appel_18: '📞', commande_das: '🛡️',
-  coupure_energies: '⚡', reconnaitre_defaut_das: '🛠️', accueil_pompiers: '🚒'
+  coupure_energies: '⚡', reconnaitre_defaut_das: '🛠️', accueil_pompiers: '🚒',
+  traiter_cause: '💨'
 };
 
 // Consignes génériques affichées à l'élève avant chaque exercice (déroulé type).
@@ -280,6 +282,19 @@ class PosteEleve {
       var ph = c.cle === 'heure' ? 'hh:mm' : '';
       return '<td' + cls + '><input type="text" data-cle="' + c.cle + '" value="' + _esc(v) + '" placeholder="' + ph + '"></td>';
     }).join('');
+    // Ligne saisissable : horodatage automatique dès que l'élève commence à remplir
+    // la ligne (l'heure se remplit toute seule si elle est encore vide), modifiable ensuite.
+    if (!auto) {
+      var champHeure = tr.querySelector('input[data-cle="heure"]');
+      if (champHeure) {
+        tr.querySelectorAll('input').forEach(function (inp) {
+          if (inp === champHeure) return;
+          inp.addEventListener('focus', function () {
+            if (!champHeure.value.trim()) champHeure.value = _heure();
+          });
+        });
+      }
+    }
     this._mcBody.appendChild(tr);
   }
 
@@ -317,6 +332,7 @@ class PosteEleve {
     if (cle === 'commande_das') { if (this.accesNiveau() < 2) { this.onAccesRequis(); return; } this._ouvrirModaleDAS(); return; }
     if (cle === 'coupure_energies') { if (this.accesNiveau() < 2) { this.onAccesRequis(); return; } this._ouvrirModaleCoupure(); return; }
     if (cle === 'reconnaitre_defaut_das') { this._ouvrirModaleDefaut(); return; }
+    if (cle === 'traiter_cause') { this._traiterCause(); return; }
     this.onAction(cle, {});
   }
 
@@ -324,7 +340,7 @@ class PosteEleve {
 
   _injecterModalesEquipement() {
     var self = this;
-    [['peModalDAS', 'peDASBody'], ['peModalCoupure', 'peCoupureBody'], ['peModalDefaut', 'peDefautBody']].forEach(function (pair) {
+    [['peModalDAS', 'peDASBody'], ['peModalCoupure', 'peCoupureBody'], ['peModalDefaut', 'peDefautBody'], ['peModalCause', 'peCauseBody']].forEach(function (pair) {
       if (document.getElementById(pair[0])) return;
       var ov = document.createElement('div');
       ov.className = 'pe-modal-ov';
@@ -377,6 +393,20 @@ class PosteEleve {
       self.onAction('coupure_energies', {});
     });
     document.getElementById('peModalCoupure').classList.add('active');
+  }
+
+  _traiterCause() {
+    var self = this;
+    var body = document.getElementById('peCauseBody');
+    body.innerHTML = '<h3>💨 Traiter l\'origine de l\'alarme</h3>' +
+      '<div class="pe-modal-sub">Après une fausse alarme confirmée (ex. vapeur de cuisson sur un détecteur optique), il faut <b>faire disparaître la cause</b> — par exemple faire aérer le local — <b>avant</b> de pouvoir réarmer le système. Tant que le détecteur perçoit la fumée/vapeur, le réarmement est impossible.</div>' +
+      '<div class="pe-modal-row"><button class="pe-btn pe-btn-ghost" data-close="peModalCause">Annuler</button>' +
+      '<button class="pe-btn pe-btn-primary" id="peCauseOk">Faire aérer / traiter la cause</button></div>';
+    body.querySelector('#peCauseOk').addEventListener('click', function () {
+      self._fermerModale('peModalCause');
+      self.onAction('traiter_cause', {});
+    });
+    document.getElementById('peModalCause').classList.add('active');
   }
 
   _ouvrirModaleDefaut() {
@@ -542,10 +572,15 @@ class PosteEleve {
     if (etat === 'route') {
       body.innerHTML = '<h3>🚶 Levée de doute en cours</h3>' +
         '<div class="pe-modal-sub">Un équipier de ronde se rend sur la zone en alarme pour vérifier.</div>' +
-        '<p style="text-align:center;font-size:1.05em;margin:18px 0">Retour de l’équipier dans <b id="peLeveeCompte">' + (data.reste || '') + '</b> s…</p>';
+        '<p style="text-align:center;font-size:1.05em;margin:18px 0">Retour de l’équipier dans <b id="peLeveeCompte">' + (data.reste || '') + '</b> s…</p>' +
+        '<p style="font-size:0.82em;color:#666;text-align:center">Profitez de ce délai pour <b>commencer à remplir la main courante</b>. Le compte-rendu s’ouvrira automatiquement au retour de l’équipier.</p>' +
+        '<div class="pe-modal-row" style="justify-content:center"><button class="pe-btn pe-btn-ghost" id="peLeveeReduire">↧ Réduire (remplir la main courante)</button></div>';
+      var btnRed = body.querySelector('#peLeveeReduire');
+      if (btnRed) btnRed.addEventListener('click', function () { self._fermerModale('peModalLevee'); });
       return;
     }
     if (etat === 'choix') {
+      document.getElementById('peModalLevee').classList.add('active'); // ré-ouvre si la modale a été réduite
       body.innerHTML = '<h3>📻 Compte-rendu de l’équipier</h3>' +
         '<div class="pe-modal-sub">L’équipier est sur place. Que constate-t-il ? <em>(mode exploration : à vous de choisir la branche à tester)</em></div>' +
         '<div class="pe-modal-row" style="justify-content:center;gap:14px;margin-top:16px">' +
@@ -557,6 +592,7 @@ class PosteEleve {
       return;
     }
     if (etat === 'rapport') {
+      document.getElementById('peModalLevee').classList.add('active'); // ré-ouvre si la modale a été réduite
       var feu = data.feu;
       var conseil = feu
         ? '➜ Feu confirmé : alertez le 18/112, passez en niveau d’accès 2 et déclenchez l’évacuation générale.'

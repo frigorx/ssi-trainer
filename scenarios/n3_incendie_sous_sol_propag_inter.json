@@ -238,18 +238,18 @@
     {
       "type": "manque",
       "cle": "commande_das",
-      "libelle": "Compartimentage inter-batiments non commande — propagation par les galeries techniques"
+      "libelle": "Compartimentage inter-bâtiments non commandé — propagation par les galeries techniques"
     },
     {
       "type": "manque",
       "cle": "evacuation_generale",
-      "libelle": "Evacuation/mise en securite non declenchee"
+      "libelle": "Évacuation/mise en sécurité non déclenchée"
     },
     {
       "type": "fait_sans",
       "cle": "coupure_energies",
       "avant": "accueil_pompiers",
-      "libelle": "Coupure des energies decidee seul, avant l-arrivee et la demande des secours (la coupure releve de la decision des pompiers)"
+      "libelle": "Coupure des énergies décidée seul, avant l'arrivée et la demande des secours (la coupure relève de la décision des pompiers)"
     }
   ],
   "conduite_a_tenir": [
@@ -476,9 +476,9 @@
     }
   ],
   "objectifs": [
-    "Gerer une crise multi-batiments depuis une baie (bus RS485)",
-    "Maitriser la propagation inter-batiments par le compartimentage",
-    "Coordonner la coupure des energies AVEC les secours",
+    "Gérer une crise multi-bâtiments depuis une baie (bus RS485)",
+    "Maîtriser la propagation inter-bâtiments par le compartimentage",
+    "Coordonner la coupure des énergies AVEC les secours",
     "Tenir une main courante de crise exploitable par les pompiers"
   ]
 }

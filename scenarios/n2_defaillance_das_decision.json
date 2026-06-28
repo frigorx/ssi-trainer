@@ -179,22 +179,22 @@
     {
       "type": "manque",
       "cle": "reconnaitre_defaut_das",
-      "libelle": "Defaut DAS non reconnu/consigne — strategie non adaptee, secours non informes"
+      "libelle": "Défaut DAS non reconnu/consigné — stratégie non adaptée, secours non informés"
     },
     {
       "type": "manque",
       "cle": "commande_das",
-      "libelle": "DAS de compartimentage non commandes — propagation par les gaines inevitable"
+      "libelle": "DAS de compartimentage non commandés — propagation par les gaines inévitable"
     },
     {
       "type": "manque",
       "cle": "appel_18",
-      "libelle": "Secours non alertes malgre feu confirme et defaillance d-equipement"
+      "libelle": "Secours non alertés malgré feu confirmé et défaillance d'équipement"
     },
     {
       "type": "manque",
       "cle": "accueil_pompiers",
-      "libelle": "Accueil pompiers omis ou defaillance exutoire non signalee aux secours"
+      "libelle": "Accueil pompiers omis ou défaillance exutoire non signalée aux secours"
     }
   ],
   "conduite_a_tenir": [
@@ -377,9 +377,9 @@
     }
   ],
   "objectifs": [
-    "Reconnaitre une defaillance d-equipement (exutoire HS) et la consigner",
-    "Adapter sa strategie : basculer vers un plan B de compartimentage",
-    "Signaler la defaillance aux secours et a la maintenance",
-    "Gerer une evacuation en etablissement de sante (patients alites)"
+    "Reconnaître une défaillance d'équipement (exutoire HS) et la consigner",
+    "Adapter sa stratégie : basculer vers un plan B de compartimentage",
+    "Signaler la défaillance aux secours et à la maintenance",
+    "Gérer une évacuation en établissement de santé (patients alités)"
   ]
 }

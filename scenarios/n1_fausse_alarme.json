@@ -10,7 +10,7 @@
     "BTS_MOS"
   ],
   "erp_type": "N",
-  "duree_max": 180,
+  "duree_max": 240,
   "description": "Un détecteur optique se déclenche en cuisine. Après levée de doute, il s'avère que c'est de la vapeur de cuisson. L'élève doit suivre la procédure standard.",
   "contexte": {
     "etablissement": "Restaurant d'application — ERP type N",
@@ -38,7 +38,7 @@
   ],
   "levee_doute": {
     "feu": false,
-    "delai": 6,
+    "delai": 60,
     "rapport_ras": "RAS — vapeur de cuisson en cuisine, activité normale. Aucun foyer, pas de fumée suspecte.",
     "rapport_feu": "FEU — départ de feu en cuisine, flammes sur le piano de cuisson, fumée."
   },
@@ -53,34 +53,46 @@
   "actions_attendues": [
     {
       "action": "acquittement",
-      "delai_max": 15,
+      "delai_max": 20,
       "competence": "C2",
       "points": 25
     },
     {
       "action": "arret_signal",
-      "delai_max": 20,
+      "delai_max": 30,
       "competence": "C2",
       "points": 15
     },
     {
       "action": "levee_doute",
-      "delai_max": 45,
+      "delai_max": 50,
+      "competence": "C2",
+      "points": 20
+    },
+    {
+      "action": "traiter_cause",
+      "delai_max": 160,
       "competence": "C2",
       "points": 20
     },
     {
       "action": "rearmement",
-      "delai_max": 120,
+      "delai_max": 190,
       "competence": "C2",
       "points": 30
     },
     {
       "action": "test_signalisation",
-      "delai_max": 150,
+      "delai_max": 220,
       "competence": "C2",
       "points": 30
     }
+  ],
+  "gestes_operateur": [
+    { "cle": "levee_doute", "label": "Envoyer un équipier (levée de doute)", "competence": "C2" },
+    { "cle": "appel_18", "label": "Alerter les secours (18 / 112)", "competence": "C3" },
+    { "cle": "traiter_cause", "label": "Faire aérer / traiter la cause", "competence": "C2" },
+    { "cle": "accueil_pompiers", "label": "Accueil & guidage des secours", "competence": "C8" }
   ],
   "fautes_graves": [
     {
@@ -115,8 +127,12 @@
       "texte": "Attendre et analyser le compte-rendu de l'équipier"
     },
     {
+      "cle": "traiter_cause",
+      "texte": "Fausse alarme confirmée (vapeur de cuisson) → faire aérer la cuisine pour lever la cause avant tout réarmement"
+    },
+    {
       "cle": "rearmement",
-      "texte": "Fausse alarme confirmée → réarmer le système"
+      "texte": "Une fois la cause traitée → réarmer le système"
     },
     {
       "cle": "test_signalisation",
@@ -147,12 +163,13 @@
     "Acquitter ≠ lever le risque : l'acquittement n'est que la prise en compte de l'alarme par l'agent.",
     "La levée de doute par un équipier est obligatoire avant tout réarmement.",
     "Un détecteur optique de fumée réagit aux fumées MAIS aussi aux vapeurs et buées de cuisson.",
-    "Ne jamais réarmer tant que l'origine de l'alarme n'est pas formellement identifiée."
+    "Ne jamais réarmer tant que l'origine de l'alarme n'est pas formellement identifiée.",
+    "Avant de réarmer, faire disparaître la cause (ici, aérer la cuisine) : un détecteur encore exposé à la vapeur réactiverait aussitôt l'alarme."
   ],
   "objectifs": [
-    "Identifier une alarme feu et l-acquitter dans les temps sur l-ECS",
-    "Organiser une levee de doute par un equipier avant toute decision",
-    "Decider face a une fausse alarme : rearmer en securite, sans surreagir",
-    "Tenir une main courante claire et horodatee"
+    "Identifier une alarme feu et l'acquitter dans les temps sur l'ECS",
+    "Organiser une levée de doute par un équipier avant toute décision",
+    "Décider face à une fausse alarme : traiter la cause puis réarmer en sécurité, sans surréagir",
+    "Tenir une main courante claire et horodatée"
   ]
 }
