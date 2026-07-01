@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SSI Niveau 1 — ECS Simple — inerWeb Édu</title>
+<title>SSI Trainer — Niveau 1 : ECS Simple</title>
+<meta name="description" content="Niveau 1 du simulateur SSI Trainer : exploitation d'un ECS (détection, acquittement, levée de doute, réarmement).">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="css/pedago.css">
 <style>
 /* ===== RESET & BASE ===== */
@@ -13,7 +15,6 @@ body{font-family:Calibri,sans-serif;font-size:14pt;line-height:1.5;background:#f
 /* ===== HEADER ===== */
 .header{background:#1b3a63;color:#fff;padding:14px 24px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;position:sticky;top:0;z-index:100}
 .header .logo{font-family:'Trebuchet MS',sans-serif;font-size:1.4em;font-weight:bold;display:flex;align-items:center;gap:6px;white-space:nowrap}
-.header .logo .snowflake{font-size:1.2em}
 .header .badge{background:#ff6b35;color:#fff;padding:1px 8px;border-radius:4px;font-size:0.55em;margin-left:3px;vertical-align:middle}
 .header .author{font-size:0.5em;opacity:0.8;margin-left:6px}
 .header .title-center{margin-left:auto;font-family:'Trebuchet MS',sans-serif;font-size:1.05em;letter-spacing:1px;text-align:right}
@@ -191,11 +192,7 @@ button:focus-visible,select:focus-visible,input:focus-visible,a:focus-visible{ou
 <!-- ===== HEADER ===== -->
 <div class="header">
   <a href="index.html" class="back-link" title="Retour accueil">&larr; Accueil</a>
-  <div class="logo">
-    <span class="snowflake">&#10052;</span>
-    inerWeb<span class="badge">&Eacute;du</span>
-    <span class="author">par F. Henninot</span>
-  </div>
+  <div class="logo">LPP/UFA Jacques Raynaud <span class="badge">SSI</span></div>
   <div class="title-center">SSI TRAINER &mdash; NIVEAU 1 : ECS SIMPLE</div>
 </div>
 
@@ -381,8 +378,7 @@ button:focus-visible,select:focus-visible,input:focus-visible,a:focus-visible{ou
 
 <!-- Footer -->
 <div class="footer">
-  SSI Trainer v1.1 &mdash; <a href="https://frigorx.github.io/ssi-trainer/">inerWeb &Eacute;du</a> &mdash; par F. Henninot
-  &mdash; LP Priv&eacute; Jacques Raynaud &mdash; Campus &Eacute;QUATIO, Marseille
+  LPP/UFA Jacques Raynaud &mdash; Campus &Eacute;QUATIO, Marseille &middot; SSI Trainer, outil p&eacute;dagogique par F. Henninot
 </div>
 
 <!-- ===== MODAL AIDE / FICHE DE POSTE ===== -->
@@ -1131,7 +1127,7 @@ function genererBilanHTML() {
   }
 
   h += '<h2>Observations du formateur</h2><div class="obs">' + esc(obs) + '</div>';
-  h += '<p class="peri">' + esc(ev.perimetre) + ' — Réf. ' + esc(getDiplomeInfo().rncp || '') + '. Document généré par SSI Trainer (inerWeb Édu).</p>';
+  h += '<p class="peri">' + esc(ev.perimetre) + ' — Réf. ' + esc(getDiplomeInfo().rncp || '') + '. Document généré par SSI Trainer — LPP/UFA Jacques Raynaud — Campus ÉQUATIO.</p>';
   h += '</body></html>';
   return h;
 }

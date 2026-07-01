@@ -507,7 +507,7 @@
       if (mc.lignes && mc.lignes.length) { h += '<h2>Main courante de l\'élève</h2><table><thead><tr>'; mc.colonnes.forEach(function (c) { h += '<th>' + esc(c) + '</th>'; }); h += '</tr></thead><tbody>'; mc.lignes.forEach(function (row) { h += '<tr>'; row.forEach(function (v) { h += '<td>' + esc(v) + '</td>'; }); h += '</tr>'; }); h += '</tbody></table>'; }
       if (reps.length) { h += '<h2>Réponses aux questions</h2>'; reps.forEach(function (q, i) { h += '<p style="font-size:0.9em"><b>Q' + (i + 1) + '.</b> ' + esc(q.question) + '<br><span style="color:#1b3a63">→ ' + (esc(q.reponse) || '<i style="color:#999">(sans réponse)</i>') + '</span></p>'; }); }
       h += '<h2>Observations du formateur</h2><div class="obs">' + esc(obs) + '</div>';
-      h += '<p class="peri">' + esc(ev.perimetre) + ' — Réf. ' + esc(getDiplomeInfo().rncp || '') + '. Généré par SSI Trainer (inerWeb Édu).</p></body></html>';
+      h += '<p class="peri">' + esc(ev.perimetre) + ' — Réf. ' + esc(getDiplomeInfo().rncp || '') + '. Généré par SSI Trainer — LPP/UFA Jacques Raynaud — Campus ÉQUATIO.</p></body></html>';
       return h;
     }
     function imprimerBilan() { var h = genererBilanHTML(); if (!h) return; var w = window.open('', '_blank'); if (!w) { alert('Autorisez les pop-up pour imprimer.'); return; } w.document.write(h); w.document.close(); w.onload = function () { w.focus(); w.print(); }; }

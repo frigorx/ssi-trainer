@@ -1,0 +1,16 @@
+# Outils / config locale
+.claude/
+.vscode/
+.idea/
+
+# Dépendances (le projet est volontairement zéro-build)
+node_modules/
+
+# Fichiers système
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Journaux / temporaires
+*.log
+*.tmp

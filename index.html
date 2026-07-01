@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SSI Trainer — inerWeb Édu</title>
+<title>SSI Trainer — Simulateur pédagogique de Système de Sécurité Incendie</title>
+<meta name="description" content="Simulateur web de Système de Sécurité Incendie (ECS, CMSI, baie) pour la formation aux métiers de la sécurité, du CAP Agent de sécurité au BTS MOS. Évaluation par compétences, 100 % dans le navigateur.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:Calibri,sans-serif;font-size:14pt;line-height:1.5;background:#f2f5fb;color:#1b3a63;text-align:left}
@@ -68,9 +70,9 @@ h1{font-family:'Trebuchet MS',sans-serif;color:#1b3a63;font-size:1.6em;margin-bo
 <body>
 
 <div class="instit-bar">
-  <a href="https://equatio.org/lycee-ufa-jacques-raynaud/" target="_blank" rel="noopener" title="Lycée / UFA Jacques Raynaud">
-    <span class="logo-lycee" role="img" aria-label="Lycée / UFA Jacques Raynaud">
-      <span class="ll-1">Lycée / UFA</span>
+  <a href="https://equatio.org/lycee-ufa-jacques-raynaud/" target="_blank" rel="noopener" title="LPP/UFA Jacques Raynaud">
+    <span class="logo-lycee" role="img" aria-label="LPP/UFA Jacques Raynaud">
+      <span class="ll-1">LPP / UFA</span>
       <span class="ll-2">Jacques Raynaud</span>
     </span>
   </a>
@@ -105,11 +107,11 @@ h1{font-family:'Trebuchet MS',sans-serif;color:#1b3a63;font-size:1.6em;margin-bo
         </div>
       </div>
       <div class="card-body">
-        <p>Panneau ECS basique avec 4 zones de détection. Apprentissage des signalisations et des gestes fondamentaux.</p>
+        <p>Panneau ECS à 4 zones de détection. Deux mises en situation : une fausse alarme (levée de doute, ne pas surréagir) et un incendie confirmé avec alerte des secours et évacuation.</p>
         <ul>
-          <li>Voyants et signalisations</li>
-          <li>Acquittement et réarmement</li>
-          <li>Procédure alarme simple</li>
+          <li>Voyants, signalisations, acquittement</li>
+          <li>Levée de doute et réarmement en sécurité</li>
+          <li>Alerte 18/112 et accueil des secours</li>
         </ul>
       </div>
       <div class="card-footer">
@@ -149,10 +151,10 @@ h1{font-family:'Trebuchet MS',sans-serif;color:#1b3a63;font-size:1.6em;margin-bo
         </div>
       </div>
       <div class="card-body">
-        <p>Baie multi-bâtiments reliée par bus RS485 : gestion de crise, défaillances en cascade, coupure des énergies et évacuation PMR.</p>
+        <p>Baie multi-bâtiments reliée par bus RS485. Deux scénarios de gestion de crise distincts : propagation en cascade inter-bâtiments (coupure des énergies) et évacuation horizontale PMR vers zone refuge.</p>
         <ul>
-          <li>Coordination multi-bâtiments</li>
-          <li>Coupure des énergies (gaz / électricité)</li>
+          <li>Coordination multi-bâtiments (RS485)</li>
+          <li>Coupure des énergies à la demande des secours</li>
           <li>Évacuation PMR &amp; zone refuge</li>
         </ul>
       </div>
@@ -186,8 +188,8 @@ h1{font-family:'Trebuchet MS',sans-serif;color:#1b3a63;font-size:1.6em;margin-bo
 </div>
 
 <div class="footer">
-  <p>LP Privé Jacques Raynaud — Campus ÉQUATIO · 59 Trav. Charles Susini, 13013 Marseille</p>
-  <p class="credit-discret">SSI Trainer v1.0 — outil pédagogique réalisé par F. Henninot · <a href="https://frigorx.github.io/ssi-trainer/">inerWeb Édu</a></p>
+  <p>LPP/UFA Jacques Raynaud — Campus ÉQUATIO · 59 Trav. Charles Susini, 13013 Marseille</p>
+  <p class="credit-discret">SSI Trainer — outil pédagogique réalisé par F. Henninot</p>
 </div>
 
 
