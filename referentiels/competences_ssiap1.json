@@ -21,7 +21,7 @@
       "libelle": "Exploitation du SSI — Détection et alerte",
       "description": "Savoir exploiter un système de sécurité incendie : reconnaître les signaux, acquitter les alarmes, interpréter les informations de l'ECS/CMSI.",
       "criteres": [
-        "Identifier les différents types de détecteurs (optique, thermique, ionique, linéaire)",
+        "Identifier les différents types de détecteurs (optique, thermique, multicapteur, linéaire — le détecteur ionique est proscrit en installation neuve depuis 2011)",
         "Reconnaître les signalisations visuelles et sonores de l'ECS",
         "Acquitter une alarme feu dans le délai réglementaire",
         "Interpréter les messages du tableau de signalisation",

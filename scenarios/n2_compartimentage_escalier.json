@@ -252,7 +252,7 @@
       "type": "libre"
     },
     {
-      "q": "Selon la NF S 61-937, le délai de fermeture complète d'une PCF après commande ne doit pas dépasser :",
+      "q": "Selon la NF S 61-937 (portes battantes), le délai de fermeture complète d'une PCF après commande ne doit pas dépasser :",
       "type": "qcm",
       "options": [
         "30 secondes",
@@ -275,10 +275,10 @@
     }
   ],
   "points_cles": [
-    "Double détection (2 détecteurs dans la même ZD) = passage en alarme générale, sans temporisation d'acquittement (NF S 61-931). Terme normalisé français : « double détection » (pas l'anglicisme « double knock »).",
+    "Double détection (2 détecteurs dans la même ZD) = information confirmée (coïncidence) : fiabilise l'alarme et déclenche la mise en sécurité automatique (commande des DAS). L'alarme générale, elle, est gérée par l'UGA et peut être immédiate ou temporisée (≤ 5 min selon le type d'équipement d'alarme). Terme normalisé français : « double détection » (pas l'anglicisme « double knock »).",
     "Le compartimentage par PCF est la PREMIÈRE défense contre la propagation verticale dans les escaliers.",
     "La PCF escalier est équipée d'une ventouse type RUPTURE (fail-safe) : la fermeture est garantie même en cas de coupure d'alimentation — c'est ce qui en fait une défense fiable.",
-    "Selon la NF S 61-937, une PCF doit se fermer complètement en moins de 30 secondes après commande (vitesse angulaire maîtrisée).",
+    "Selon la NF S 61-937 (portes battantes), une PCF doit se fermer complètement en moins de 30 secondes après commande (vitesse angulaire ≤ 10°/s).",
     "Exutoires et compartimentage travaillent ensemble : la PCF isole, l'extraction réduit la pression et la fumée (évite la rupture de la PCF par poussée thermique).",
     "La commande des DAS exige le niveau d'accès 2 (code/clé) — mesure de sécurité contre les déclenchements accidentels.",
     "Ne JAMAIS laisser une PCF bloquée ouverte → vérifier l'état physique (cales, crochets) lors des rondes de prévention (C1).",

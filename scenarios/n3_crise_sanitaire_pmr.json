@@ -253,7 +253,7 @@
       "texte": "Déclencher l'évacuation générale + consignes UTP : évacuation HORIZONTALE via la galerie refuge vers le Bât A"
     },
     {
-      "texte": "INTERDIRE explicitement l'usage du monte-charge / ascenseur, même s'il semble accessible : risque de piégeage et d'inhalation de fumée en cas de coupure d'alimentation (un ascenseur de type EN 81-73 se ramène à un niveau de sécurité et verrouille ses portes). Évacuation par les axes praticables uniquement."
+      "texte": "INTERDIRE explicitement l'usage du monte-charge / ascenseur, même s'il semble accessible : risque de piégeage et d'inhalation de fumée en cas de coupure d'alimentation (un ascenseur de type EN 81-73 se rappelle automatiquement à un niveau de sécurité, ouvre ses portes puis se met hors service — ce n'est pas un moyen d'évacuation). Évacuation par les axes praticables uniquement."
     },
     {
       "cle": "commande_das",
@@ -304,7 +304,7 @@
   ],
   "points_cles": [
     "UTP / ERP accueillant des PMR = anticipation absolue de l'évacuation horizontale et des moyens (personnel, galerie sécurisée, zone refuge).",
-    "Ascenseur/monte-charge en incendie : risque de piégeage, de blocage de portes et de perte d'alimentation. JAMAIS pour une évacuation d'urgence (cf. EN 81-73 : ramène à un niveau de sécurité puis verrouille).",
+    "Ascenseur/monte-charge en incendie : risque de piégeage, de blocage de portes et de perte d'alimentation. JAMAIS pour une évacuation d'urgence (cf. EN 81-73 : rappel automatique à un niveau de sécurité, ouverture des portes puis mise hors service — pas un moyen d'évacuation).",
     "La galerie refuge est un espace tampon : sa traversabilité est essentielle. Surveiller la propagation de la fumée et l'état des DAS (PCF, clapets).",
     "Communication RS485 dégradée = basculer sur des appels vocaux directs (téléphone) avec les autres bâtiments/baies.",
     "Évacuation horizontale : coordination multi-baies, liste des personnes fragiles, contact SAMU, point de rassemblement adapté.",
