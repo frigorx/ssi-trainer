@@ -58,6 +58,14 @@ assert.strictEqual(durand.noteMoy, null, 'Durand : pas de note');
 const r4 = agreger([{ schema: 'autre-chose', eleve: { nom: 'X' } }]);
 assert.strictEqual(r4.eleves.length, 0, 'jeton hors schéma ignoré');
 
+// --- Deux élèves ANONYMES ne doivent PAS fusionner en une ligne ---
+const r5 = agreger([
+  jeton('', '1CAP', 8, [comp('C1', 'acquis')]),
+  jeton('', '1CAP', 14, [comp('C1', 'partiel')])
+]);
+assert.strictEqual(r5.eleves.length, 2, 'deux anonymes = deux lignes (pas de fusion)');
+assert.ok(r5.eleves.every((e) => e.nbEval === 1), 'chaque jeton anonyme reste distinct');
+
 // --- parserListeClasse : « Nom » ou « Nom;Classe » ---
 const liste = parserListeClasse('Dupont;1CAP\n  Martin , 2BACPRO \n\nDurand');
 assert.strictEqual(liste.length, 3, '3 élèves parsés (ligne vide ignorée)');

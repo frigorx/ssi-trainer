@@ -223,7 +223,11 @@ function exporterCSV() {
   var res = TableauAgregation.agreger(jetons, liste);
   if (!res.eleves.length) { alert('Rien à exporter.'); return; }
   var sep = ';';
-  function cell(v) { v = (v == null ? '' : String(v)); return /[";\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; }
+  function cell(v) {
+    v = (v == null ? '' : String(v));
+    if (/^[=+\-@\t\r]/.test(v)) v = "'" + v; // neutralise l'injection de formule (Excel/Sheets)
+    return /[";\n]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v;
+  }
   var lignes = [];
   var entete = ['Élève', 'Classe', 'Diplôme', 'Nb éval', 'Note moy /20'].concat(res.codes.map(function (c) { return c + ' — ' + res.libelles[c]; }));
   lignes.push(entete.map(cell).join(sep));

@@ -43,8 +43,8 @@
     var map = {};        // clé élève -> objet élève
     var codesSet = {};   // code compétence -> libellé
 
-    function getEleve(nom, classe) {
-      var k = _cle(nom, classe);
+    function getEleve(nom, classe, forceKey) {
+      var k = forceKey || _cle(nom, classe);
       if (!map[k]) {
         map[k] = {
           nom: ((nom || '').trim()) || '(anonyme)',
@@ -63,10 +63,14 @@
       if (p && (p.nom || p.classe)) getEleve(p.nom, p.classe);
     });
 
-    jetons.forEach(function (j) {
+    jetons.forEach(function (j, idx) {
       if (!j || j.schema !== 'ssi-trainer/bilan') return;
       var ev = j.evaluation || {};
-      var el = getEleve(j.eleve && j.eleve.nom, j.eleve && j.eleve.classe);
+      var nom = j.eleve && j.eleve.nom;
+      // Élève anonyme (nom vide) : clé unique par jeton, pour NE PAS fusionner
+      // plusieurs élèves anonymes de la même classe sur une seule ligne.
+      var forceKey = (nom && String(nom).trim()) ? null : ('__anon__' + idx);
+      var el = getEleve(nom, j.eleve && j.eleve.classe, forceKey);
       el.nbEval++;
       if (j.diplome && j.diplome.intitule) el.diplome = j.diplome.intitule;
       if (typeof ev.note_finale === 'number') el.notes.push(ev.note_finale);
