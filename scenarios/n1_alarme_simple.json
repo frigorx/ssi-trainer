@@ -89,14 +89,15 @@
   ],
   "points_cles": [
     "Acquitter ≠ lever le risque : l'acquittement n'est que la prise en compte de l'alarme par l'agent.",
-    "La levée de doute par un équipier est obligatoire avant toute décision (réarmer ou évacuer).",
+    "La levée de doute par un équipier est obligatoire avant tout réarmement.",
+    "Elle ne doit jamais retarder l'alerte : face à un feu manifeste, des fumées visibles ou une victime, on alerte et on met en sécurité sans attendre.",
     "On ne réarme jamais tant que l'origine de l'alarme n'est pas identifiée et traitée.",
     "Une évacuation générale injustifiée est une faute : elle perturbe l'établissement et décrédibilise l'alarme."
   ],
   "objectifs": [
     "Reconnaître une alarme feu et l'acquitter dans les temps sur l'ECS",
     "Localiser la zone en alarme sur le tableau",
-    "Organiser une levée de doute par un équipier avant toute décision",
+    "Organiser une levée de doute par un équipier avant de réarmer le système",
     "Réarmer en sécurité après avoir traité une fausse alarme, sans surréagir"
   ]
 }

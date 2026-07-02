@@ -89,7 +89,7 @@
     {
       "t": 15,
       "type": "info_formateur",
-      "msg": "Le système passe en ALARME GÉNÉRALE. Commande envoyée aux exutoires SS."
+      "msg": "Double détection confirmée : dans ce scénario, le système passe en alarme générale et commande les exutoires SS."
     },
     {
       "t": 25,
@@ -236,10 +236,10 @@
     },
     {
       "cle": "evacuation_generale",
-      "texte": "Déclencher l'évacuation générale du bâtiment"
+      "texte": "Déclencher la mise en sécurité du bâtiment (commande « évacuation générale » du tableau)"
     },
     {
-      "texte": "Coordonner l'évacuation stratégique étage par étage (escalier de secours prioritaire si l'escalier central est enfumé)"
+      "texte": "Dans un établissement de santé, la mise en sécurité s'organise selon les consignes de l'exploitant : évacuation stratégique étage par étage, transfert horizontal des patients vers une zone protégée si nécessaire, escalier de secours prioritaire si l'escalier central est enfumé"
     },
     {
       "texte": "Gérer les patients alités : matériel adapté (lits, brancards, accompagnement infirmier)"

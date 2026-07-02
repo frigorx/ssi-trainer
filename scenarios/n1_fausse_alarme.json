@@ -98,7 +98,7 @@
     {
       "type": "fait",
       "cle": "evacuation_generale",
-      "libelle": "Évacuation générale déclenchée sur une fausse alarme (surréaction grave)"
+      "libelle": "Évacuation générale déclenchée alors que l'alarme restait restreinte au PC, non confirmée (surréaction grave)"
     },
     {
       "type": "fait_sans",
@@ -164,11 +164,12 @@
     "La levée de doute par un équipier est obligatoire avant tout réarmement.",
     "Un détecteur optique de fumée réagit aux fumées MAIS aussi aux vapeurs et buées de cuisson.",
     "Ne jamais réarmer tant que l'origine de l'alarme n'est pas formellement identifiée.",
-    "Avant de réarmer, faire disparaître la cause (ici, aérer la cuisine) : un détecteur encore exposé à la vapeur réactiverait aussitôt l'alarme."
+    "Avant de réarmer, faire disparaître la cause (ici, aérer la cuisine) : un détecteur encore exposé à la vapeur réactiverait aussitôt l'alarme.",
+    "Dans cet exercice, l'alarme reste restreinte au PC sécurité (non diffusée au public) : c'est ce qui rend l'évacuation générale prématurée ici. Face à un feu manifeste, des fumées visibles ou une victime, on n'attend pas la levée de doute pour alerter et mettre en sécurité."
   ],
   "objectifs": [
     "Identifier une alarme feu et l'acquitter dans les temps sur l'ECS",
-    "Organiser une levée de doute par un équipier avant toute décision",
+    "Organiser une levée de doute par un équipier avant de réarmer le système",
     "Décider face à une fausse alarme : traiter la cause puis réarmer en sécurité, sans surréagir",
     "Tenir une main courante claire et horodatée"
   ]

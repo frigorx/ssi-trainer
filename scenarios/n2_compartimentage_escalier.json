@@ -89,7 +89,7 @@
     {
       "t": 15,
       "type": "info_formateur",
-      "msg": "Le système passe en ALARME GÉNÉRALE (double détection dans la même ZD)"
+      "msg": "Double détection confirmée dans la même ZD : dans ce scénario, le système passe en alarme générale"
     },
     {
       "t": 30,
@@ -236,7 +236,7 @@
   ],
   "questions": [
     {
-      "q": "Expliquez le terme « double détection » en détection incendie sur CMSI. Comment cela conditionne-t-il le passage en alarme générale ?",
+      "q": "Expliquez le terme « double détection » en détection incendie sur CMSI. Dans ce scénario, quel effet a-t-elle sur le système ? Ce comportement est-il universel sur tout SSI ?",
       "type": "libre"
     },
     {
@@ -276,6 +276,7 @@
   ],
   "points_cles": [
     "Double détection (2 détecteurs dans la même ZD) = information confirmée (coïncidence) : fiabilise l'alarme et déclenche la mise en sécurité automatique (commande des DAS). L'alarme générale, elle, est gérée par l'UGA et peut être immédiate ou temporisée (≤ 5 min selon le type d'équipement d'alarme). Terme normalisé français : « double détection » (pas l'anglicisme « double knock »).",
+    "Attention : le comportement exact (déclenchement, temporisation, DAS commandés) dépend du SSI réel, de son paramétrage, du découpage en zones et des consignes validées de l'établissement — ce scénario en propose une configuration pédagogique.",
     "Le compartimentage par PCF est la PREMIÈRE défense contre la propagation verticale dans les escaliers.",
     "La PCF escalier est équipée d'une ventouse type RUPTURE (fail-safe) : la fermeture est garantie même en cas de coupure d'alimentation — c'est ce qui en fait une défense fiable.",
     "Selon la NF S 61-937 (portes battantes), une PCF doit se fermer complètement en moins de 30 secondes après commande (vitesse angulaire ≤ 10°/s).",
