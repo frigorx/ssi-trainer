@@ -159,7 +159,7 @@
     {
       "action": "commande_das",
       "delai_max": 75,
-      "competence": "C7",
+      "competence": "C6",
       "points": 35
     },
     {
@@ -353,7 +353,7 @@
     {
       "cle": "commande_das",
       "label": "Commander DAS (PCF / clapets / exutoires)",
-      "competence": "C7"
+      "competence": "C6"
     },
     {
       "cle": "reconnaitre_defaut_das",

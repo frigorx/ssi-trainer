@@ -1,0 +1,102 @@
+{
+  "id": "n1_alarme_simple",
+  "titre": "Première alarme — Bureaux (travaux)",
+  "niveau": 1,
+  "equipement": "ECS",
+  "diplomes": [
+    "CAP_AS",
+    "BACPRO_MS",
+    "BP_ATPS",
+    "BTS_MOS"
+  ],
+  "erp_type": "R",
+  "duree_max": 220,
+  "description": "Un détecteur optique se déclenche dans les bureaux pendant des travaux. Exercice d'initiation : apprendre les gestes fondamentaux sur l'ECS, de l'acquittement au réarmement, sans surréagir.",
+  "contexte": {
+    "etablissement": "Établissement d'enseignement — ERP type R",
+    "effectif": 350,
+    "particularites": "Travaux de peinture et ponçage dans les bureaux du 1er étage pendant les cours."
+  },
+  "mission": "Vous êtes l'agent de sécurité au poste de sécurité (PC sécurité). Une alarme vient de retentir sur l'ECS. Appliquez la procédure de base : prendre en compte l'alarme, lever le doute, puis décider — sans déclencher d'évacuation injustifiée.",
+  "zones": [
+    { "id": "ZD01", "nom": "Cuisine RDC" },
+    { "id": "ZD02", "nom": "Hall accueil" },
+    { "id": "ZD03", "nom": "Bureaux 1er" },
+    { "id": "ZD04", "nom": "Stockage SS" }
+  ],
+  "levee_doute": {
+    "feu": false,
+    "delai": 60,
+    "rapport_ras": "RAS — poussières soulevées par le ponçage des travaux dans les bureaux du 1er. Aucun foyer, pas de fumée de combustion.",
+    "rapport_feu": "FEU — départ de feu sur une multiprise dans les bureaux, fumée noire."
+  },
+  "evenements": [
+    { "t": 0, "type": "alarme", "zone": "ZD03", "detail": "Détecteur optique fumée — Bureaux 1er" }
+  ],
+  "actions_attendues": [
+    { "action": "acquittement", "delai_max": 15, "competence": "C2", "points": 25 },
+    { "action": "arret_signal", "delai_max": 25, "competence": "C2", "points": 15 },
+    { "action": "levee_doute", "delai_max": 50, "competence": "C2", "points": 25 },
+    { "action": "traiter_cause", "delai_max": 155, "competence": "C2", "points": 20 },
+    { "action": "rearmement", "delai_max": 185, "competence": "C2", "points": 30 },
+    { "action": "test_signalisation", "delai_max": 205, "competence": "C2", "points": 20 }
+  ],
+  "fautes_graves": [
+    { "type": "fait", "cle": "evacuation_generale", "libelle": "Évacuation générale déclenchée sans feu confirmé (surréaction grave)" },
+    { "type": "fait_sans", "cle": "rearmement", "avant": "levee_doute", "libelle": "Réarmement effectué sans levée de doute préalable" }
+  ],
+  "conduite_a_tenir": [
+    { "cle": "acquittement", "texte": "Acquitter l'alarme sonore sur l'ECS (prise en compte par l'agent)" },
+    { "cle": "arret_signal", "texte": "Arrêter le signal sonore une fois l'alarme prise en compte" },
+    { "texte": "Localiser la zone en alarme sur le tableau (voyant + afficheur)" },
+    { "cle": "levee_doute", "texte": "Envoyer un équipier de ronde en levée de doute sur la zone" },
+    { "texte": "Attendre et analyser le compte-rendu de l'équipier" },
+    { "cle": "traiter_cause", "texte": "Fausse alarme : faire traiter la cause (ventiler les bureaux, interrompre le ponçage)" },
+    { "cle": "rearmement", "texte": "Origine identifiée et traitée → réarmer le système" },
+    { "cle": "test_signalisation", "texte": "Vérifier le bon fonctionnement (test signalisation)" }
+  ],
+  "gestes_operateur": [
+    { "cle": "levee_doute", "label": "Envoyer un équipier en levée de doute", "competence": "C2" },
+    { "cle": "traiter_cause", "label": "Faire traiter la cause (ventiler les bureaux)", "competence": "C2" }
+  ],
+  "questions": [
+    {
+      "q": "Que signifie « acquitter » une alarme sur l'ECS ?",
+      "type": "qcm",
+      "options": [
+        "Que le risque est écarté et qu'on peut réarmer",
+        "Que l'agent a pris en compte l'alarme (sans lever le risque)",
+        "Que l'évacuation est déclenchée",
+        "Que le détecteur est mis hors service"
+      ],
+      "reponse": 1
+    },
+    {
+      "q": "Quelle étape est indispensable AVANT de réarmer l'ECS ?",
+      "type": "qcm",
+      "options": [
+        "Attendre 5 minutes",
+        "Couper l'électricité de la zone",
+        "Lever le doute et traiter l'origine de l'alarme",
+        "Prévenir la direction"
+      ],
+      "reponse": 2
+    },
+    {
+      "q": "Pourquoi ne faut-il pas déclencher l'évacuation générale dès la première alarme ?",
+      "type": "libre"
+    }
+  ],
+  "points_cles": [
+    "Acquitter ≠ lever le risque : l'acquittement n'est que la prise en compte de l'alarme par l'agent.",
+    "La levée de doute par un équipier est obligatoire avant toute décision (réarmer ou évacuer).",
+    "On ne réarme jamais tant que l'origine de l'alarme n'est pas identifiée et traitée.",
+    "Une évacuation générale injustifiée est une faute : elle perturbe l'établissement et décrédibilise l'alarme."
+  ],
+  "objectifs": [
+    "Reconnaître une alarme feu et l'acquitter dans les temps sur l'ECS",
+    "Localiser la zone en alarme sur le tableau",
+    "Organiser une levée de doute par un équipier avant toute décision",
+    "Réarmer en sécurité après avoir traité une fausse alarme, sans surréagir"
+  ]
+}

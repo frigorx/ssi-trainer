@@ -1,0 +1,102 @@
+{
+  "id": "n1_malaise_fumee",
+  "titre": "Fumées et victime — Personne incommodée",
+  "niveau": 1,
+  "equipement": "ECS",
+  "diplomes": [
+    "CAP_AS",
+    "BACPRO_MS",
+    "BP_ATPS",
+    "BTS_MOS"
+  ],
+  "erp_type": "R",
+  "duree_max": 280,
+  "description": "Un appareil électrique surchauffe au stockage et dégage des fumées ; une personne présente est incommodée. L'élève doit lever le doute, alerter en signalant la victime, mettre en sécurité et guider les secours.",
+  "contexte": {
+    "etablissement": "Établissement d'enseignement — ERP type R",
+    "effectif": 350,
+    "particularites": "Local de stockage au sous-sol. Un agent d'entretien s'y trouvait au moment du départ de fumées."
+  },
+  "mission": "Vous êtes l'agent de sécurité au poste de sécurité. Une alarme retentit ; une personne est signalée dans le local concerné. Levez le doute, alertez les secours en précisant l'état de la victime, mettez les personnes en sécurité et guidez les pompiers.",
+  "zones": [
+    { "id": "ZD01", "nom": "Cuisine RDC" },
+    { "id": "ZD02", "nom": "Hall accueil" },
+    { "id": "ZD03", "nom": "Bureaux 1er" },
+    { "id": "ZD04", "nom": "Stockage SS" }
+  ],
+  "levee_doute": {
+    "feu": true,
+    "delai": 35,
+    "rapport_feu": "FEU — appareil électrique en surchauffe, fumées épaisses au stockage. Une personne présente est incommodée (toux, gêne respiratoire).",
+    "rapport_ras": "RAS — appareil débranché à temps, fumée légère dissipée, la personne va bien."
+  },
+  "evenements": [
+    { "t": 0, "type": "alarme", "zone": "ZD04", "detail": "Détecteur optique fumée — Stockage sous-sol" },
+    { "t": 180, "type": "info_formateur", "msg": "Sapeurs-pompiers en approche — préparez les plans, les clés et le point de situation, en précisant la victime." }
+  ],
+  "actions_attendues": [
+    { "action": "acquittement", "delai_max": 15, "competence": "C2", "points": 15 },
+    { "action": "levee_doute", "delai_max": 45, "competence": "C2", "points": 20 },
+    { "action": "appel_18", "delai_max": 95, "competence": "C3", "points": 35 },
+    { "action": "evacuation_generale", "delai_max": 135, "competence": "C4", "points": 30 },
+    { "action": "accueil_pompiers", "delai_max": 250, "competence": "C8", "points": 20 }
+  ],
+  "fautes_graves": [
+    { "type": "manque", "cle": "appel_18", "libelle": "Secours non alertés alors qu'une victime est incommodée par les fumées" },
+    { "type": "manque", "cle": "evacuation_generale", "libelle": "Personnes non mises en sécurité malgré fumées et victime" }
+  ],
+  "conduite_a_tenir": [
+    { "cle": "acquittement", "texte": "Acquitter l'alarme et localiser la zone (stockage sous-sol)" },
+    { "cle": "levee_doute", "texte": "Envoyer un équipier en levée de doute — attention à la personne signalée" },
+    { "texte": "Faire soustraire la victime à l'atmosphère enfumée si cela peut se faire sans risque pour l'équipier" },
+    { "cle": "appel_18", "texte": "Alerter le 18/112 avec un message structuré incluant le nombre et l'état des victimes" },
+    { "cle": "evacuation_generale", "texte": "Mettre les personnes en sécurité (niveau d'accès 2)" },
+    { "texte": "Faire appliquer les gestes qui sauvent dans la limite de la formation de l'équipier (PSC1/SST), sans se mettre en danger" },
+    { "cle": "accueil_pompiers", "texte": "Accueillir et guider les secours, les informer de la victime et de son emplacement" }
+  ],
+  "gestes_operateur": [
+    { "cle": "levee_doute", "label": "Envoyer un équipier en levée de doute", "competence": "C2" },
+    { "cle": "appel_18", "label": "Alerter le 18/112 (préciser la victime)", "competence": "C3" },
+    { "cle": "accueil_pompiers", "label": "Accueillir et guider les secours", "competence": "C8" }
+  ],
+  "questions": [
+    {
+      "q": "Face à une personne incommodée par les fumées, quelle est la priorité ?",
+      "type": "qcm",
+      "options": [
+        "Lui donner à boire",
+        "La soustraire à l'atmosphère enfumée et alerter les secours",
+        "La laisser sur place et attendre",
+        "La faire marcher rapidement pour la réveiller"
+      ],
+      "reponse": 1
+    },
+    {
+      "q": "Dans le message d'alerte au 18, concernant la victime, vous précisez :",
+      "type": "qcm",
+      "options": [
+        "Rien, ce n'est pas le rôle de l'agent",
+        "Le nombre et l'état des victimes",
+        "Uniquement votre nom",
+        "Seulement l'heure de l'appel"
+      ],
+      "reponse": 1
+    },
+    {
+      "q": "Quels gestes simples peut-on faire en attendant les secours, sans se mettre en danger ? (réponse écrite — relève du PSC1/SST, hors simulateur)",
+      "type": "libre"
+    }
+  ],
+  "points_cles": [
+    "Une victime incommodée par les fumées doit d'abord être soustraite à l'atmosphère toxique, si cela peut se faire SANS risque pour le sauveteur.",
+    "Le message d'alerte doit préciser le nombre et l'état des victimes : c'est vital pour dimensionner les moyens de secours.",
+    "L'agent alerte, met en sécurité et guide les secours ; les gestes de premiers secours relèvent de la formation PSC1/SST.",
+    "On ne prend jamais de risque pour soi : un sauveteur intoxiqué devient une seconde victime."
+  ],
+  "objectifs": [
+    "Reconnaître une situation avec victime et en tenir compte dans sa réponse",
+    "Transmettre un message d'alerte structuré (18/112) incluant l'état des victimes",
+    "Mettre les personnes en sécurité face à des fumées",
+    "Accueillir et guider les sapeurs-pompiers en les informant de la victime"
+  ]
+}
