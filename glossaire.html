@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glossaire SSI — SSI Trainer</title>
+<meta name="description" content="Glossaire des sigles et termes du Système de Sécurité Incendie (SSI) utilisés dans SSI Trainer.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Calibri,Arial,sans-serif;font-size:13pt;line-height:1.55;background:#f2f5fb;color:#1b3a63}
+.header{background:#1b3a63;color:#fff;padding:14px 24px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.header .logo{font-family:'Trebuchet MS',sans-serif;font-size:1.3em;font-weight:bold}
+.header .badge{background:#ff6b35;color:#fff;padding:1px 8px;border-radius:4px;font-size:0.55em}
+.header .back-link{color:#fff;text-decoration:none;font-size:0.85em;opacity:0.85;margin-right:6px}
+.header .actions{margin-left:auto;display:flex;gap:8px}
+.header .actions button{background:#ff6b35;color:#fff;border:none;border-radius:6px;padding:7px 16px;font-size:0.85em;font-weight:bold;cursor:pointer}
+.container{max-width:820px;margin:24px auto;padding:0 18px}
+h1{font-family:'Trebuchet MS',sans-serif;font-size:1.6em;margin-bottom:4px}
+.sub{color:#555;margin-bottom:22px}
+.card{background:#fff;border-radius:10px;box-shadow:0 2px 10px rgba(27,58,99,0.08);padding:18px 22px;margin-bottom:18px}
+.card h2{font-family:'Trebuchet MS',sans-serif;font-size:1.15em;color:#1b3a63;border-bottom:2px solid #ff6b35;padding-bottom:5px;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+table{width:100%;border-collapse:collapse;font-size:0.92em;margin-top:6px}
+th,td{border:1px solid #dde2ea;padding:7px 10px;text-align:left;vertical-align:top}
+th{background:#1b3a63;color:#fff}
+td.sigle{font-weight:bold;color:#1b3a63;white-space:nowrap}
+.note{background:#fff8f4;border-left:4px solid #ff6b35;border-radius:6px;padding:10px 14px;font-size:0.92em;margin-bottom:16px}
+.footer{text-align:center;padding:18px;color:#888;font-size:0.8em}
+.footer a{color:#ff6b35;text-decoration:none}
+@media print{
+  body{background:#fff;font-size:11pt}
+  .header .actions,.header .back-link{display:none}
+  .header{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .card{box-shadow:none;border:1px solid #ccc;page-break-inside:avoid}
+  th{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <a href="index.html" class="back-link">&larr; Accueil</a>
+  <div class="logo">LPP/UFA Jacques Raynaud <span class="badge">SSI</span></div>
+  <div class="actions"><button onclick="window.print()">&#128424; Imprimer</button></div>
+</div>
+
+<div class="container">
+  <h1>Glossaire SSI</h1>
+  <p class="sub">Les sigles et termes du Système de Sécurité Incendie utilisés dans SSI Trainer.</p>
+
+  <div class="note">📖 Glossaire pédagogique simplifié, pensé pour l'apprentissage. Pour une définition normative complète, se référer aux normes NF S 61-931 et suivantes.</div>
+
+  <div class="card">
+    <h2>🔤 Sigles et équipements</h2>
+    <table>
+      <thead><tr><th>Sigle</th><th>Définition</th></tr></thead>
+      <tbody>
+        <tr><td class="sigle">SSI</td><td>Système de Sécurité Incendie — l'ensemble des équipements qui détectent un sinistre et mettent le bâtiment en sécurité.</td></tr>
+        <tr><td class="sigle">SDI</td><td>Système de Détection Incendie — la partie qui détecte (détecteurs, déclencheurs manuels, ECS).</td></tr>
+        <tr><td class="sigle">ECS</td><td>Équipement de Contrôle et de Signalisation — le tableau qui reçoit les alarmes du SDI, les signale et permet de les traiter (acquittement, réarmement).</td></tr>
+        <tr><td class="sigle">SMSI</td><td>Système de Mise en Sécurité Incendie — la partie qui agit (CMSI + DAS) pour mettre le bâtiment en sécurité.</td></tr>
+        <tr><td class="sigle">CMSI</td><td>Centralisateur de Mise en Sécurité Incendie — le tableau qui commande les DAS et gère l'alarme générale (Niveau 2 du simulateur).</td></tr>
+        <tr><td class="sigle">UGA</td><td>Unité de Gestion d'Alarme — gère la diffusion de l'alarme (restreinte puis générale) aux occupants.</td></tr>
+        <tr><td class="sigle">DAS</td><td>Dispositif Actionné de Sécurité — un équipement commandé par le CMSI en cas de sinistre : porte coupe-feu, exutoire de désenfumage, clapet…</td></tr>
+        <tr><td class="sigle">DM</td><td>Déclencheur Manuel — le bouton-poussoir rouge permettant à toute personne de déclencher l'alarme.</td></tr>
+        <tr><td class="sigle">DA</td><td>Détecteur Automatique — détecteur de fumée, de chaleur… qui déclenche l'alarme sans intervention humaine.</td></tr>
+        <tr><td class="sigle">PCF</td><td>Porte Coupe-Feu — porte qui se ferme automatiquement pour bloquer la propagation du feu et de la fumée (compartimentage).</td></tr>
+        <tr><td class="sigle">EAS</td><td>Espace d'Attente Sécurisé (ou zone refuge) — lieu protégé où une personne à mobilité réduite peut attendre les secours en sécurité.</td></tr>
+        <tr><td class="sigle">ZD</td><td>Zone de Détection — secteur du bâtiment surveillé par un groupe de détecteurs.</td></tr>
+        <tr><td class="sigle">ZA</td><td>Zone d'Alarme — secteur dans lequel l'alarme est diffusée aux occupants.</td></tr>
+        <tr><td class="sigle">ZS</td><td>Zone de mise en Sécurité — secteur dans lequel les DAS sont commandés (compartimentage, désenfumage).</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>🚨 Vocabulaire de l'alarme</h2>
+    <table>
+      <thead><tr><th>Terme</th><th>Définition</th></tr></thead>
+      <tbody>
+        <tr><td class="sigle">Alarme restreinte</td><td>Signal destiné au personnel chargé de la sécurité (PC sécurité), pas encore diffusé aux occupants. C'est le moment de lever le doute.</td></tr>
+        <tr><td class="sigle">Alarme générale</td><td>Signal d'évacuation ou de mise en sécurité diffusé aux occupants, selon la configuration du SSI et le type d'équipement d'alarme (immédiate ou temporisée).</td></tr>
+        <tr><td class="sigle">Levée de doute</td><td>Vérification sur place (par un équipier) pour confirmer ou infirmer un départ de feu avant de décider.</td></tr>
+        <tr><td class="sigle">Double détection</td><td>Confirmation d'un sinistre par deux informations de détection dans une même zone, utilisée pour fiabiliser une décision automatique (terme français ; on évite l'anglicisme « double knock »).</td></tr>
+        <tr><td class="sigle">Acquittement</td><td>Prise en compte de l'alarme par l'agent — ce n'est PAS la levée du risque.</td></tr>
+        <tr><td class="sigle">Réarmement</td><td>Remise en service du système après avoir traité et fait disparaître la cause de l'alarme.</td></tr>
+        <tr><td class="sigle">Main courante</td><td>Trace écrite chronologique des événements, décisions et actions — une preuve de ce qui a été fait.</td></tr>
+        <tr><td class="sigle">Niveau d'accès</td><td>Niveau de droits sur le tableau : le niveau 2 (code ou clé) est requis pour les commandes engageantes (évacuation, DAS, coupures), afin d'éviter les déclenchements accidentels.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="footer">LPP/UFA Jacques Raynaud — Campus ÉQUATIO · SSI Trainer, glossaire pédagogique</div>
+
+<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "86c8808b88f3489c8f37af96810d5f1e"}'></script><!-- End Cloudflare Web Analytics -->
+<script src="js/lecture-adaptee.js" defer></script>
+</body>
+</html>

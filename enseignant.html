@@ -40,6 +40,11 @@ ol.steps li::before{content:counter(s);position:absolute;left:0;top:8px;width:30
 .scenario ul li,.scenario ol li{margin-bottom:2px}
 .lbl{font-size:0.78em;text-transform:uppercase;letter-spacing:0.5px;color:#8893a5;font-weight:bold;margin-top:10px;margin-bottom:2px}
 .faute-item{background:#fdeeee;border-left:4px solid #c62828;padding:6px 10px;margin:4px 0;font-size:0.88em;border-radius:4px}
+.reperes{background:#eef2f8;border-radius:8px;padding:10px 14px;margin-bottom:10px}
+.reperes-tbl{margin-top:4px}
+.reperes-tbl th{background:none;color:#1b3a63;text-align:left;width:32%;vertical-align:top;font-size:0.82em;border:none;padding:4px 8px 4px 0}
+.reperes-tbl td{border:none;font-size:0.88em;padding:4px 0}
+.reperes-tbl tr+tr th,.reperes-tbl tr+tr td{border-top:1px solid #dde5f0}
 .pk{background:#f2f9f2;border-left:4px solid #2e7d32;padding:8px 12px;font-size:0.88em;border-radius:4px}
 .ok{color:#2e7d32;font-weight:bold}
 .toolbar-fiches{display:flex;gap:8px;margin-bottom:12px}
@@ -140,8 +145,10 @@ th{background:#1b3a63;color:#fff}
     <h2>📚 Ressources formateur</h2>
     <ul style="margin-left:18px">
       <li><a href="guide.html">Guide de l'élève</a> (mode d'emploi imprimable)</li>
+      <li><a href="glossaire.html">Glossaire SSI</a> (sigles et vocabulaire, imprimable)</li>
       <li><a href="referentiels/competences_ssiap1.json" target="_blank">Grille de compétences C1-C8 (JSON)</a></li>
       <li><a href="referentiels/diplomes-securite.json" target="_blank">Rapprochements diplômes filière sécurité (JSON, sourcé)</a></li>
+      <li><a href="LEGAL.md" target="_blank">Avertissement pédagogique et conditions d'utilisation</a></li>
     </ul>
   </section>
 </div>
@@ -207,9 +214,11 @@ function charger() {
   ]).then(function (res) {
     var comps = {};
     (res[0].competences || []).forEach(function (c) { comps[c.id] = c.libelle; });
+    var diplomesMap = {};
+    (res[1].diplomes || []).forEach(function (d) { diplomesMap[d.code] = d.intitule; });
     rendreEchelle();
     rendreDiplomes(res[1].diplomes || []);
-    rendreScenarios(comps);
+    rendreScenarios(comps, diplomesMap);
   });
 }
 
@@ -241,7 +250,7 @@ function declencheur(f) {
   return 'Faire « ' + f.cle + ' » sans avoir fait « ' + f.avant + ' » avant';
 }
 
-function ficheScenario(s, comps) {
+function ficheScenario(s, comps, diplomesMap) {
   var codes = {};
   (s.actions_attendues || []).forEach(function (a) { if (a.competence && a.competence !== '—') codes[a.competence] = 1; });
   var listeCodes = Object.keys(codes).sort();
@@ -251,6 +260,25 @@ function ficheScenario(s, comps) {
   h += '<span class="titre">' + esc(s.titre || s.id) + '</span>';
   h += '<span class="meta">' + esc(s.equipement || '') + (s.erp_type ? ' · ERP type ' + esc(s.erp_type) : '') + (s.duree_max ? ' · ' + fmtSec(s.duree_max) + ' max' : '') + '</span>';
   h += '</summary><div class="fiche-corps">';
+
+  // Repères formateur — synthèse « à retenir avant d'exploiter le scénario en classe ».
+  // Dérivé exclusivement des données du scénario (rien d'inventé) : diplomes[], objectifs[0],
+  // fautes_graves[] (reformulées en « pièges »), questions ouvertes + points_cles (débrief).
+  var niveauReco = (s.diplomes || []).map(function (d) { return diplomesMap[d] || d; }).join(', ');
+  var questionsOuvertes = (s.questions || []).filter(function (q) { return q.type !== 'qcm'; }).map(function (q) { return q.q; });
+  h += '<div class="reperes">';
+  h += '<div class="lbl" style="margin-top:0">🎓 Repères formateur</div>';
+  h += '<table class="reperes-tbl"><tbody>';
+  if (s.objectifs && s.objectifs[0]) h += '<tr><th>Objectif principal</th><td>' + esc(s.objectifs[0]) + '</td></tr>';
+  if (niveauReco) h += '<tr><th>Niveau recommandé</th><td>' + esc(niveauReco) + '</td></tr>';
+  if (s.fautes_graves && s.fautes_graves.length) {
+    h += '<tr><th>Pièges pédagogiques</th><td>' + s.fautes_graves.map(function (f) { return esc(f.libelle); }).join(' · ') + '</td></tr>';
+  }
+  if (questionsOuvertes.length || (s.points_cles && s.points_cles.length)) {
+    var debrief = questionsOuvertes.concat((s.points_cles || []).slice(0, 2));
+    h += '<tr><th>Débrief conseillé</th><td><ul style="margin:0 0 0 16px">' + debrief.map(function (d) { return '<li>' + esc(d) + '</li>'; }).join('') + '</ul></td></tr>';
+  }
+  h += '</tbody></table></div>';
 
   if (s.mission) h += '<div class="lbl">Mission donnée à l\'élève</div><p style="font-size:0.92em">' + esc(s.mission) + '</p>';
 
@@ -338,7 +366,7 @@ function ficheScenario(s, comps) {
   return h;
 }
 
-function rendreScenarios(comps) {
+function rendreScenarios(comps, diplomesMap) {
   var cont = document.getElementById('scenarios');
   var blocs = SCENARIOS.map(function (g) {
     return Promise.all(g.fichiers.map(function (f) {
@@ -350,7 +378,7 @@ function rendreScenarios(comps) {
     groupes.forEach(function (gr) {
       h += '<h3>Niveau ' + gr.g.niveau + ' — ' + esc(gr.g.equip) + '</h3>';
       if (!gr.scs.length) { h += '<p style="color:#999">Scénarios indisponibles.</p>'; return; }
-      gr.scs.forEach(function (s) { h += ficheScenario(s, comps); });
+      gr.scs.forEach(function (s) { h += ficheScenario(s, comps, diplomesMap); });
     });
     cont.innerHTML = h;
     document.getElementById('btnDeplierTout').onclick = function () {

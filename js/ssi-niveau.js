@@ -454,10 +454,6 @@
       global._dernierBilan = bilan; global._derniereEval = ev;
       var cls = ev.noteFinale >= 14 ? 'good' : ev.noteFinale >= 10 ? 'medium' : 'bad';
       var h = '<p style="text-align:center;color:#666;font-size:0.85em">' + (profil.nom ? esc(profil.nom) : 'Élève') + (profil.classe ? ' — ' + esc(profil.classe) : '') + ' · ' + esc(ev.diplome) + '</p>';
-      h += '<div class="score-big ' + cls + '">' + fmtNote(ev.noteFinale) + ' / 20</div>';
-      h += '<p style="text-align:center;color:#888;font-size:0.8em">' + esc(ev.etiquetteNote) + ' · ' + ev.pct + '% des points · durée ' + bilan.duree + ' s</p>';
-      if (ev.plafonnee) h += '<p style="text-align:center;color:#c62828;font-size:0.82em;font-weight:bold">Note plafonnée en raison d\'une faute grave.</p>';
-      if (ev.fautes.length) { h += '<div style="background:#ffebee;border-left:4px solid #c62828;padding:10px 14px;margin:10px 0;border-radius:6px;font-size:0.85em"><strong>⛔ Faute(s) grave(s) :</strong><ul style="margin:6px 0 0 18px">'; ev.fautes.forEach(function (f) { h += '<li>' + esc(f) + '</li>'; }); h += '</ul></div>'; }
       if (ev.competences.length) {
         h += '<h3 style="font-family:\'Trebuchet MS\',sans-serif;font-size:0.95em;color:#1b3a63;margin:14px 0 8px">Positionnement par compétence</h3>';
         ev.competences.forEach(function (c) {
@@ -469,6 +465,10 @@
             '<div style="font-size:0.72em;color:#888;margin:0 0 8px 54px">' + esc(c.libelle) + (c.evaluee ? ' (' + c.pct + '%)' : '') + '</div>';
         });
       }
+      h += '<div class="score-big ' + cls + '">' + fmtNote(ev.noteFinale) + ' / 20</div>';
+      h += '<p style="text-align:center;color:#888;font-size:0.8em">' + esc(ev.etiquetteNote) + ' · ' + ev.pct + '% des points · durée ' + bilan.duree + ' s</p>';
+      if (ev.plafonnee) h += '<p style="text-align:center;color:#c62828;font-size:0.82em;font-weight:bold">Note plafonnée en raison d\'une faute grave.</p>';
+      if (ev.fautes.length) { h += '<div style="background:#ffebee;border-left:4px solid #c62828;padding:10px 14px;margin:10px 0;border-radius:6px;font-size:0.85em"><strong>⛔ Faute(s) grave(s) :</strong><ul style="margin:6px 0 0 18px">'; ev.fautes.forEach(function (f) { h += '<li>' + esc(f) + '</li>'; }); h += '</ul></div>'; }
       if (bilan.details.length) {
         h += '<h3 style="font-family:\'Trebuchet MS\',sans-serif;font-size:0.95em;color:#1b3a63;margin:14px 0 8px">Détail des actions</h3><table><thead><tr><th>Action</th><th>Résultat</th><th>Temps</th><th>Points</th></tr></thead><tbody>';
         bilan.details.forEach(function (d) { var color = d.resultat === 'OK' ? '#2e7d32' : d.resultat === 'RETARD' ? '#ef6c00' : '#c62828'; var lib = (typeof LIB_ACTIONS !== 'undefined' && LIB_ACTIONS[d.action]) ? LIB_ACTIONS[d.action] : d.action; h += '<tr><td>' + esc(lib) + '</td><td style="color:' + color + ';font-weight:bold">' + d.resultat + '</td><td>' + d.realise + '</td><td>' + d.points + '/' + d.max + '</td></tr>'; });

@@ -965,20 +965,7 @@ function showBilan(bilan) {
           (profil.nom ? esc(profil.nom) : 'Élève') + (profil.classe ? ' — ' + esc(profil.classe) : '') +
           ' · ' + esc(ev.diplome) + '</p>';
 
-  // Note finale /20
-  html += '<div class="score-big ' + noteCls + '">' + fmtNote(ev.noteFinale) + ' / 20</div>';
-  html += '<p style="text-align:center;color:#888;font-size:0.8em">' + esc(ev.etiquetteNote) + ' · ' + ev.pct + '% des points · durée ' + bilan.duree + ' s</p>';
-  if (ev.plafonnee) html += '<p style="text-align:center;color:#c62828;font-size:0.82em;font-weight:bold">Note plafonnée en raison d\'une faute grave.</p>';
-
-  // Fautes graves
-  if (ev.fautes.length) {
-    html += '<div style="background:#ffebee;border-left:4px solid #c62828;padding:10px 14px;margin:10px 0;border-radius:6px;font-size:0.85em">';
-    html += '<strong>⛔ Faute(s) grave(s) :</strong><ul style="margin:6px 0 0 18px">';
-    ev.fautes.forEach(function (f) { html += '<li>' + esc(f) + '</li>'; });
-    html += '</ul></div>';
-  }
-
-  // Positionnement par compétence
+  // Positionnement par compétence — affiché AVANT la note (la note /20 est l'indicateur secondaire)
   if (ev.competences.length) {
     html += '<h3 style="font-family:\'Trebuchet MS\',sans-serif;font-size:0.95em;color:#1b3a63;margin:14px 0 8px">Positionnement par compétence</h3>';
     ev.competences.forEach(function (c) {
@@ -991,6 +978,19 @@ function showBilan(bilan) {
       html += '</div>';
       html += '<div style="font-size:0.72em;color:#888;margin:0 0 8px 54px">' + esc(c.libelle) + (c.evaluee ? ' (' + c.pct + '%)' : '') + '</div>';
     });
+  }
+
+  // Note finale /20 (indicateur secondaire)
+  html += '<div class="score-big ' + noteCls + '">' + fmtNote(ev.noteFinale) + ' / 20</div>';
+  html += '<p style="text-align:center;color:#888;font-size:0.8em">' + esc(ev.etiquetteNote) + ' · ' + ev.pct + '% des points · durée ' + bilan.duree + ' s</p>';
+  if (ev.plafonnee) html += '<p style="text-align:center;color:#c62828;font-size:0.82em;font-weight:bold">Note plafonnée en raison d\'une faute grave.</p>';
+
+  // Fautes graves
+  if (ev.fautes.length) {
+    html += '<div style="background:#ffebee;border-left:4px solid #c62828;padding:10px 14px;margin:10px 0;border-radius:6px;font-size:0.85em">';
+    html += '<strong>⛔ Faute(s) grave(s) :</strong><ul style="margin:6px 0 0 18px">';
+    ev.fautes.forEach(function (f) { html += '<li>' + esc(f) + '</li>'; });
+    html += '</ul></div>';
   }
 
   // Détail des actions
