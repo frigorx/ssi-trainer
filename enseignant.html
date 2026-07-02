@@ -25,15 +25,31 @@ ol.steps li::before{content:counter(s);position:absolute;left:0;top:8px;width:30
 .btn{display:inline-block;background:#ff6b35;color:#fff;padding:10px 26px;border:none;border-radius:8px;font-size:0.95em;font-weight:bold;cursor:pointer;text-decoration:none;transition:background 0.2s}
 .btn:hover{background:#e55a28}
 .btn-blue{background:#1b3a63}.btn-blue:hover{background:#142d4e}
-.scenario{border:1px solid #e4e9f1;border-radius:10px;padding:14px 16px;margin-bottom:14px}
+.scenario{border:1px solid #e4e9f1;border-radius:10px;margin-bottom:12px;overflow:hidden}
+.scenario summary{cursor:pointer;list-style:none;padding:12px 16px;background:#f8fafd;display:flex;flex-direction:column;gap:2px}
+.scenario summary::-webkit-details-marker{display:none}
+.scenario summary::before{content:'▸ ';color:#ff6b35;font-weight:bold}
+.scenario[open] summary::before{content:'▾ '}
 .scenario .titre{font-weight:bold;font-family:'Trebuchet MS',sans-serif;color:#1b3a63;font-size:1.02em}
-.scenario .meta{font-size:0.8em;color:#777;margin:3px 0 8px}
+.scenario .meta{font-size:0.8em;color:#777}
+.fiche-corps{padding:6px 16px 16px}
 .tag{display:inline-block;background:#eef2f8;color:#3a567d;border-radius:20px;padding:1px 10px;font-size:0.78em;margin:2px 4px 2px 0}
 .tag.comp{background:#e7f1ff;color:#1b4f8a}
-.tag.faute{background:#fdecec;color:#b53030}
 .scenario ul{margin:4px 0 4px 18px;font-size:0.88em;color:#444}
-.scenario ul li{margin-bottom:2px}
-.lbl{font-size:0.78em;text-transform:uppercase;letter-spacing:0.5px;color:#8893a5;font-weight:bold;margin-top:8px}
+.scenario ol{margin:4px 0 4px 18px;font-size:0.88em;color:#444}
+.scenario ul li,.scenario ol li{margin-bottom:2px}
+.lbl{font-size:0.78em;text-transform:uppercase;letter-spacing:0.5px;color:#8893a5;font-weight:bold;margin-top:10px;margin-bottom:2px}
+.faute-item{background:#fdeeee;border-left:4px solid #c62828;padding:6px 10px;margin:4px 0;font-size:0.88em;border-radius:4px}
+.pk{background:#f2f9f2;border-left:4px solid #2e7d32;padding:8px 12px;font-size:0.88em;border-radius:4px}
+.ok{color:#2e7d32;font-weight:bold}
+.toolbar-fiches{display:flex;gap:8px;margin-bottom:12px}
+.btn-mini{background:#fff;color:#1b3a63;border:1.5px solid #c7d0de;border-radius:6px;padding:5px 14px;font-size:0.82em;cursor:pointer}
+.btn-mini:hover{background:#eef2f8}
+@media print{
+  .toolbar-fiches,.gate,.header,.footer{display:none!important}
+  .scenario{page-break-inside:avoid;border-color:#999}
+  .scenario:not([open]) .fiche-corps{display:block!important}
+}
 table{width:100%;border-collapse:collapse;font-size:0.85em;margin-top:8px}
 th,td{border:1px solid #e2e7f0;padding:7px 9px;text-align:left}
 th{background:#1b3a63;color:#fff}
@@ -94,10 +110,14 @@ th{background:#1b3a63;color:#fff}
     <div class="warn">Astuce : la liste de classe collée dans le tableau de bord fait aussi apparaître les élèves <b>pas encore évalués</b> (utile pour le suivi).</div>
   </section>
 
-  <!-- B. Scénarios pédagogiques -->
+  <!-- B. Dossier pédagogique des scénarios -->
   <section>
-    <h2>🎯 Les scénarios pédagogiques</h2>
-    <p>Le « dessous des cartes » de chaque mise en situation : objectifs, compétences travaillées et fautes graves évaluées. Données issues directement des scénarios du simulateur.</p>
+    <h2>🎯 Dossier pédagogique des scénarios</h2>
+    <p>Le contenu complet de chaque mise en situation — mission, contexte, chronologie des événements injectés, barème, fautes graves (avec leur déclencheur exact), conduite à tenir, questionnaire corrigé et points clés. Généré directement depuis les scénarios du simulateur : toujours à jour.</p>
+    <div class="toolbar-fiches">
+      <button type="button" class="btn-mini" id="btnDeplierTout">Tout déplier</button>
+      <button type="button" class="btn-mini" id="btnReplierTout">Tout replier</button>
+    </div>
     <div id="scenarios"><p style="color:#999">Chargement…</p></div>
   </section>
 
@@ -139,7 +159,7 @@ th{background:#1b3a63;color:#fff}
    de la documentation pédagogique). NE JAMAIS placer de données
    d'élèves derrière ce code.
    =================================================================== */
-var CODE_ACCES = 'lppjaquesRaynaud';
+var CODE_ACCES = 'LPPJACQUESRAYNAUD';
 
 // --- Porte d'accès ---
 var gate = document.getElementById('gate');
@@ -163,7 +183,7 @@ try { if (sessionStorage.getItem('ssi-enseignant-ok') === '1') deverrouiller(); 
 
 // --- Données ---
 var SCENARIOS = [
-  { niveau: 1, equip: 'ECS', fichiers: ['n1_fausse_alarme', 'ecs_incendie_confirme'] },
+  { niveau: 1, equip: 'ECS', fichiers: ['n1_alarme_simple', 'n1_fausse_alarme', 'n1_malaise_fumee', 'ecs_incendie_confirme'] },
   { niveau: 2, equip: 'CMSI', fichiers: ['n2_compartimentage_escalier', 'n2_defaillance_das_decision'] },
   { niveau: 3, equip: 'Baie multi-bâtiments', fichiers: ['n3_incendie_sous_sol_propag_inter', 'n3_crise_sanitaire_pmr'] }
 ];
@@ -214,6 +234,110 @@ function rendreDiplomes(list) {
   document.getElementById('diplomes').innerHTML = h;
 }
 
+function fmtSec(s) { return (s == null ? '—' : s + ' s'); }
+function declencheur(f) {
+  if (f.type === 'manque') return 'Ne PAS faire « ' + f.cle + ' »';
+  if (f.type === 'fait') return 'Faire « ' + f.cle + ' » (action interdite ici)';
+  return 'Faire « ' + f.cle + ' » sans avoir fait « ' + f.avant + ' » avant';
+}
+
+function ficheScenario(s, comps) {
+  var codes = {};
+  (s.actions_attendues || []).forEach(function (a) { if (a.competence && a.competence !== '—') codes[a.competence] = 1; });
+  var listeCodes = Object.keys(codes).sort();
+  var total = (s.actions_attendues || []).reduce(function (a, b) { return a + (b.points || 0); }, 0);
+
+  var h = '<details class="scenario"><summary>';
+  h += '<span class="titre">' + esc(s.titre || s.id) + '</span>';
+  h += '<span class="meta">' + esc(s.equipement || '') + (s.erp_type ? ' · ERP type ' + esc(s.erp_type) : '') + (s.duree_max ? ' · ' + fmtSec(s.duree_max) + ' max' : '') + '</span>';
+  h += '</summary><div class="fiche-corps">';
+
+  if (s.mission) h += '<div class="lbl">Mission donnée à l\'élève</div><p style="font-size:0.92em">' + esc(s.mission) + '</p>';
+
+  if (s.contexte) {
+    h += '<div class="lbl">Contexte</div><ul>' +
+      '<li><b>Établissement :</b> ' + esc(s.contexte.etablissement || '—') + '</li>' +
+      '<li><b>Effectif :</b> ' + esc(s.contexte.effectif != null ? s.contexte.effectif : '—') + '</li>' +
+      '<li><b>Particularités :</b> ' + esc(s.contexte.particularites || '—') + '</li></ul>';
+  }
+
+  if (s.objectifs && s.objectifs.length) {
+    h += '<div class="lbl">Objectifs pédagogiques</div><ul>' +
+      s.objectifs.map(function (o) { return '<li>' + esc(o) + '</li>'; }).join('') + '</ul>';
+  }
+
+  if (listeCodes.length) {
+    h += '<div class="lbl">Compétences travaillées</div><div>' +
+      listeCodes.map(function (c) { return '<span class="tag comp">' + esc(c) + (comps[c] ? ' — ' + esc(comps[c]) : '') + '</span>'; }).join('') + '</div>';
+  }
+
+  if (s.zones && s.zones.length) {
+    h += '<div class="lbl">Zones de détection</div><p style="font-size:0.88em">' +
+      s.zones.map(function (z) { return '<span class="tag">' + esc(z.id) + ' — ' + esc(z.nom) + '</span>'; }).join(' ') + '</p>';
+  }
+
+  if (s.das && s.das.length) {
+    h += '<div class="lbl">DAS (dispositifs actionnés de sécurité)</div><table><thead><tr><th>Id</th><th>Désignation</th><th>Type</th><th>Zone</th></tr></thead><tbody>' +
+      s.das.map(function (d) { return '<tr><td>' + esc(d.id) + '</td><td>' + esc(d.designation) + '</td><td>' + esc(d.type) + '</td><td>' + esc(d.zone || '—') + '</td></tr>'; }).join('') +
+      '</tbody></table>';
+  }
+
+  if (s.levee_doute) {
+    h += '<div class="lbl">Levée de doute</div><ul>' +
+      '<li><b>Constat du scénario :</b> ' + (s.levee_doute.feu ? 'FEU confirmé' : 'RAS (fausse alarme)') + ' · <b>délai équipier :</b> ' + fmtSec(s.levee_doute.delai) + '</li>' +
+      (s.levee_doute.rapport_ras ? '<li><b>Compte-rendu si RAS :</b> ' + esc(s.levee_doute.rapport_ras) + '</li>' : '') +
+      (s.levee_doute.rapport_feu ? '<li><b>Compte-rendu si FEU :</b> ' + esc(s.levee_doute.rapport_feu) + '</li>' : '') +
+      '</ul>';
+  }
+
+  if (s.evenements && s.evenements.length) {
+    h += '<div class="lbl">Chronologie des événements injectés</div><table><thead><tr><th>t (s)</th><th>Type</th><th>Détail</th></tr></thead><tbody>' +
+      s.evenements.map(function (e) {
+        return '<tr><td>' + e.t + '</td><td>' + esc(e.type) + (e.zone ? ' (' + esc(e.zone) + ')' : '') + (e.das ? ' (' + esc(e.das) + ')' : '') + '</td><td>' + esc(e.detail || e.msg || (e.from ? 'depuis ' + e.from : '')) + '</td></tr>';
+      }).join('') + '</tbody></table>';
+  }
+
+  if (s.actions_attendues && s.actions_attendues.length) {
+    h += '<div class="lbl">Actions attendues (barème — total ' + total + ' pts)</div><table><thead><tr><th>Action</th><th>Délai max</th><th>Compétence</th><th>Points</th></tr></thead><tbody>' +
+      s.actions_attendues.map(function (a) {
+        return '<tr><td>' + esc(a.action) + '</td><td>' + fmtSec(a.delai_max) + '</td><td>' + esc(a.competence) + (comps[a.competence] ? ' — ' + esc(comps[a.competence]) : '') + '</td><td>' + a.points + '</td></tr>';
+      }).join('') + '</tbody></table>' +
+      '<p class="note">Règle : action dans les délais = points pleins ; en retard = moitié des points ; non faite = 0.</p>';
+  }
+
+  if (s.fautes_graves && s.fautes_graves.length) {
+    h += '<div class="lbl">Fautes graves (plafonnent la note à 8/20)</div>' +
+      s.fautes_graves.map(function (f) {
+        return '<div class="faute-item"><b>⛔ ' + esc(f.libelle) + '</b><br><span style="color:#888;font-size:0.82em">Déclencheur : ' + esc(declencheur(f)) + '</span></div>';
+      }).join('');
+  }
+
+  if (s.conduite_a_tenir && s.conduite_a_tenir.length) {
+    h += '<div class="lbl">Conduite à tenir (mode guidé)</div><ol>' +
+      s.conduite_a_tenir.map(function (c) { return '<li>' + esc(c.texte) + (c.cle ? ' <span style="color:#999;font-size:0.78em">[' + esc(c.cle) + ']</span>' : ''); }).join('</li>') + '</li></ol>';
+  }
+
+  if (s.questions && s.questions.length) {
+    h += '<div class="lbl">Questionnaire (corrigé)</div><ol>' +
+      s.questions.map(function (q) {
+        if (q.type === 'qcm') {
+          return '<li>' + esc(q.q) + '<ul>' + q.options.map(function (o, k) {
+            return '<li>' + (k === q.reponse ? '<span class="ok">✔ ' + esc(o) + ' (bonne réponse)</span>' : esc(o)) + '</li>';
+          }).join('') + '</ul></li>';
+        }
+        return '<li>' + esc(q.q) + ' <i style="color:#888">(réponse libre, corrigée sur copie)</i></li>';
+      }).join('') + '</ol>';
+  }
+
+  if (s.points_cles && s.points_cles.length) {
+    h += '<div class="lbl">« À retenir » affiché au bilan</div><div class="pk"><ul>' +
+      s.points_cles.map(function (p) { return '<li>' + esc(p) + '</li>'; }).join('') + '</ul></div>';
+  }
+
+  h += '</div></details>';
+  return h;
+}
+
 function rendreScenarios(comps) {
   var cont = document.getElementById('scenarios');
   var blocs = SCENARIOS.map(function (g) {
@@ -226,34 +350,15 @@ function rendreScenarios(comps) {
     groupes.forEach(function (gr) {
       h += '<h3>Niveau ' + gr.g.niveau + ' — ' + esc(gr.g.equip) + '</h3>';
       if (!gr.scs.length) { h += '<p style="color:#999">Scénarios indisponibles.</p>'; return; }
-      gr.scs.forEach(function (s) {
-        // compétences travaillées (uniques) depuis actions_attendues
-        var codes = {};
-        (s.actions_attendues || []).forEach(function (a) { if (a.competence && a.competence !== '—') codes[a.competence] = 1; });
-        h += '<div class="scenario">';
-        h += '<div class="titre">' + esc(s.titre || s.id) + '</div>';
-        h += '<div class="meta">' + esc(s.equipement || '') + (s.erp_type ? ' · ERP type ' + esc(s.erp_type) : '') + (s.duree_max ? ' · ' + s.duree_max + ' s max' : '') + '</div>';
-        if (s.mission) h += '<p style="font-size:0.9em;margin:0 0 6px">' + esc(s.mission) + '</p>';
-        if (s.objectifs && s.objectifs.length) {
-          h += '<div class="lbl">Objectifs</div><ul>';
-          s.objectifs.forEach(function (o) { h += '<li>' + esc(o) + '</li>'; });
-          h += '</ul>';
-        }
-        var listeCodes = Object.keys(codes).sort();
-        if (listeCodes.length) {
-          h += '<div class="lbl">Compétences travaillées</div><div>';
-          listeCodes.forEach(function (c) { h += '<span class="tag comp" title="' + esc(comps[c] || '') + '">' + esc(c) + (comps[c] ? ' — ' + esc(comps[c]) : '') + '</span>'; });
-          h += '</div>';
-        }
-        if (s.fautes_graves && s.fautes_graves.length) {
-          h += '<div class="lbl">Fautes graves (plafonnent à 8/20)</div><div>';
-          s.fautes_graves.forEach(function (fg) { h += '<span class="tag faute">⛔ ' + esc(fg.libelle || fg.cle) + '</span>'; });
-          h += '</div>';
-        }
-        h += '</div>';
-      });
+      gr.scs.forEach(function (s) { h += ficheScenario(s, comps); });
     });
     cont.innerHTML = h;
+    document.getElementById('btnDeplierTout').onclick = function () {
+      cont.querySelectorAll('details.scenario').forEach(function (d) { d.open = true; });
+    };
+    document.getElementById('btnReplierTout').onclick = function () {
+      cont.querySelectorAll('details.scenario').forEach(function (d) { d.open = false; });
+    };
   });
 }
 </script>
