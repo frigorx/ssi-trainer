@@ -32,6 +32,10 @@
 .pe-mission .pe-contexte { font-size: 0.82em; color: #555; margin-top: 8px; line-height: 1.5; }
 .pe-mission .pe-contexte b { color: var(--pe-bleu); }
 .pe-mission-txt { font-size: 0.9em; color: #222; line-height: 1.55; }
+.pe-brief { background: #eef2f8; border: 1px dashed #b9c2d2; border-radius: 6px; padding: 8px 12px; margin-bottom: 10px; }
+.pe-brief .pe-sous-titre { margin-top: 0; }
+.pe-brief ul { margin: 0 0 0 16px; font-size: 0.84em; line-height: 1.55; }
+.pe-brief li { margin-bottom: 2px; }
 .pe-sous-titre { font-weight: bold; color: var(--pe-bleu); font-size: 0.82em; margin: 10px 0 4px; }
 .pe-objectifs { background: #f1f6ff; border-left: 4px solid var(--pe-bleu); border-radius: 6px; padding: 8px 12px; margin-top: 10px; }
 .pe-objectifs ul { margin: 0 0 0 16px; font-size: 0.84em; line-height: 1.5; }

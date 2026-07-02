@@ -155,10 +155,26 @@ class PosteEleve {
 
   // ---------------------------------------------------------------- rendus
 
+  /** Brief opérationnel court (4 lignes max), dérivé du scénario — avant le détail complet. */
+  _renderBrief(s, c) {
+    var lignes = [];
+    if (c.etablissement) lignes.push('<b>Lieu :</b> ' + _esc(c.etablissement));
+    if (c.effectif) lignes.push('<b>Effectif :</b> ' + _esc(c.effectif) + ' personnes');
+    var premAlarme = (s.evenements || []).find(function (e) { return e.type === 'alarme'; });
+    if (premAlarme && (premAlarme.detail || premAlarme.zone)) {
+      lignes.push('<b>Première alarme :</b> ' + _esc(premAlarme.detail || ('zone ' + premAlarme.zone)));
+    }
+    if (s.objectifs && s.objectifs[0]) lignes.push('<b>Ton objectif :</b> ' + _esc(s.objectifs[0]));
+    if (!lignes.length) return '';
+    return '<div class="pe-brief"><div class="pe-sous-titre">⚡ Brief rapide</div><ul>' +
+      lignes.map(function (l) { return '<li>' + l + '</li>'; }).join('') + '</ul></div>';
+  }
+
   _renderMission() {
     if (!this.refs.mission) return;
     var s = this.scenario, c = s.contexte || {};
     var html = '<div class="pe-bloc-titre"><span class="pe-ico">🎯</span> Mission, objectifs &amp; consignes</div>';
+    html += this._renderBrief(s, c);
     html += '<div class="pe-mission-txt">' + _esc(s.mission || s.description || '') + '</div>';
     var ctx = [];
     if (c.etablissement) ctx.push('<b>Établissement :</b> ' + _esc(c.etablissement));
